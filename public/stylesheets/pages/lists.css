@@ -1,0 +1,51 @@
+input.search-query {
+    padding-left:35px !important;
+}
+form.form-search.glass {
+    display: inline-block;
+    margin: 8px 0 0 40px;
+    position: relative;
+}
+form.form-search.glass .form-control{
+    border-radius: 20px !important;
+}
+form.form-search.glass:before {
+    display: block !important;
+    width: 14px !important;
+    height: 14px !important;
+    content: "\e003" !important;
+    font-family: 'Glyphicons Halflings' !important;
+    background-position: -48px 0 !important;
+    position: absolute !important;
+    top:8px !important;
+    left:13px !important;
+    opacity: .5 !important;
+    z-index: 1000 !important;
+}
+.nav-text {
+    padding: 15px;
+    display: inline-block;
+}
+.list .panel-heading {
+    padding: 3px;
+}
+#bs-example-navbar-collapse-1 {
+    padding-left: 0;
+}
+.btn-group.nav.navbar-nav {
+    margin: 8px 0 0;
+}
+.btn-group.nav.pull-right.right {
+    margin: 8px 0 0 20px;
+}
+.top-separation {
+    margin-top: 30px;
+}
+.page-header .alert {
+    margin-top: 20px;
+    margin-bottom: -5px;
+}
+.col-index {
+    display: inline-block;
+    width: 40px;
+}

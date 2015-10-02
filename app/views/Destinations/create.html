@@ -1,0 +1,144 @@
+#{extends 'main.html' /}
+#{set title:'New Destination' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+<link rel="stylesheet" href="/public/stylesheets/pages/destinations.create.css">
+#{/set}
+
+#{set 'moreScripts'}
+<script src="/public/javascripts/destinations/create.js"></script>
+<script src="/public/javascripts/form.validation.js"></script>
+<script>
+    $(document).ready(function() {
+    #{if editMode}
+        $.ajax({
+            url:  '/TableList',
+            type:'POST',
+            data:{'url': '/destinations/${id}'},
+            success:function(result){
+                console.log("result >>>" + result);
+                var result =  $.parseJSON(result);
+                console.log("result.active>>>" + result.active);
+                var statusNumber = (result.active == true) ? "1" : "0";
+                if(result.state){
+                    load_countries(result.state.country.code, result.state.id);
+                }else{
+                    load_countries();
+                }
+                $("#destination-name").val(Decode(result.name));
+                $("#destination-description").val(Decode(result.description));
+                lim=$("#destination-description").attr("maxlength");
+                $("#cont").html(lim-count_text($("#destination-description")));
+                $("#status" + statusNumber).prop("checked", true);
+            },
+            error: function(err){
+                alert("error" + err);
+            }
+        });
+
+        $("#redirect input[name=mode]").val("edit");
+    #{/if}
+    #{else}
+        load_countries();
+    #{/else}
+    });
+</script>
+#{/set}
+
+#{form @Destinations.list(), method:'POST', id:'redirect'}
+<input name="destinationName" type="hidden" value="" />
+<input id="id-value" name="id-value" type="hidden" value="${id}"/>
+<input type="hidden" name="mode" value="create" />
+#{/form}
+
+<input id="id-value" type="hidden" value="${id}"/>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <h1>
+                    Destination
+                </h1>
+                <div class="alert alert-danger alert-dismissible oculto" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+<div class="col-lg-12">
+<div class="panel panel-default">
+<div class="panel-heading">
+    New Destination
+</div>
+<div class="panel-body">
+<form id="createDestination" action="" method="post">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="col-xs-7">
+                    <div class="form-group">
+                        <label>Name*</label>
+                        <input type="text" class="form-control" id="destination-name" data-required="true" data-length="2" maxlength="30"/>
+                    </div>
+                </div>
+                <div class="col-xs-7">
+                    <div class="form-group">
+                        <label>Description*</label>
+                        <div class="clearfix"></div>
+                        <div class="row">
+                            <div class="col-sm-11">
+                                <textarea class="form-control col-sm-10" data-required="true" maxlength="250" id="destination-description" rows="3" data-length="2"/></textarea>
+                            </div>
+                            <div id="cont" class="col-sm-1">0</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs-7">
+                    <label>Country*</label>
+                    <select class="form-control" id="countries"></select>
+                </div>
+                <div class="col-xs-7">
+                    <label>State*</label>
+                    <select class="form-control" id="states"></select>
+                </div>
+                <br/>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Status</label><br>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" class="destination-status" id="status1" value="1" checked>Enabled
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="inlineRadioOptions" class="destination-status" id="status0" value="0">Disabled
+        </label>
+    </div>
+    <br/>
+    #{if id }
+        #{secure.check 'EditarDestino'}
+            <input type="submit" class="btn btn-primary" value="Save">&nbsp;&nbsp;or
+        #{/secure.check}
+    #{/if}
+    #{else }
+        #{secure.check 'CrearDestino'}
+            <input type="submit" class="btn btn-primary" value="Save">&nbsp;&nbsp;or
+        #{/secure.check}
+    #{/else}
+    <a href="/destinations" class="btn">Cancel</a>
+</form>
+<br>
+<br>
+</div>
+</div>
+</div>
+</div>
+
+

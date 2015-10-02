@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+#{form action:@addPhoto(), enctype:'multipart/form-data', id:'addphotoform'}
+
+<h2>&{'msg.upload.photos'}</h2>
+<table id="addphoto-table" style="height: 307px;">
+    <tr>
+        <td>
+            <p>
+            <div>
+                #{field 'photo'}
+                    <label for="${field.id}">Imagen</label><br />
+                    <input type="file" id="photo" name="photo" />
+                #{/field}
+            </div>
+            </p>
+            <div>
+                <fieldset>
+                    <legend>&{'tabs.title.recomendations'}</legend>
+                &{'txt.photos.txt1'}
+                    <ol>
+                        <li>&{'txt.photos.txt2'}</li>
+                        <li>&{'txt.photos.txt3'}</li>
+                        <li>&{'txt.photos.txt4'}</li>
+                    </ol>
+                </fieldset>
+            </div>
+        </td>
+    </tr>
+</table>
+<input type="submit" value="Subir">
+#{/form}
+</body>
+</html>

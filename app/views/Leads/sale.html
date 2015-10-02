@@ -1,0 +1,1016 @@
+#{extends 'main.html' /}
+#{set title:'New Lead' /}
+<link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">
+<link rel="stylesheet" href="/public/stylesheets/animate.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" href="/public/stylesheets/bootstrap-datepicker.min.css"/>
+#{/set}
+#{set 'moreScripts'}
+<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="/public/javascripts/vendor/confirm-dialog/jquery.easy-confim-dialog.js"></script>
+<script src="/public/javascripts/vendor/masked-input/jquery.maskedinput.js"></script>
+<script src="/public/javascripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/public/javascripts/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="/public/javascripts/jquery.creditCardValidator.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function (){
+        load_catalog("/campaign?callcenter=${callcenter}", $("#campania"));
+        load_catalog("/sellers?tipo=M", $("#rep, #supervisor, #agent"));
+        load_catalog("/extrabonos?callcenter=${callcenter}", $("#bonos"));
+        load_catalog("/status", $("#status"));
+        $("#sale").validate({
+            rules: {},
+            submitHandler: function(form) {
+                data={
+                    'campania': $("#campania").val(),
+                    'numCert': $("#certnumber").val(),
+                    'checker': $("#rep").val(),
+                    'supervisor': $("#supervisor").val(),
+                    'status': $("#status").val(),
+                    'agent': $("#agent").html(),
+                    'bookingid': '${bookingid}',
+                    'numRecord': $("#grabacion").val(),
+                    'comment': $("#observaciones").val(),
+                    'client': "${clientid}",
+                    'extraBonus': $("#bonos").val()
+                }
+                console.log(data);
+                id=$("#id_sale").val();
+                var url = (id != '') ? '/createSale/'+id :'/createSale/';
+                continuar=false;
+                if(id!=''){
+                    #{secure.check 'EditarVenta'}
+                        continuar=true;
+                    #{/secure.check}
+                }else{
+                    #{secure.check 'CrearVenta'}
+                        continuar=true;
+                    #{/secure.check}
+                }
+                if(!continuar){
+                    showError("No tienes los permisos necesarios para realizar estos cambios");
+                    return;
+                }
+                var $submitButton = $('#save');
+                $submitButton.attr("disabled", true).val("creating....");
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function(msg){
+                        result = JSON.parse(msg);
+                        console.log(result);
+                        if(result.message){
+                            showError(result.message);
+                        }else if(result.errors){
+                            showError(result.errors);
+                        }else{
+                            showSuccess("Su venta fue actualizado correctamente");
+
+                            setTimeout(function(){
+                                if(id != '')
+                                    window.location.reload(1);
+                                else
+                                    window.location="/clients/${clientid}/payments/"+result.idBooking+"/${callcenter}";
+                            }, 3000);
+                        }
+                        $submitButton.attr("disabled", false).val("Guardar");
+                    }, error: function(result){
+                        showError(result.responseJSON.message);
+                    }
+                });
+            }
+        });
+    });
+</script>
+#{if bookingid }
+<script src="/public/javascripts/leads/sale.js" type="text/javascript"></script>
+<script>
+    //Cuando eliminas un pago
+    $( document ).on( "click", ".payments a.glyphicon-trash", function(e){
+        var papa= $(this).closest("tr");
+        var token= $(this).attr("data-id");
+        e.preventDefault();
+        $.ajax({
+            url: '/removePayment/'+token+'/',
+            type: 'POST',
+            data: {'bookingId': '${bookingid}'},
+            success: function(msg){
+                var result = JSON.parse(msg);
+                console.log(result);
+                if(result.message != undefined){
+                    showError(result.message);
+                }else if(result.errors){
+                    showError(result.errors);
+                }else{
+                    $(papa).remove();
+                }
+            }, error: function(result){
+                showError(result.responseJSON.message);
+            }
+        });
+    });
+
+    //Cuando seleccionas un pago
+    $( document ).on( "click", ".payments table th a", function(e){
+        $(".alert-danger").remove();
+        var id=$(this).html();
+        //Cargar un pago seleccionado
+        $.ajax({
+            url: '/application/paymentlist/${bookingid}/'+id,
+            type: 'GET',
+            success: function (result) {
+                var result = $.parseJSON(result);
+                console.log(result);
+                $("#payment #id").val(id);
+                if(result.creditCardDTO) {
+                    if (result.creditCardDTO.name) {
+                        $("#nombre_pago").val(result.creditCardDTO.name);
+                    }if (result.creditCardDTO.lastName) {
+                        $("#apellido_pago").val(result.creditCardDTO.lastName);
+                    }if (result.creditCardDTO.nCard) {
+                        $("#tarjeta_pago").val(result.creditCardDTO.nCard);
+                    }if (result.creditCardDTO.cvv) {
+                        $("#codigo_pago").val(result.creditCardDTO.cvv);
+                    }if (result.creditCardDTO.exp) {
+                        $("#vencimiento_pago").val(result.creditCardDTO.exp);
+                    }if (result.creditCardDTO.typeCard) {
+                        $("#tipo_pago").val(result.creditCardDTO.typeCard);
+                    }
+                }
+                if(result.terminal){
+                    $("#terminal_pago").val(result.terminal);
+                }if(result.authorizationNumber){
+                    $("#autorizacion_pago").val(result.authorizationNumber);
+                    $("#submit-payment").hide();
+                }else{
+                    $("#submit-payment").show();
+                }
+                if(result.exchangeRate){
+                    $("#cambio_pago").val(result.exchangeRate);
+                }
+                if(result.amount){
+                    amount=result.amount;
+                    $("#importe_pago").val(result.amount);
+                }
+                if(result.paymentDate){
+                    paymentDate= new Date(result.paymentDate);
+                    $("#fecha_pago").val(paymentDate.getUTCMonth()-1+"/"+paymentDate.getUTCDate()+"/"+paymentDate.getUTCFullYear());
+                }
+
+                if(result.currency){
+                    $("#payment .checkbox input").prop('checked', true);
+                    $("#payment .tag span").html(amount);
+                    $("#cambio_pago").val(1).attr('readonly', true);
+                }else{
+                    $("#payment .tag span").html(amount/result.exchangeRate);
+                }
+                $("#fecha_pago").readonlyDatepicker(false);
+                #{secure.check 'AsignacionUsuarioComision'}
+                    if(result.userCommission)
+                        $("#usuario_comision").val(result.userCommission);
+                #{/secure.check}
+                #{secure.check 'AsignacionUsuarioPago'}
+                    if(result.userPayment)
+                        $("#usuario_pago").val(result.userPayment);
+                #{/secure.check}
+                if(result.providedServicesDTO.length>0){
+                    arrf=[], amount=[];
+                    if(result.providedServicesDTO){
+                        $.each(result.providedServicesDTO, function(index, value){
+                            arrf.push(value.id)
+                            amount.push(value.amountPaid)
+                        });
+                    }
+                    load_services('${bookingid}', arrf, amount);
+//                    $(".payments").find(".sk-chasing-dots").remove();
+//                    payments.show();
+                }else{
+                    load_services(${bookingid});
+//                    $(".payments").find(".sk-chasing-dots").remove();
+//                    $(".payments").find(".ibox-content").append($("<p/>", {'text': 'No existen pagos'}))
+                }
+
+            },
+            error: function (err) {
+                showError("error" + err);
+            }
+        });
+    });
+
+    $.fn.readonlyDatepicker = function (makeReadonly) {
+        $(this).each(function(){
+
+            //find corresponding hidden field
+            var name = $(this).attr('name');
+            var $hidden = $('input[name="' + name + '"][type="hidden"]');
+
+            //if it doesn't exist, create it
+            if ($hidden.length === 0){
+                $hidden = $('<input type="hidden" name="' + name + '"/>');
+                $hidden.insertAfter($(this));
+            }
+
+            if (makeReadonly){
+                $hidden.val($(this).val());
+                $(this).unbind('change.readonly');
+                $(this).attr('disabled', true);
+            }
+            else{
+                $(this).bind('change.readonly', function(){
+                    $hidden.val($(this).val());
+                });
+                $(this).attr('disabled', false);
+            }
+        });
+    };
+
+    $(document).ready(function (){
+        //Cargar Usuarios para la seleccionar comisión y pago
+        #{secure.check 'AsignacionUsuarioComision'}
+            load_user($("#usuario_comision"));
+        #{/secure.check}
+        #{secure.check 'AsignacionUsuarioPago'}
+            load_user($("#usuario_pago"));
+        #{/secure.check}
+        load_subservices("/subservices?for_certificates_area=true&callcenter=${callcenter}", $("#servicios"));
+
+        //Crear o Editar un pago
+        $("#payment form").validate({
+            submitHandler: function(form) {
+                continuar=false;
+                if(id!=''){
+                    #{secure.check 'ModificacionDatosPago'}
+                        continuar=true;
+                    #{/secure.check}
+                }else{
+                    continuar=true;
+                }
+                if(!continuar){
+                    showModalError($("#payment"),"No tienes los permisos necesarios para realizar estos cambios");
+                    return;
+                }
+                sum=$("#payment tbody tr").sumaEle();
+                if(sum==$("#importe_pago").val()){
+                    servicesId = $("#payment tbody input:checkbox:checked").map(function(){
+                        return $(this).val();
+                    }).get();
+                    servicesId=servicesId.join(", ");
+                    servicesAmount = $("#payment tbody input:checkbox:checked").map(function(){
+                        return $(this).closest("tr").find("td:eq(5) input").val();
+                    }).get();
+                    usuario_comision="",usuario_pago="";
+                    servicesAmount=servicesAmount.join(", ");
+                    #{secure.check 'AsignacionUsuarioComision'}
+                        usuario_comision=$("#usuario_comision").val();
+                    #{/secure.check}
+                    #{secure.check 'AsignacionUsuarioPago'}
+                        usuario_pago=$("#usuario_pago").val();
+                    #{/secure.check}
+                    currency=0;
+                    if($("#payment .checkbox input").is(":checked"))
+                        currency=1;
+                    data={
+                        'name': $("#nombre_pago").val(),
+                        'lastName': $("#apellido_pago").val(),
+                        'nCard': $("#tarjeta_pago").val(),
+                        'typeCard': $("#tipo_pago").val(),
+                        'terminal': $("#terminal_pago").val(),
+                        'cvv': $("#codigo_pago").val(),
+                        'exp': $("#vencimiento_pago").val(),
+                        'authorizationNumber': $("#autorizacion_pago").val(),
+                        'amount': $("#importe_pago").val(),
+                        'exchangeRate': $("#cambio_pago").val(),
+                        'userCommission': usuario_comision,
+                        'userPayment': usuario_pago,
+                        'paymentDate': $("#fecha_pago").val(),
+                        'bookingId': '${bookingid}',
+                        'servicesId': servicesId,
+                        'servicesAmount': servicesAmount,
+                        'currency': currency
+                    }
+                    console.log(data);
+                    id=$("#payment #id").val();
+                    var url = (id != '') ? '/createPayment/'+id :'/createPayment/';
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: data,
+                        success: function(msg){
+                            result = JSON.parse(msg);
+                            console.log(result);
+                            if(result.message != undefined){
+                                showModalError($("#payment"), result.message);
+                            }else if(result.errors){
+                                showModalError($("#payment"), result.errors);
+                            }else{
+                                showModalSuccess($("#payment"),"Su pago fue actualizado correctamente");
+                                setTimeout(function(){
+                                    window.location.reload(1);
+                                }, 3000);
+                            }
+                        }, error: function(result){
+                            showModalError($("#payment"), result.responseJSON.message);
+                        }
+                    });
+                }
+                else
+                    showModalError($("#payment"), 'El importe de pago no concide con los pagos de los servicios')
+            }
+        });
+
+        //Limpiar el formulario para ingresar un nuevo pago
+        $(".add-payment").click(function (e) {
+            $('#payment form').clearForm();
+            $('#payment tbody').html("");
+            $("#payment .tag span").html("");
+            load_services(${bookingid});
+            $(".alert-danger").remove();
+            $("#payment .checkbox input").prop("checked","true");
+            $("#payment .tag span").html(1);
+            $("#importe_pago").val(1);
+            $("#cambio_pago").val(1);
+            $("#payment #id").val("");
+            $("#fecha_pago").datepicker("setDate", new Date())
+            $("#fecha_pago").readonlyDatepicker(true);
+            $("#submit-payment").show();
+        });
+
+        //Cargar pagos de un booking
+        $.ajax({
+            url: '/application/paymentlist/${bookingid}',
+            type: 'GET',
+            success: function (result) {
+                var result = $.parseJSON(result);
+                var payments=$(".payments").find("tbody");
+                console.log(result);
+                if(result.length>0){
+                    $.each(result, function(index, value){
+                        if(value.autorization)
+                            var tr=$("<tr/>", {class:'success'});
+                        else
+                            var tr=$("<tr/>");
+                        a_href="", numPay="", bank="", amount="", paymentDate="", userPayment="", currency="";
+                        if(value.id)
+                            a_href=$("<th/>").append($("<a/>", {'scope': 'rov', 'text': value.id, 'data-toggle':'modal', 'data-target':'#payment'}));
+                        if(value.numPay)
+                            numPay=value.numPay;
+                        if(value.bank)
+                            bank=value.bank;
+                        if(value.amount)
+                            amount=value.amount;
+                        if(value.paymentDate){
+                            paymentDate= new Date(value.paymentDate);
+                            paymentDate=months[paymentDate.getUTCMonth()-1]+" "+paymentDate.getUTCDate()+", "+paymentDate.getUTCFullYear();
+                        }
+                        if(value.userPayment)
+                            userPayment=value.userPayment;
+                        if(value.currency)
+                            currency=value.currency;
+                        tr=tr.append(a_href);
+                        tr=tr.append($("<td/>", {'text': numPay}));
+                        tr=tr.append($("<td/>", {'text': bank}));
+                        tr=tr.append($("<td/>", {'text': '$ '+amount+' '+currency}));
+                        tr=tr.append($("<td/>", {'text': paymentDate}));
+                        tr=tr.append($("<td/>", {'text': userPayment}));
+
+                    #{secure.check 'EliminarPago'}
+                        a_href=$("<a/>", {'class': 'glyphicon glyphicon-trash', 'data-id': value.id}).easyconfirm({text: 'Are you sure you want to delete this image?'})
+                        tr=tr.append($("<td/>").append(a_href));
+                    #{/secure.check}
+                        payments.append(tr);
+                    });
+                    $(".payments").find(".sk-chasing-dots").remove();
+                    payments.show();
+                }else{
+                    $(".payments").find(".sk-chasing-dots").remove();
+                    $(".payments").find(".ibox-content").append($("<p/>", {'text': 'No existen pagos'}))
+                }
+            },
+            error: function (err) {
+                showError("error" + err);
+            }
+        });
+
+        //Cuando seleccionas un servicio
+        $( document ).on( "click", ".services table th a", function(e){
+            $(".alert-danger").remove();
+            var id=$(this).html();
+            //Cargar un pago seleccionado
+            $.ajax({
+                url:  '/TableList',
+                type:'POST',
+                data: {'url': '/sales/${bookingid}/providedServices/'+id},
+                success: function (result) {
+                    var result = $.parseJSON(result);
+                    console.log(result);
+                    $("#service #id_service").val(id);
+                    if(result.idsubservicio!=null)
+                        $("#servicios").val(result.idsubservicio)
+                    if(result.amount!=null)
+                        $("#amount_service").val(result.amount)
+                    if(result.adults!=null)
+                        $("#adults_service").val(result.adults)
+                    if(result.minor!=null)
+                        $("#minor_service").val(result.minor)
+                    if(result.description)
+                        $("#description_service").val(result.description)
+                },
+                error: function (err) {
+                    showError("error" + err);
+                }
+            });
+        });
+
+        //Cargar servicios
+        $.ajax({
+            url:  '/TableList',
+            type:'POST',
+            data:{'url': '/sales/${bookingid}/providedServices'},
+            success: function (result) {
+                var result = $.parseJSON(result);
+                console.log(result);
+                var services=$(".services").find("tbody");
+                if(result.length>0){
+                    $.each(result, function(index, value){
+                        var a_href=$("<th/>"), amount="", amountPaid="", description="", idBooking="", remaining="", userService="", subService="";
+                        var tr=$("<tr/>");
+//                        if(value.id)
+                        a_href=$("<th/>").append($("<a/>", {'scope': 'rov', 'text': value.id, 'data-toggle':'modal', 'data-target':'#service'}));
+                        if(value.amount)
+                            amount=value.amount;
+                        if(value.amountPaid)
+                            amountPaid=value.amountPaid;
+                        if(value.description)
+                            description=value.description;
+                        if(value.idBooking)
+                            idBooking=value.idBooking;
+                        if(value.remaining)
+                            remaining=value.remaining;
+                        if(value.userService)
+                            userService=value.userService;
+                        if(value.subService)
+                            subService=value.subService;
+                        tr=tr.append(a_href);
+//                        tr=tr.append($("<td/>", {'text': idBooking}));
+                        tr=tr.append($("<td/>", {'text': subService}));
+//                        tr=tr.append($("<td/>", {'text': 2}));
+                        tr=tr.append($("<td/>", {'text': amount}));
+                        tr=tr.append($("<td/>", {'text': description}));
+                        tr=tr.append($("<td/>", {'text': userService}));
+                        #{secure.check 'EliminarServiciosContratados'}
+                            a_href=$("<a/>", {'class': 'glyphicon glyphicon-trash', 'data-id': value.id}).easyconfirm({text: 'Are you sure you want to delete this service?'})
+                            tr=tr.append($("<td/>").append(a_href));
+                        #{/secure.check}
+                        services.append(tr);
+                    });
+                    $(".services").find(".sk-chasing-dots").remove();
+                    services.show();
+                }else{
+                    $(".services").find(".sk-chasing-dots").remove();
+                    $(".services").find(".ibox-content").append($("<p/>", {'text': 'No existen servicios'}))
+                }
+            },
+            error: function (err) {
+                showError("error" + err);
+            }
+        });
+
+        //Actualizar o crear un nuevo servicio
+        $("#service form").validate({
+            rules: {
+                amount_service: {
+                    required: true,
+                    number: true
+                },adults_service: {
+                    required: true,
+                    number: true
+                },minor_service: {
+                    required: true,
+                    number: true
+                }
+            },
+            submitHandler: function(form) {
+                idsubservicio=$("#servicios").val();
+                amount=$("#amount_service").val();
+                description=$("#description_service").val();
+                data={
+                    'idsubservicio': idsubservicio,
+                    'adults': $("#adults_service").val(),
+                    'minors': $("#minor_service").val(),
+                    'amount': amount,
+                    'bookingId': '${bookingid}',
+                    'description': description
+                }
+                console.log(data);
+                id=$("#service #id_service").val();
+                var url = (id != '') ? '/createService/'+id :'/createService/';
+                continuar=false;
+                if(id!=''){
+                    #{secure.check 'EditarServiciosContratados'}
+                        continuar=true;
+                    #{/secure.check}
+                }else{
+                    #{secure.check 'CrearServiciosContratados'}
+                        continuar=true;
+                    #{/secure.check}
+                }
+                if(!continuar){
+                    showModalError($("#service"),"No tienes los permisos necesarios para realizar estos cambios");
+                    return;
+                }
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function(msg){
+                        result = JSON.parse(msg);
+                        console.log(result);
+                        if(result.message != undefined){
+                            showModalError($("#service"), result.message);
+                        }else if(result.errors){
+                            showModalError($("#service"), result.errors);
+                        }else{
+                            showModalSuccess($("#service"),"Su servicio fue actualizado correctamente");
+                            setTimeout(function(){
+                                window.location.reload(1);
+                            }, 3000);
+                        }
+                    }, error: function(result){
+                        showModalError($("#service"), result.responseJSON.message);
+                    }
+                });
+            }
+        });
+
+        //Limpiar el formulario para ingresar un nuevo servicio
+        $(".add-service").click(function (e) {
+            $('#service form').clearForm();
+            $("#service #id_service").val("");
+        });
+
+        //Cuando eliminas un pago
+        $( document ).on( "click", ".services a.glyphicon-trash", function(e){
+            var papa= $(this).closest("tr");
+            var token= $(this).attr("data-id");
+            e.preventDefault();
+            $.ajax({
+                url: '/removeService/'+token+'/',
+                type: 'POST',
+                data: {'bookingId': '${bookingid}'},
+                success: function(msg){
+                    var result = JSON.parse(msg);
+                    console.log(result);
+                    if(result.message != undefined){
+                        showError(result.message);
+                    }else if(result.errors){
+                        showError(result.errors);
+                    }else{
+                        $(papa).remove();
+                    }
+                }, error: function(result){
+                    showError(result.responseJSON.message);
+                }
+            });
+        });
+
+        //  Cargar detalle de la venta
+        $.ajax({
+            url: "/application/salelist/${bookingid}",
+            type: 'GET',
+            success: function(msg){
+                result = JSON.parse(msg);
+                console.log(result);
+                if(result.message != undefined){
+                    showError("No existe la venta");
+                }else if(result.errors){
+                    showError("No existe la venta");
+                }else{
+                    $(".detail-sale .col-sm-6").eq(0)
+                            .append($("<strong/>", {'text': 'Certificate: '}), result.numCert);
+                    $(".detail-sale .col-sm-6").eq(1)
+                            .append($("<strong/>", {'text': 'Usuario: '}), $("<span/>", {'id':'agent','text': result.agent}));
+                    if(result.campaignId)
+                        $("#campania").val(result.campaignId);
+                    if(result.checker)
+                        $("#rep").val(result.checker);
+                    if(result.supervisor)
+                        $("#supervisor").val(result.supervisor);
+                    if(result.agent)
+                        $("#agent").val(result.agent);
+                    if(result.extraBonus!=null)
+                        $("#bonos").val(result.extraBonus);
+                    if(result.status)
+                        $("#status").val(result.status);
+                    if(result.numRecord)
+                        $("#grabacion").val(result.numRecord);
+                    if(result.comment)
+                        $("#observaciones").val(result.comment);
+                    if(result.numCert)
+                        $("#certnumber").val(result.numCert);
+                }
+            }, error: function(result){
+                showModalError($("#service"), result.responseJSON.message);
+            }
+        });
+    });
+    </script>
+    #{/if}
+#{/set}
+<div class="col-lg-12 page-header">
+    <div class="row"><div class="col-lg-12"><h1></h1></div></div>
+</div>
+<div class="row">
+    <div class="col-sm-12" >
+        <div class="personal-information">
+            <div class="ibox-title">
+                <h5>#{if !bookingid} New #{/if}Sale</h5>
+                <div class="ibox-tools pull-right">
+                    <a class="label label-primary" href="/clients/${clientid}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Go Back
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="ibox-content">
+                #{if bookingid}
+                <div class="row detail-sale">
+                    <div class="col-sm-6">
+                        <strong>Booking Id: </strong>  ${bookingid}<br />
+                        *{<label href="#" class="tag pull-right">Total: $ 100 </label>}*
+                        *{<strong>x Sunset World Gives Back H3R 2014</strong><br />}*
+                        *{<small class="text-muted">${sale.numCert}</small><br />}*
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Call Center: </strong>  Certificados<br />
+                        *{<strong>Usuario: </strong>  ${sale.agent}<br />}*
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br/>
+                #{/if}
+                <input type="hidden" name="id" value="${bookingid}" id="id_sale"/>
+                <form action="" class="row" id="sale">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Campaña*</label>
+                            <select name="" id="campania" class="form-control input-sm">
+                                <option value="">Campaña</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="certnumber">Cert Number*</label>
+                            <input type="text" class="form-control input-sm" id="certnumber" name="certnumber" #{if bookingid }readonly #{/if}/>
+                        </div>
+                    </div>
+                #{else }
+                    <input id="clientid" type="hidden" value="${clientid}" />
+                #{/else}
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Representante*</label>
+                            <select name="rep" id="rep" class="form-control input-sm"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Supervisor*</label>
+                            <select name="supervisor" id="supervisor" class="form-control input-sm" required></select>
+                        </div>
+                    </div>
+                    *{<div class="col-sm-6">}*
+                        *{<div class="form-group">}*
+                            *{<label for="lastname">Agent*</label>}*
+                            *{<select name="agent" id="agent" class="form-control input-sm" required></select>}*
+                        *{</div>}*
+                    *{</div>}*
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Extra Bonos*</label>
+                            <select name="bonos" id="bonos" class="form-control input-sm"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Status*</label>
+                            <select name="status" id="status" class="form-control input-sm" required></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Número de Grabación*</label>
+                            <input type="text" class="form-control input-sm" id="grabacion" name="grabacion" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Observaciones*</label>
+                            <input type="text" class="form-control input-sm" id="observaciones" name="observaciones" />
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <input id="save" type="submit" class="btn pull-right btn-default" value="Guardar"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    #{if bookingid }
+    <div class="col-sm-6">
+        <div class="ibox float-e-margins services">
+            <div class="ibox-title" style="margin-bottom: 20px;">
+                <h5>Services</h5>
+                <div class="ibox-tools pull-right">
+                    <a class="label label-primary add-service" data-toggle="modal"  data-target="#service">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add service
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        *{<th>Booking</th>}*
+                        <th>Subservicio</th>
+                        <th>Importe</th>
+                        <th>Descripción</th>
+                        <th>Usuario</th>
+                    </tr>
+                    </thead>
+                    <tbody style="display:none;">
+                    </tbody>
+                </table>
+                <div class="sk-chasing-dots">
+                    <div class="sk-child sk-dot1"></div>
+                    <div class="sk-child sk-dot2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="ibox float-e-margins payments">
+            <div class="ibox-title" style="margin-bottom: 20px;">
+                <h5>Payments</h5>
+                <div class="ibox-tools pull-right">
+                    <a class="label label-primary add-payment" data-toggle="modal"  data-target="#payment">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add payment
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Pagos</th>
+                            <th>Banco</th>
+                            <th>Importe</th>
+                            <th>Fecha</th>
+                            <th>Agente</th>
+                        </tr>
+                    </thead>
+                    <tbody style="display:none;">
+                    </tbody>
+                </table>
+
+                <div class="sk-chasing-dots">
+                    <div class="sk-child sk-dot1"></div>
+                    <div class="sk-child sk-dot2"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <br/><br/>
+    #{/if}
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade " id="payment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title col-sm-6" id="myModalLabel"><br />Payment</h4>
+                <p class="col-sm-5 text-right" style="color: #ffffff">
+                    <strong>Call Center: </strong>  Certificados<br />
+                    <strong>Booking Id: </strong>  ${bookingid}
+                </p>
+                <div class="clearfix"></div>
+            </div>
+            <form action="" method="post">
+            <div class="modal-body text-justify">
+                    <input type="hidden" id="id" value="" style="display:none;"/>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="Nombre">Nombre</label>
+                            <input type="text" class="form-control input-sm" id="nombre_pago" name="nombre_pago" required />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="Apellido">Apellido</label>
+                            <input type="text" class="form-control input-sm" id="apellido_pago" name="apellido_pago" required  />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="Num Tarjeta">Num Tarjeta</label>
+                            <input type="text" class="form-control input-sm" id="tarjeta_pago" name="tarjeta_pago" required  />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="Tipo de Tarjeta">Tipo de Tarjeta</label>
+                            <select class="form-control input-sm" name="tipo_pago" id="tipo_pago"  required></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="Terminal">Terminal</label>
+                            <select class="form-control input-sm" name="terminal_pago"  id="terminal_pago" required></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Código de Seguridad">Código de Seguridad</label>
+                                    <input type="text" class="form-control input-sm" id="codigo_pago" name="codigo_pago" required />
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Fecha de Vencimiento">Fecha de Vencimiento</label>
+                                    <input type="text" class="form-control input-sm" id="vencimiento_pago" name="vencimiento_pago" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Número de Autorización">Número de Autorización</label>
+                                    <input type="text" class="form-control input-sm" id="autorizacion_pago" name="autorizacion_pago" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Importe">Importe</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">$</div>
+                                        <input type="text" class="form-control" id="importe_pago" name="importe_pago" required />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> Dolares
+                                    </label>
+
+                                </div>
+                                <label href="#" class="tag">USD: $ <span>100</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Tipo de Cambio">Tipo de Cambio</label>
+                                    <input type="text" class="form-control input-sm" id="cambio_pago" name="cambio_pago" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                        #{secure.check 'AsignacionUsuarioComision'}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Usuario Comisión">Usuario Comisión</label>
+                                    <select class="form-control" name="usuario_comision" id="usuario_comision" ></select>
+                                </div>
+                            </div>
+                        #{/secure.check}
+                        #{secure.check 'AsignacionUsuarioPago'}
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="Usuario Pago">Usuario Pago</label>
+                                    <select class="form-control" name="usuario_pago" id="usuario_pago" ></select>
+                                </div>
+                            </div>
+                        #{/secure.check}
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="Fecha">Fecha</label>
+                            <input type="text" class="form-control input-sm" id="fecha_pago" name="fecha_pago" required  />
+                        </div>
+                    </div>
+
+                <div class="clearfix"></div>
+                <table class="table table-condensed ">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Subservicio</th>
+                        <th>Importe</th>
+                        <th>Descripción</th>
+                        <th>Saldo</th>
+                        <th>Importe pago</th>
+                    </tr>
+                    </thead>
+                    <tbody style="display: none;">
+
+                    </tbody>
+                </table>
+                <div class="sk-chasing-dots">
+                    <div class="sk-child sk-dot1"></div>
+                    <div class="sk-child sk-dot2"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+            #{secure.check 'EditarCliente'}
+                <button type="submit" class="btn btn-default" id="submit-payment">Guardar</button>
+            #{/secure.check}
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade " id="service" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title col-sm-6" id="myModalLabel"><br />Service</h4>
+                <p class="col-sm-5 text-right" style="color: #ffffff">
+                    <strong>Call Center: </strong>  Certificados<br />
+                    <strong>Booking Id: </strong>  ${bookingid}
+                </p>
+                <div class="clearfix"></div>
+            </div>
+            <form action="" method="post" >
+                <input type="hidden" id="id_service" value="" />
+                <div class="modal-body text-justify">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Servicio*</label>
+                            <select name="servicios" class="form-control input-sm" id="servicios" required></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Importe*</label>
+                            <input type="text" name="amount_service" class="form-control input-sm" id="amount_service" required/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Adultos*</label>
+                            <input type="text" name="adults_service" class="form-control input-sm" id="adults_service" required/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Menores*</label>
+                            <input type="text" name="minor_service" class="form-control input-sm" id="minor_service" required/>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="lastname">Description*</label>
+                            <input type="text" name="description_service" class="form-control input-sm" id="description_service"/>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="modal-footer">
+                #{secure.check 'EditarCliente'}
+                    <button type="submit" class="btn btn-default">Guardar</button>
+                #{/secure.check}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Clients Reservations</title>
+    <link rel="stylesheet" href="@{'/public/stylesheets/main.min.css'}"/>
+    <!-- jQuery -->
+    <script src="/public/stylesheets/vendor/sb-admin-2/bower_components/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+    <div class="loader"></div>
+    <form action='${urlportal}/Portal.jsp' method='POST'>
+        <input type='hidden' name='FormAction'  value='login'>
+        <input type='hidden' name='FormName'  value='LOGIN'>
+        <input type='hidden' name='Login'  value='${username}'>
+        <input type='hidden' name='Password'  value='${password}'>
+        <input type='hidden' name='redirectURL'  value='${pageurl}'>
+        <input type='hidden' name='querystring'  value=''>
+        <input type='hidden' name='ret_page'  value=''>
+    </form>
+
+</body>
+<script>
+    $(document).ready(function() {
+        $("form").submit();
+    });
+</script>
+</html>

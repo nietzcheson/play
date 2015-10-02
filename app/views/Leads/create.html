@@ -1,0 +1,258 @@
+#{extends 'main.html' /}
+#{set title:'New Client' /}
+<link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+#{set 'moreStyles'}
+#{/set}
+#{set 'moreScripts'}
+<script src="/public/javascripts/form.validation.js"></script>
+<script src="/public/javascripts/leads/create.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="/public/javascripts/vendor/masked-input/jquery.maskedinput.js"></script>
+#{/set}
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <h1>
+                    Client
+                </h1>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="alert alert-danger alert-dismissible oculto" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <span class="text"></span>
+</div>
+<!-- /.row -->
+#{form @Leads.list(), method:'POST', id:'redirect'}
+<input name="leadName" type="hidden" value="" />
+<input type="hidden" name="mode" value="create" />
+<input id="id-value" type="hidden" value="${id}"/>
+#{/form}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                New Client
+            </div>
+            <div class="panel-body">
+                <form id="lead-form">
+                    <input id="id-value" type="hidden" value="${id}"/>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-xs-12">First name*</label>
+                                    <div class="col-sm-3">
+                                        <select class="form-control" name="title" id="title">
+                                            <option value="1">SR</option>
+                                            <option value="1">SRA</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="firstname" name="firstname" data-required="true" data-length="2" maxlength="100" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="lastname">Last name*</label>
+                                <input type="text" class="form-control" id="lastname" name="lastname" data-required="true" data-length="2" maxlength="100" />
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label>Age*</label>
+                                        <input type="number" class="form-control" id="age" name="age" min="17" max="80" data-length="2" maxlength="2"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="form-group">
+                                        <label>Date of birth*</label>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <select class="form-control day" name="day" id="day">
+                                                    <option value="">Day</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select class="form-control month" name="month" id="month">
+                                                    <option value=""> Month </option>
+                                                    <option value="1">January</option>
+                                                    <option value="2">February</option>
+                                                    <option value="3">March</option>
+                                                    <option value="4">April</option>
+                                                    <option value="5">May</option>
+                                                    <option value="6">June</option>
+                                                    <option value="7">July</option>
+                                                    <option value="8">August</option>
+                                                    <option value="9">September</option>
+                                                    <option value="10">October</option>
+                                                    <option value="11">November</option>
+                                                    <option value="12">December</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select class="form-control year" name="year" id="year" name="year">
+                                                    <option value="">Year</option>
+                                                    <option value="2015">2015</option>
+                                                    <option value="2014">2014</option>
+                                                    <option value="2013">2013</option>
+                                                    <option value="2012">2012</option>
+                                                    <option value="2011">2011</option>
+                                                    <option value="2010">2010</option>
+                                                    <option value="2009">2009</option>
+                                                    <option value="2008">2008</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-6 pull-right">
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label>Email*</label>
+                                <input type="email" class="form-control" id="email" name="email" data-required="true" data-length="2" maxlength="100"/>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="row" id="phones">
+                                    <label class="col-xs-12">
+                                        Phone*<button type="button" class="btn btn-success pull-right" id="add-phone">
+                                        <span class="glyphicon glyphicon-earphone" style="margin-right: 5px;"></span>  Add  </button>
+                                    </label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" id="type-phone" name="type-phone">
+                                            <option value="phone">HOME</option>
+                                            <option value="phone2">WORK</option>
+                                            <option value="phone3">CELLPHONE</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="phone" name="phone" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-6">
+                            <label>Country*</label>
+                            <div class="form-group">
+                                <select id="countries" name="countries" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>States*</label>
+                            <div class="form-group">
+                                <select id="states" name="states" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>City</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="city" name="city" maxlength="100" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label>Zip Code</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="zipcode" name="zipcode" maxlength="100" />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label>Address</label>
+                            <div class="form-group">
+                                *{<input type="text" class="form-control" id="street" name="street" />}*
+                                <div class="row">
+                                    <div class="col-sm-11">
+                                        <textarea class="form-control col-sm-10" maxlength="500" id="street" rows="3" data-length="2"/></textarea>
+                                    </div>
+                                    <div id="cont" class="col-sm-1">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Certificate*</label>
+                                <input type="text" class="form-control" id="certificate" name="certificate" data-required="true" data-length="2" maxlength="100" />
+                            </div>
+                            <div id="offer" class="oculto">
+                                <h3><span class="text"></span> <a><span class="glyphicon glyphicon-menu-down"></span></a></h3>
+                                <p class="oculto"></p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="terms oculto" data-toggle="modal" data-target="#terms">View terms</a>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <p class="lead col-xs-12" style="color: #337ab7">Sale information</p>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Marital Status</label><br />
+                                <div id="marital"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Occupation</label>
+                                <input type="text" class="form-control" id="occupation" name="occupation" maxlength="100"/>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-12">Customer is interested in </label>
+                                    <div id="features" class="col-sm-12">
+                                        <div class="checkbox"></div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    #{if id }
+                        #{secure.check 'EditarCliente'}
+                             <input type="submit" class="btn btn-primary" value="Save" id="submit" />&nbsp;&nbsp;&nbsp;or
+                        #{/secure.check}
+                    #{/if}
+                    #{else }
+                        #{secure.check 'CrearCliente'}
+                             <input type="submit" class="btn btn-primary" value="Save" id="submit" />&nbsp;&nbsp;&nbsp;or
+                        #{/secure.check}
+                    #{/else}
+                    <a href="/clients" class="btn">Cancel</a>
+                    <br /><br />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Terms</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

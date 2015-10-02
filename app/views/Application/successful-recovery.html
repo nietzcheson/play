@@ -1,0 +1,27 @@
+#{extends 'access-layout.html' /}
+#{set title:'Información Enviada' /}
+<link rel="stylesheet" href="/public/stylesheets/pages/login.css">
+
+<div class="panel-heading">
+    <h3 class="panel-title">
+        Por favor revisa tu correo electrónico
+    </h3>
+</div>
+<div class="panel-body">
+    <form role="form">
+        <p>
+            Hemos enviado los datos de acceso de tu cuenta a tu email.
+        </p>
+        <p>
+            Si no haz recibido nuestro email en tu bandeja de entrada o en la carpeta de SPAM o "correo no deseado", es
+            posible que te hayas inscrito con otra dirección de correo electrónico.
+        </p>
+        <fieldset>
+
+            <!-- Change this to a button or input when using this as a form -->
+            <a href="/login" class="btn btn-primary pull-right" >
+                Iniciar sesión
+            </a>
+        </fieldset>
+    </form>
+</div>

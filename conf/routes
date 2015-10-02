@@ -1,0 +1,133 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+
+GET     /login			                        Application.login
+POST    /login                                  Secure.authenticate
+GET     /logout                                 Secure.logout
+*     /recover/?                                Application.recover
+*     /successful-recovery/?                    Application.successfulRecovery
+
+# Import Secure routes
+*      /                                        module:secure
+
+# Home page
+*     /                                         Application.index
+
+# Ignore favicon requests
+*     /favicon.ico                              404
+
+#Funciones Generales Jquery
+POST   /TableList/?                             Application.TableList   #Listado Jquery para Tablas y Selects
+GET    /application/UsersGroupList/?            Application.UsersGroupList
+
+# Leads
+*     /clients/?                                         Leads.list
+*     /clients/{id}/edit/?                               Leads.create
+GET   /clients/{clientid}/payments/{callcenter}/new/?           Leads.sale
+GET   /clients/{clientid}/payments/{bookingid}/{callcenter}?    Leads.sale
+*     /clients/create/?                                  Leads.create
+*     /clients/{id}/?                                    Leads.view
+*     /application/leadslist/?                           Application.leadsList
+*     /application/leadslist/{id}/?                      Application.leadsList
+*     /application/certificates/{id}/?                   Application.certificate
+POST  /createLead                                        Leads.createLead
+POST  /createLead/{id}/?                                 Leads.createLead
+POST  /removePayment/{id}/?                              Leads.removePayment
+POST  /createPayment/?                                   Leads.createPayment
+POST  /createPayment/{id}/?                              Leads.createPayment
+POST  /createService/?                                   Leads.createService
+POST  /createService/{id}/?                              Leads.createService
+POST  /removeService/{id}/?                              Leads.removeService
+POST  /createSale/?                                      Leads.createSale
+POST  /createSale/{id}/?                                 Leads.createSale
+POST  /removeSale/{id}/?                                 Leads.removeSale
+POST  /createNote/?                                      Leads.createNote
+GET   /application/salelist/{id}/?                       Application.saleShow
+POST   /application/notelist/?                       Application.notesList
+POST   /application/notelist/{id}/?                       Application.notesList
+
+GET    /upload-leads/?                                   Application.uploadLeads
+GET   /application/paymentlist/{bookingid}/?             Application.paymentList
+GET   /application/paymentlist/{bookingid}/{paymentid}/? Application.paymentList
+GET   /intranet/{page}/{id}/?                            Leads.reservations
+GET   /intranet/{page}/{id}/{booking}?                   Leads.reservations
+GET   /intranet/{page}/{id}/{booking}/{callcenter}/?     Leads.reservations
+
+# Serial Numbers
+*     /serials/create/?                         Serials.create
+*     /serials/{id}/?                           Serials.list
+*     /serials/?                                Serials.list
+*     /serials/{idCampaign}/create/?            Serials.create
+*     /serials/batch/{id}?                      Serials.view
+*     /application/serialslist/{id}/?           Application.serialsList
+POST  /createBatch/{id}/?                       Serials.createBatch
+
+
+POST  /createSerials                            Serials.createOffer
+
+# Ofertas
+*  /offers                                      Offers.list
+GET   /offers/{id}/?                            Offers.create
+*     /application/offerslist/?                 Application.offersList
+POST  /createOffer                              Offers.createOffer
+POST  /createOffer/{id}/?                       Offers.createOffer
+
+# Master brokers
+*     /master-brokers/?                         Users.list
+*     /master-broker/{id}/?                     Users.create
+*     /application/userslist/?                  Application.usersList
+*     /application/brokers-list/{id}/?          Application.masterbrokersList
+POST  /createUser                               Users.createUser
+POST  /createUser/{id}/?                        Users.createUser
+
+# Brokers
+*     /brokers/?                                Brokers.list
+*     /brokers/{id}/?                           Brokers.list
+*     /brokers/{masterBrokerId}/create/?        Brokers.create
+*     /brokers/{masterBrokerId}/{brokerId}/?    Brokers.create
+*     /application/brokerslist/?                Application.brokersList
+*     /application/brokerslist/{id}/?           Application.brokerShow
+POST  /createBroker                             Brokers.createBroker
+POST  /createBroker/{id}/?                      Brokers.createBroker
+
+# Destinos
+*     /destinations/?                           Destinations.list
+*     /destinations/{id}/?                      Destinations.create
+POST  /createDestination                        Destinations.createDestination
+POST  /createDestination/{id}/?                 Destinations.createDestination
+
+# Hoteles
+
+*     /hotels/?                                         Hotels.list
+*     /hotels/{id}/?                                    Hotels.create
+POST   /application/deleteImghotel/{id}/{token}/?       Application.hotelDelete
+POST  /createHotel                                      Hotels.createHotel
+POST  /createHotel/{id}/?                               Hotels.createHotel
+
+# Campañas
+GET   /campaigns/?                              Campaigns.list(boolean successfullyCreated : true)
+POST  /campaigns                                Campaigns.list
+POST  /createCampaign                           Campaigns.createCampaign
+POST  /createConfigImage                        Campaigns.createConfigImage
+GET   /campaigns/{id}/?                         Campaigns.create
+GET   /application/campaignslist/?              Application.campaignsList
+GET   /application/campaignslist/{id}           Application.campaignsList
+
+*   /campaigns-masterbroker/{id_master}/?     Campaigns.create
+
+GET   /application/offers/search                Application.offersSearch
+GET   /application/certCustomer/search          Application.certCustomerSearch
+GET   /application/certconfiglist/{id}/?        Application.certconfigList
+
+# Cert Images
+*     /ecerts/?                                 Ecert.list
+
+#Inventory
+*     /application/inventorylist/{id}/?         Application.inventoryList
+*     /application/campaignsearch/?             Application.campaignsSearch
+
+# Map static resources from the /app/public folder to the /public path
+*     /public/                                  staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

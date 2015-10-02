@@ -1,0 +1,85 @@
+#{extends 'main.html' /}
+#{set title:'Usuarios' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
+<link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
+#{/set}
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+*{<script src="/public/javascripts/libs/app.js"></script>}*
+<script>
+$(document).ready(function() {
+    $('#master-brokers-datatable').dataTable({
+        "processing": true,
+        "serverSide": true,
+        "ajax":'/application/userslist',
+        "columnDefs": [
+            {
+                "targets":0,
+                "render": function (td, cellData, rowData, row, col) {
+                    return  '<a href="/master-broker/' + rowData.id + '">' + rowData.company+ '</a>';
+                }
+            },
+        #{secure.check 'ListarBroker'}
+            { "targets": 5,
+                "render":function(td, cellData, rowData, row, col){
+                    var view="";
+
+                    view= '<a href="/brokers/' + rowData.id + '">View Brokers</a>';
+                    return  view;
+                }
+            }
+        #{/secure.check}
+        ],
+        "columns": [
+            { "data": "company","title":"Company"  },
+            { "data": "responsablename","title":"Responsable" },
+            { "data": "username","title":"Username", bSortable: false },
+            { "data": "email","title":"Email", bSortable: false },
+            { "data": "campaign","title":"Campaigns", bSortable: false },
+            { "data": "id","title":"Brokers", bSortable: false }
+        ],
+        "order": [[ 3, "desc" ]]
+
+    });
+});
+</script>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        #{if successfullyCreated}
+            <div class="alert alert-success alert-dismissible " role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Well done!</strong> You successfully created the master broker <strong><a href="/master-broker/${id}">${name}</a></strong>
+            </div>
+        #{/if}
+        #{if successfullyUpdated}
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                You successfully updated the master broker <strong><a href="/master-broker/${id}">${name}</a></strong>
+            </div>
+        #{/if}
+        <div class="col-lg-10">
+            <div class="row">
+                <h1>Master brokers</h1>
+            </div>
+        </div>
+        #{secure.check 'CrearMasterBroker'}
+        <div class="col-lg-2">
+            <div class="row">
+                    <a href="/users/create"  class="btn btn-sm btn-primary pull-right top-separation">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    &nbsp;New Master Broker
+                </a>
+            </div>
+        </div>
+        #{/secure.check}
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <table id="master-brokers-datatable" class="table table-striped table-bordered dataTable" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;"></table>
+    </div>
+</div>
+<!-- /.col-lg-12 -->

@@ -1,0 +1,175 @@
+#{extends 'main.html' /}
+#{set title:'New Master Broker' /}
+<link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+#{/set}
+#{set 'moreScripts'}
+<script src="/public/javascripts/vendor/masked-input/jquery.maskedinput.js"></script>
+    <script src="/public/javascripts/form.validation.js"></script>
+    <script src="/public/javascripts/users/create.js"></script>
+#{/set}
+<script>
+    $(document).ready(function() {
+        $("#countries").on('change', function() {
+            var country=$(this).val();
+            load_states(country);
+        });
+        $("#phone").mask("(999) ?999-9999");
+    #{if editMode}
+        $("#redirect input[name=mode]").val("edit");
+    #{/if}
+    #{else}
+        load_countries();
+    #{/else}
+    });
+
+</script>
+
+#{form @Users.list(), method:'POST', id:'redirect'}
+<input name="name" type="hidden" value="" />
+<input name="id" type="hidden" value="" />
+<input type="hidden" name="mode" value="create" />
+#{/form}
+<input id="id-value" type="hidden" value="${id}"/>
+<input id="mode" type="hidden" value="${ editMode ? "edit" : "create" }"/>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <h1>
+                    New Master Broker
+                </h1>
+                <div class="alert alert-danger alert-dismissible oculto" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading" id="users-panel-title">
+                Create a new master broker and add them to the system
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <form id="user-form" role="form" action="" method="post">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Name (Responsible)*</label>
+                                <input id="name" type="text" name="name" class="form-control" data-required="true" data-length="2" maxlength="255" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input id="email" type="email" name="email" class="form-control" data-required="true" data-length="2" maxlength="150"  />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Company*</label>
+                                <input id="company" type="text" name="company" class="form-control" data-required="true" data-length="2" maxlength="255" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Invoice Address</label>
+                                <input id="billing" type="text" name="billing" class="form-control"  maxlength="255" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Phone*</label>
+                                <input id="phone" type="phone" name="phone" class="form-control phone" data-required="true" data-length="10" />
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Country*</label>
+                                <select id="countries" name="countries" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>State*</label>
+                                <select id="states" name="states" class="form-control"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>City</label>
+                                <input id="city" type="text" name="city" class="form-control" maxlength="255" />
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Username*</label>
+                                <input id="username" type="text" name="username" class="form-control" data-required="true" #{if editMode} readonly  #{/if}data-length="2" maxlength="16" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="hidden" name="pass_oculto" value="" id="pass_oculto" />
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" id="password" class="form-control" #{if !editMode}data-required="true" data-length="6"#{/if}  maxlength="16"/>
+                                #{if editMode}
+                                    <em>If you would like to change the password type a new one. Otherwhise leave this blank.</em>
+                                #{/if}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pull-right">
+                            <div class="form-group">
+                                <label>Repeat Password</label>
+                                <input type="password" name="repeat-password" id="repeat-password" class="form-control" #{if !editMode}data-required="true" data-length="6"#{/if} maxlength="16" />
+                                #{if editMode}
+                                <em>Type your new password again.</em>
+                                #{/if}
+                            </div>
+                        #{if editMode}
+                            <div id="campaigns">
+                                <h4>Campaigns</h4>
+                                <ul></ul>
+                                <p></p>
+                            </div>
+                        #{/if}
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-sm-12">
+                        #{if !editMode}
+                            #{secure.check 'CrearBroker'}
+                            <input type="submit" id="submit-save" class="btn btn-primary" value="Save">&nbsp;
+                            #{/secure.check}
+                        #{/if}
+
+                        #{if brokerId }
+                            #{secure.check 'EditarMasterBroker'}
+                                <input type="submit" id="submit" class="btn btn-primary" data-url="prueba" value="Save
+                                #{if !editMode} and create campaign#{/if}">
+                            &nbsp; or
+                            #{/secure.check}
+                        #{/if}
+                        #{else }
+                            #{secure.check 'CrearMasterBroker'}
+                                <input type="submit" id="submit" class="btn btn-primary" data-url="prueba" value="Save
+                                #{if !editMode} and create campaign#{/if}">
+                            &nbsp; or
+                            #{/secure.check}
+                        #{/else}
+                            <a href="/master-brokers" class="btn">Cancel</a>
+                    </div>
+                </form>
+            </div>
+            <!-- /.row (nested) -->
+        </div>
+        <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+</div>
+</div>

@@ -1,0 +1,97 @@
+#{extends 'main.html' /}
+#{set title:'New User' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+#{/set}
+
+#{set 'moreScripts'}
+<script src="/public/javascripts/form.validation.js"></script>
+<script src="/public/javascripts/brokers/create.js"></script>
+#{/set}
+
+<form action="/brokers/${masterBrokerId}"  method='POST' id='redirect'>
+    <input name="id" type="hidden" value="${brokerId}" />
+    <input id="name" name="name" type="hidden" value="" />
+    <input id="mode" type="hidden" name="mode" value="#{if editMode}edit#{/if}#{else}create#{/else}"/>
+</form>
+
+<input id="id-value" type="hidden" value="${brokerId}"/>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <h1>
+                    New broker
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading" id="brokers-panel-title">
+                Create a new broker
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form id="broker-form" role="form" action="" method="post">
+                            <input id="master" name="master" type="hidden" value="${masterBrokerId}"/>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input id="broker-name" type="text" name="broker-name" class="form-control" data-required="true" data-length="2" />
+                            </div>
+                            <div class="form-group">
+                                <label>Email address</label>
+                                <input type="email" name="broker-email" id="broker-email" class="form-control"data-required="true" data-length="2" />
+                            </div>
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input id="broker-brokerName" name="username" type="text" #{if editMode} readonly  #{/if} data-required="true" class="form-control" data-required="true" data-length="2" />
+                            </div>
+                            <input id="pass_oculto" name="pass_oculto" value="" type="hidden" />
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" id="password" class="form-control" />
+                            #{if editMode}
+                                <em>If you would like to change the password type a new one. Otherwhise leave this blank.</em>
+                            #{/if}
+                            </div>
+                            <div class="form-group">
+                                <label>Repeat Password</label>
+                                <input type="password" name="repeat-password" id="repeat-password" class="form-control" />
+                                #{if editMode}
+                                    <em>Type your new password again.</em>
+                                #{/if}
+                                <div class="form-group">
+                                    <label>Campaign</label>
+                                    <select class="form-control" name="campaigns" id="campaigns"></select>
+                                    *{<input type="text" name="campaigns" id="campaigns" class="form-control" />}*
+                                </div>
+                            </div>
+                            #{if brokerId }
+                                #{secure.check 'EditarBroker'}
+                                    <input type="submit" id="submit" class="btn btn-primary" value="Save">&nbsp; or
+                                #{/secure.check}
+                            #{/if}
+                            #{else }
+                                #{secure.check 'CrearBroker'}
+                                    <input type="submit" id="submit" class="btn btn-primary" value="Save">&nbsp; or
+                                #{/secure.check}
+                            #{/else}
+                            <a href="/brokers/${masterBrokerId}" class="btn">Cancel</a>
+                        </form>
+                    </div>
+                    <!-- /.col-lg-6 (nested) -->
+
+                </div>
+                <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>

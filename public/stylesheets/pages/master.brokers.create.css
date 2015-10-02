@@ -1,0 +1,13 @@
+.certmgr-field-required{
+    font-style: italic;
+    color: #a40000;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.form-group em {
+    color: #666;
+    display: inline-block;
+    margin: 3px;
+    font-size: 14px;
+    min-width: 150%;
+}

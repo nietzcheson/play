@@ -1,0 +1,186 @@
+    #{extends 'main.html' /}
+    #{set title:'Serials' /}
+
+    #{set 'moreStyles'}
+    <link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
+    <link rel="stylesheet" href="/public/stylesheets/pages/serials.list.css" />
+    <link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="/public/stylesheets/fonts.css" />
+    #{/set}
+    <script src="/public/stylesheets/vendor/sb-admin-2/bower_components/datatables/media/js/jquery.dataTables.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script>
+        $(document).ready(function() {
+            #{if idCampaign!= null }
+            var typeFolio="";
+            $.ajax({
+                url:  '/application/campaignslist/${idCampaign}',
+                type:'GET',
+                success:function(result){
+                    var result =  $.parseJSON(result);
+                    console.log(result);
+                    #{if success}
+                        $("#campaignPlaceHolder").html(result.name);
+                    #{/if}
+                        $("#campaign-name").html(result.name);
+                    if(result.typeFolio == 2) {
+                        console.log("result.typeFolio es igual a>>>" + result.typeFolio + "\n Por lo tanto Type es \"Generic\"");
+                        typeFolio = "Generic"
+                    } else if(result.typeFolio == 1) {
+                        console.log("result.typeFolio es igual a>>>" + result.typeFolio + "\n Por lo tanto Type es \"Unique\"");
+                        typeFolio = "Unique"
+                    }
+                },
+                error: function(result){
+                    alert("error" + result);
+                },
+                statusCode: {
+                    500: function() {
+                        alert("status 500")
+                    }
+                }
+            });
+
+            var dataSet = new Array();
+            $.ajax({
+                url:  '/application/serialslist/${idCampaign}',
+                type:'GET',
+                cache: false,
+                success:function(result){
+                    var result =  $.parseJSON(result);
+                    for(var i=0; i < result.elements.length; i++) {
+                        var content = new Array(
+                                result.elements[i].quantity,
+                                typeFolio,
+                                new Date(result.elements[i].fechaCreacion).toDateString(),
+                                '<a target="_blank" class="flaticon-microsoft-excel" href="${urlservicio}/certificates/'+result.elements[i].id+'/getFolios"> Excel</a>'
+                        );
+                        dataSet.push(content);
+                    } //Termina el For
+
+                    $('#serials-datatable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+
+                    $('#serials-datatable').dataTable( {
+                        "data": dataSet,
+                        "columns": [
+                            { "title": "Number", bSortable: false },
+                            { "title": "Type", bSortable: false },
+                            { "title": "Created", bSortable: false },
+                            { "title": "Excel", bSortable: false }
+                        ],
+                        "oLanguage": {
+                            "sEmptyTable":     'This campaign does not have any serial number.'
+                        },
+                        "bFilter": false
+                    } );
+                },
+                error: function(result){
+                    alert(result);
+                },
+                statusCode: {
+                    500: function() {
+                        alert("status 500")
+                    }
+                }
+            });
+        #{/if}
+        #{else}
+            $(document).ready(function() {
+                //var dataSet = new Array();
+                var context;
+
+                $('#serials-datatable').dataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax":'/application/inventorylist',
+                    "columnDefs": [
+                        {
+                            "targets":0,
+                            "render": function (td, cellData, rowData, row, col) {
+                                return  '<a href="/serials/batch/' + rowData.id + '">' + rowData.id + '</a>'; }
+                        },
+                        {
+                            "targets":2,
+                            "render": function (td, cellData, rowData, row, col) {
+                                return rowData.quantity; }
+                        },
+                        { "targets": 1,
+                            "render":function(td, cellData, rowData, row, col){
+                                return new Date(rowData.createdDate).toDateString();
+                            }
+                        },
+                        {
+                            "targets":3,
+                            "render": function (td, cellData, rowData, row, col) {
+                                return '<a target="_blank" class="flaticon-microsoft-excel" href="${urlservicio}/inventory/'+rowData.id+'/export/"> Excel</a>';
+                            }
+                        }
+
+                    ],
+                    "columns": [
+                        { "data": "name","title":"Folio"  },
+                        { "data": "dateUpdated","title":"Date" },
+                        { "data": "quantity","title":"Amount", bSortable: false },
+                        { "data": "","title":"Excel", bSortable: false }
+                    ],
+                    "order": [[ 1, "desc" ]]
+
+                });
+            });
+        #{/else}
+        });
+
+
+    </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="modal-dialog">
+            <div class="ajaxloader1"></div>
+        </div>
+    </div>
+    <div id="download-container" class="hidden"></div>
+    *{<iframe src="http://10.194.21.232:9010/v1/certificates/218543/getFolios" frameborder="0"></iframe>}*
+    <div class="col-lg-12 page-header">
+        <div class="row">
+            #{if success}
+                <div class="alert alert-success alert-dismissible " role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Well done!</strong> You successfully added ${QTYofSerials} serial numbers to  <strong id="campaignPlaceHolder">${campaignName}</strong>  campaign
+                </div>
+            #{/if}
+            <div class="col-lg-10">
+                <div class="row">
+                #{if idCampaign!= null }
+                    <h1>Serials of Campaign: <span id="campaign-name"></span></h1>
+                #{/if}
+                #{else}
+                    <h1>Inventory</h1>
+                #{/else}
+                </div>
+            </div>
+            #{secure.check 'CrearInventario'}
+            <div class="col-lg-2">
+                <div class="row">
+                    <a href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create" class="btn btn-sm btn-primary pull-right top-separation">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        &nbsp;Add serial numbers
+                    </a>
+                </div>
+            </div>
+            #{/secure.check}
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="dataTable_wrapper">
+                <table class="table table-striped table-bordered table-hover" id="serials-datatable">
+                    <tr class="odd gradeX">
+                        <td>Processing...</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->

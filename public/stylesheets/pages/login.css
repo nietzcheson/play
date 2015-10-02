@@ -1,0 +1,18 @@
+body{
+    background: #8792ad;
+}
+
+.login-panel{
+    background: #eff0f4;
+    border-color: #eff0f4;
+}
+
+.panel-heading{
+    background: #eff0f4!important;
+    border-color: #eff0f4!important;
+}
+
+.panel-heading .panel-title{
+    text-align: center;
+    font-weight: bold;
+}

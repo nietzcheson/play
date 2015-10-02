@@ -1,0 +1,29 @@
+#{extends 'access-layout.html' /}
+#{set title:'Recuperar contraseña' /}
+<link rel="stylesheet" href="/public/stylesheets/pages/login.css">
+
+<div class="panel-heading">
+    <h3 class="panel-title">
+        ¿Olvidaste tu contraseña?
+    </h3>
+</div>
+<div class="panel-body">
+    <form role="form" action="/successful-recovery" method="post">
+        <p>Ingresa el email con el que te registraste y te ayudaremos.</p>
+    <fieldset>
+
+    <div class="form-group">
+        <input class="form-control" placeholder="Email" name="email" id="email" type="email" autofocus>
+    </div>
+    <!-- Change this to a button or input when using this as a form -->
+    <button class="btn btn-primary pull-right" >
+        <i class="glyphicon glyphicon-envelope"></i>
+        &nbsp;
+        Enviar email
+    </button>
+    </fieldset>
+    <div class="checkbox">
+    ¿Ya lo recordaste? Entra e <a href="/login">Inicia sesión</a>
+    </div>
+    </form>
+</div>

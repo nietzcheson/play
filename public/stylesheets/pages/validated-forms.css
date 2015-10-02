@@ -1,0 +1,23 @@
+.data_error span {
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    color: #B50202;
+}
+.data_error label {
+    color: #790000;
+}
+
+.data_error input, .data_error input, .data_error .selectize-input, .data_error textarea {
+    background-color: #fdd;
+    border: #F4BFBF solid 1px;
+}
+.ms-choice {
+    border: none;
+    height: 100%;
+}
+.ms-parent {
+    padding: 0;
+
+}

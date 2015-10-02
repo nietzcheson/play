@@ -1,0 +1,325 @@
+#{extends 'main.html' /}
+#{set title:'Marketing for Sunset' /}
+<link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/offers.create.css">
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+<link rel="stylesheet" href="/public/stylesheets/fonts.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" type="text/css" />
+#{/set}
+#{set 'moreScripts'}
+<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="/public/javascripts/form.validation.js"></script>
+<script src="/public/javascripts/vendor/confirm-dialog/jquery.easy-confim-dialog.js"></script>
+<script type="text/javascript" src="/public/javascripts/hotels/create.js"></script>
+#{/set}
+<script>
+    $(document).ready(function(){
+
+        $("#addimg").submit(function(e){
+            e.preventDefault();
+            var val = $("#image").val();
+            if (!val.match(/(?:jpg|jpeg|PNG|JPG|JPEG|png)$/)) {
+                showError("File path is not an image!");
+            }else{
+                var id=$("#id-value").val();
+                var url='${url}'+'/hotels/'+id+'/images';
+                var button=$(this).find(".btn");
+                $(button).attr("disabled", true).val("creating....");
+                $.ajax( {
+                    url: url,
+                    type: 'POST',
+                    data: new FormData( this ),
+                    success: function(msg){
+                        var result = msg;
+                        if(result.message != undefined){
+                            showError(result.message);
+                        }else{
+                            $(button).attr("disabled", false).val("Add Picture");
+                            $("#images").html("");
+                            show_images(result.images);
+                        }
+                    }, error: function(result){
+                        showError(result.responseJSON.message);
+                    },
+                    processData: false,
+                    contentType: false
+                } );
+            }
+        });
+        #{if editMode}
+            $.ajax({
+                url:  '/TableList',
+                data:{'url': '/hotels/${id}' },
+                type: 'POST',
+                success:function(result){
+                    var result = JSON.parse(result);
+                    console.log(result);
+                    $("#nombre-hotel").html(Decode(result.name));
+                    $("#hotel-name").val(Decode(result.name));
+                    $("#hotel-city").val(Decode(result.city));
+                    $("#hotel-zip").val(Decode(result.zipCode));
+                    $("#hotel-address").val(Decode(result.address));
+                    lim=$("#hotel-address").attr("maxlength");
+                    $("#hotel-address").closest(".form-group").find("#cont").html(lim-count_text($("#hotel-address")));
+                    if(result.destination)
+                        load_catalog("/destinations", $("#hotel-destination"), result.destination.id);
+                    else
+                        load_catalog("/destinations", $("#hotel-destination"));
+                    $("#hotel-url").val(Decode(result.website));
+                    console.log(result.images);
+                    show_images(result.images);
+
+                    $.each(result.translations, function( index, value ) {
+                        switch (value.language.code) {
+                            case "es":
+                                ind=1;
+                                break;
+                            case "pt-br":
+                                ind=2;
+                                break;
+                            case "en":
+                                ind=0;
+                                break;
+                        }
+                        $(".description-translation").eq(ind).val(Decode(value.websiteDescription));
+                        lim=$(".description-translation").eq(ind).attr("maxlength");
+                        $(".description-translation").eq(ind).closest(".form-group").find("#cont").html(lim-count_text( $(".description-translation").eq(ind)));
+                    });
+
+                    $('.input-tags').selectize({
+                        plugins: ['remove_button'],
+                        persist: false,
+                        create: true,
+                        onDelete: function(values) {
+                            return confirm('¿Realmente deseas eliminar este elemento?');
+                        }
+                    });
+                    $("#redirect input[name=hotelName]").val(Decode(result.name));
+                },
+                error: function(result){
+                    showError(result);
+                }
+            });
+            $("input[name=mode]").val("edit");
+        #{/if}
+        #{else}
+            load_catalog("/destinations", $("#hotel-destination"));
+            $('.input-tags').selectize({
+                plugins: ['remove_button'],
+                persist: false,
+                create: true,
+                onDelete: function(values) {
+                    return confirm('¿Realmente deseas eliminar este elemento?');
+                }
+            });
+        $(".tabs-main li:eq(2)").hide();
+        #{/else}
+    });
+</script>
+<input id="isEdit" type="hidden" value="${id}" />
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <h1>
+                #{if editMode}
+                    Edit hotel - <span id="nombre-hotel"></span>
+                #{/if}
+                #{else}
+                    New Hotel
+                #{/else}
+                </h1>
+                <div class="alert alert-danger alert-dismissible oculto" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+<div class="col-lg-12">
+<div class="panel with-nav-tabs panel-default">
+<div class="panel-heading">
+    <ul class="nav nav-tabs tabs-main">
+        <li class="active"><a href="#tab1default" data-toggle="tab">General</a></li>
+        <li><a href="#tab2default" data-toggle="tab">Content</a></li>
+        <li><a href="#tab3default" data-toggle="tab">Pictures</a></li>
+    </ul>
+</div>
+        <div class="panel-body">
+        <div class="tab-content">
+            <!-- Contenido de la "pestaña 1" -->
+
+                <div class="tab-pane fade in active" id="tab1default">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" id="form-hotel-part">
+                                <div class="form-group">
+                                    <label>Name*</label>
+                                    <input id="hotel-name" class="form-control" type="text" data-required="true" data-length="2" maxlength="100" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label>Destination</label>
+                                            <select class="form-control" id="hotel-destination"></select>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div><br />
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>City*</label>
+                                            <input id="hotel-city" class="form-control" type="text"  data-required="true" data-length="2" maxlength="200" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Zip code*</label>
+                                            <input id="hotel-zip" class="form-control" type="text"  data-required="true" data-length="2" maxlength="10" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Web Page*</label>
+                                    <input id="hotel-url" class="form-control" type="text"  data-required="true" data-length="2" name="hotel-url"  maxlength="50" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    *{<textarea id="hotel-address" maxlength="250" class="form-control" rows="3" style="max-width: 200%"  data-required="true" data-length="2"></textarea>}*
+                                    <div class="clearfix"></div>
+                                    <div class="row">
+                                        <div class="col-sm-11">
+                                            <textarea class="form-control col-sm-10" maxlength="250" id="hotel-address" rows="3" data-length="2"/></textarea>
+                                        </div>
+                                        <div id="cont" class="col-sm-1">0</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Contenido de la "pestaña 2" -->
+                <div class="tab-pane fade" id="tab2default">
+                    <div class="panel with-nav-tabs panel-default">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tabterms1default" data-toggle="tab" aria-expanded="true" id="english-tab">English</a></li>
+                                <li class=""><a href="#tabterms2default" data-toggle="tab" aria-expanded="false" id="spanish-tab">Spanish</a></li>
+                                <li class=""><a href="#tabterms3default" data-toggle="tab" aria-expanded="false" id="portuguese-tab">Portuguese</a></li>
+                            </ul>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in tabterms" id="tabterms1default">
+                                    <div class="tab-content" id="english">
+                                        <!-- Contenido de la "pestaña English" -->
+                                        <div class="tab-pane fade in active" id="language-tab1">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                *{<textarea class="form-control description-translation" rows="3" maxlength="250"></textarea>}*
+                                                <div class="clearfix"></div>
+                                                <div class="row">
+                                                    <div class="col-sm-11">
+                                                        <textarea class="form-control col-sm-10 description-translation" maxlength="4000" id="hotel-address" rows="3" data-length="2"/></textarea>
+                                                    </div>
+                                                    <div id="cont" class="col-sm-1">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Contenido de la "pestaña 2" -->
+                                <div class="tab-pane fade tabterms" id="tabterms2default">
+                                    <div class="tab-content" id="spanish">
+                                        <div class="tab-pane fade in active" id="language-tab2">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                *{<textarea class="form-control description-translation" rows="3" maxlength="250"></textarea>}*
+                                                <div class="clearfix"></div>
+                                                <div class="row">
+                                                    <div class="col-sm-11">
+                                                        <textarea class="form-control col-sm-10 description-translation" maxlength="4000" id="hotel-address" rows="3" data-length="2"/></textarea>
+                                                    </div>
+                                                    <div id="cont" class="col-sm-1">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Contenido de la "pestaña 3" -->
+                                <div class="tab-pane fade tabterms" id="tabterms3default">
+                                    <div class="tab-content" id="portuguese">
+                                        <div class="tab-pane fade in active" id="language-tab3">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                *{<textarea class="form-control description-translation" rows="3" maxlength="250"></textarea>}*
+                                                <div class="clearfix"></div>
+                                                <div class="row">
+                                                    <div class="col-sm-11">
+                                                        <textarea class="form-control col-sm-10 description-translation" maxlength="4000" id="hotel-address" rows="3" data-length="2"/></textarea>
+                                                    </div>
+                                                    <div id="cont" class="col-sm-1">0</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+
+
+            <!-- Contenido de la "pestaña 3" -->
+            <div class="tab-pane fade" id="tab3default">
+                <form method="post"  id="addimg">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <div class="col-sm-9 col-lg-9">
+                                <input type="file" name="image" class="form-control" id="image"/>
+                            </div>
+                            <input value="Add Picture" type="submit" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+                 <div class="clearfix"></div>
+                <br/>
+                <div id="images"></div>
+                <div class="clearfix"></div>
+            </div>
+            </div>
+        <form id="hotel-form">
+            <div style="display: inline-block; margin-top: 10px;">
+            #{if id }
+                #{secure.check 'EditarHotel'}
+                    <input id="submit" value="Save" type="submit" class="btn btn-primary" />&nbsp;or
+                #{/secure.check}
+            #{/if}
+            #{else }
+                #{secure.check 'CrearHotel'}
+                    <input id="submit" value="Save" type="submit" class="btn btn-primary" />&nbsp;or
+                #{/secure.check}
+            #{/else}
+                <a href="/hotels" class="btn">Cancel</a>
+            </div>
+        </form>
+</div>
+<!-- /.row (nested) -->
+</div>
+<!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+</div>
+</div>
+
+#{form @Hotels.list(), method:'POST', id:'redirect'}
+<input type="hidden" name="mode" value="create" />
+<input id="id-value" name="id-value" type="hidden" value="${id}"/>
+<input name="hotelName" type="hidden" value="" />
+<input id="country-code" type="hidden" value="" />
+#{/form}

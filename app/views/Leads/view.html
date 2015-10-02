@@ -1,0 +1,706 @@
+#{extends 'main.html' /}
+#{set title:'New Lead' /}
+<link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">
+<link rel="stylesheet" href="/public/stylesheets/animate.min.css">
+<link rel="stylesheet" href="/public/stylesheets/bootstrap-datepicker.min.css"/>
+#{/set}
+<script src="/public/javascripts/leads/view.js"></script>
+<script src="/public/javascripts/timeago.js"></script>
+<script src="/public/javascripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/public/javascripts/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function (){
+        $(document).ajaxStop(function () {
+
+        });
+        load_catalog("/noteTypes?ignore_dept=10", $("#tipo_nota"));
+        //Cargar usuarios
+        id=$("#user");
+        $("#departamento, #user").append($('<option>', {
+            value: "",
+            html : ""
+        }));
+
+        $.ajax({
+            url:  '/TableList',
+            type:'POST',
+            data:{'url': '/users?group_username=&group=&ignore_username=?'},
+            success:function(result){
+                var result = JSON.parse(result);
+                $.each(result, function (index, value) {
+                    id.append($('<option>', {
+                        value: value.id,
+                        html : value.id
+                    }));
+                });
+            },
+            error: function(result){
+                showError(result);
+            }
+        });
+//        //Cargar departamentos
+        $.ajax({
+            url:  '/TableList',
+            type:'POST',
+            data:{'url': '/areas?for_callcenter=true'},
+            success:function(result){
+                var result = JSON.parse(result);
+                $.each(result, function (index, value) {
+                    $("#departamento").append($('<option>', {
+                        value: value.code,
+                        html : value.name
+                    }));
+                });
+            },
+            error: function(result){
+                showError(result);
+            }
+        });
+
+        $( document ).on( "change", "#departamento", function(e){
+            var group= $(this).val();
+            $.ajax({
+                url:  '/TableList',
+                type:'POST',
+                data:{'url': '/users?group_username=&group='+group+'&ignore_username=?'},
+                success:function(result){
+                    var result = JSON.parse(result);
+                    $("#user").html("").append($('<option>', {
+                        value: "",
+                        html : ""
+                    }));
+                    $.each(result, function (index, value) {
+                        $("#user").append($('<option>', {
+                            value: value.id,
+                            html : value.id
+                        }));
+                    });
+                },
+                error: function(result){
+                    showError(result);
+                }
+            });
+        });
+
+        $( document ).on( "change", "#follow_up", function(e){
+            if($(this).is(":checked")) {
+                $(".follow_up").show();
+                var height= $( document ).height();
+                $(".modal-backdrop").css({'height': height+'px'});
+            }else{
+                $(".follow_up").hide();
+            }
+        });
+
+        $('#myTabs a').click(function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+        //Formato fecha
+        $('#fecha_nota').datepicker({
+            format: 'mm/dd/yyyy'
+        });
+        var idValue = $("#id-value").val();
+        if(idValue != "") {
+            var d = new Date();
+            var my_date_format = function(input){
+                var d = new Date(Date.parse(input.replace(/-/g, "/")));
+                var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                var date = d.getDay().toString() + " " + month[d.getMonth().toString()] + ", " +    d.getFullYear().toString();
+                var time = d.toLocaleTimeString().toLowerCase().replace(/([\d]+:[\d]+):[\d]+(\s\w+)/g, "$1$2");
+                return (date + " " + time);
+
+            };
+            //Cargar lead
+            $.ajax({
+                url: '/application/leadslist/' + idValue,
+                type: 'GET',
+                success: function (result) {
+                    var result = $.parseJSON(result);
+                    console.log(result);
+                    //  Cargar personal information
+                    if(result.title){
+                        if(result.title.id==2){
+                            $(".name").find("span").removeClass("flaticon-office-worker2").addClass("flaticon-woman139");
+                        }
+                    }
+                    $(".name").append(result.firstName+" "+result.lastName);
+                    var content=$(".personal-information").find(".ibox-content");
+                    if(result.country){
+                        var state = (result.state == null) ? "" :  result.state.name+", ";
+                        var city = (result.city == null) ? "" : Decode(result.city)+", ";
+                        var country = (result.country == null) ? "" : result.country.name;
+                        country = $("<p/>", {'text': city+state+country});
+                        content = content.append(country);
+                    }
+                    if (result.address) {
+                        $(".flaticon-book269").attr("title", "Address: "+result.address)
+                    }else{
+                        $(".flaticon-book269").hide();
+                    }
+                    if (result.email) {
+                        $(".flaticon-email131").attr("title", result.email)
+                    }else{
+                        $(".flaticon-email131").hide();
+                    }
+                    if (result.phone1) {
+                        $(".flaticon-phone21").attr("title", 'Home Phone: '+result.phone1)
+                    }else{
+                        $(".flaticon-phone21").hide();
+                    }
+                    if (result.phone2) {
+                        $(".flaticon-phone72").attr("title", 'Work Phone: '+result.phone1)
+                    }else{
+                        $(".flaticon-phone72").hide();
+                    }
+                    if (result.phone3) {
+                        strong = $("<strong/>", {'text': 'Cellphone: '});
+                        address = $("<p/>", {'text': result.phone3, 'id': 'cellphone'}).prepend(strong);
+                        content = content.append(address);
+                    }else{
+                        $(".flaticon-smartphone24").hide();
+                    }
+                    if (result.age) {
+                        strong = $("<strong/>", {'text': 'Age: '});
+                        occupation = $("<p/>", {'text': result.age}).prepend(strong);
+                        content = content.append(occupation);
+                    }
+                    if (result.occupation) {
+                        strong = $("<strong/>", {'text': 'Occupation: '});
+                        occupation = $("<p/>", {'text': Decode(result.occupation)}).prepend(strong);
+                        content = content.append(occupation);
+                    }
+                    if (result.maritalStatus) {
+                        strong = $("<strong/>", {'text': 'Marital Status: '});
+                        maritalStatus = $("<p/>", {'text': result.maritalStatus.civilEng}).prepend(strong);
+                        content = content.append(maritalStatus);
+                    }
+                    if (result.featuresesLst.length > 0) {
+                        var ul = $("<ul/>", {'class': 'no-bullet'});
+                        $.each(result.featuresesLst, function (index, value) {
+                            ul.append($("<li/>", {'text': value.customerFeaturesId.features.name}));
+                        });
+                        strong = $("<strong/>", {'text': 'Customer is interted in:'});
+                        maritalStatus = $("<p/>").append(strong, ul);
+                        content = content.append(maritalStatus);
+                    }
+                    callcenter=1000;
+                    if(result.callCenter)
+                        callcenter=result.callCenter.id;
+                    $(".add-sale").attr("href", "${id}/payments/"+callcenter+"/new")
+                    if (result.saleSet) {
+                        var offer, vendor, certificate, booking, ahref, cont="";
+                        var sale=$("#sale");
+                        $.each(result.saleSet, function (index, value) {
+                            var div=$("<div/>", {'class': 'item-sale'});
+                            offer, vendor, certificate, booking="";
+                            if(value.campaign){
+                                if(value.campaign.description){
+                                    campaign=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#campaign', 'text': 'View Campaign'});
+                                    div=div.append(campaign);
+                                    p_campaign=$("<p/>", {'class': 'oculto campaign', 'text': Decodehtml(value.campaign.description)});
+                                    div=div.append(p_campaign);
+                                }
+                                if(value.campaign.offer){
+                                    tam= value.campaign.offer.translations.length;
+                                    if(tam>0){
+                                        terms=Decodehtml(value.campaign.offer.translations[0].websiteTerms);
+                                        $.each(value.campaign.offer.translations, function(index, value){
+                                            if(value.language.code=="en" || index==tam)
+                                                terms=Decodehtml(value.websiteTerms);
+                                        });
+
+                                        if (terms != ""){
+                                            terms_a=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#terms', 'text': 'View Terms'});
+                                            div=div.append(terms_a);
+                                            p_terms=$("<p/>", {'class': 'oculto terms', 'text': terms});
+                                            div=div.append(p_terms);
+                                        }
+                                    }
+                                }
+                                if(value.campaign.name){
+                                    campaign= $("<strong/>",{'text': value.campaign.name});
+                                    div=div.append(campaign, "<br />");
+                                }
+                            }
+                            if(value.certifiateNumber){
+                                certificate= $("<small/>",{'text': value.certifiateNumber, 'class': 'text-muted'});
+                                div=div.append(certificate, "<br />", "<br />");
+                            }
+                            table=$("<table />", {'class': 'table'}).append($("<tbody />"));
+
+                            booking=$("<strong />",{'text': 'Booking Id: '});
+                            booking=$("<a/>", {'href': '/clients/'+idValue+'/payments/'+value.id+'/'+callcenter}).append(booking, value.id);
+                            td1=$("<td />").append(booking);
+
+                            date=$("<strong />",{'text': 'Date: '});
+                            date_text=new Date(value.saleDate);
+//                            alert(new Date(value.saleDate).getFullYear());
+                            td2=$("<td />").append(date, date_text.getDate()+"/"+date_text.getMonth()+"/"+date_text.getFullYear() );
+                            table=table.append($("<tr />").append(td1, td2));
+
+                            user=$("<strong />",{'text': 'User: '});
+                            td1=$("<td />").append(user, value.user);
+
+                            st=$("<strong />",{'text': 'Status: '});
+                            td2=$("<td />").append(st, value.status);
+                            table=table.append($("<tr />").append(td1, td2));
+
+//                            saldo=$("<strong />",{'text': 'Saldo: '});
+//                            td1=$("<td />", {'colspan': '2'}).append(saldo, "0");
+//                            table=table.append($("<tr />").append(td1));
+
+                            td1=$("<td />", {'colspan': '2', 'class':'text-right'});
+                            if(value.record){
+                                a_href=$("<a/>", {'title': 'Grabación', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href':'/intranet/record/${id}/'+value.id});
+                                a_href=a_href.append($("<span />", { 'class': 'flaticon-mic' }));
+                                td1=td1.append(a_href);
+                            }
+
+                            #{secure.check 'Archivos'}
+                            a_href=$("<a/>", {'title': 'Archivo Digital', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href': '${urlfile}/M4CArchivoDigital.jsp?idbook='+value.id+'&idcc='+value.idCallCenter+'&idcliente=${id}&area=C&iduser=${username}' });
+                            a_href=a_href.append($("<span />", { 'class': 'flaticon-file98' }));
+                            td1=td1.append(a_href);
+                            #{/secure.check}
+
+                            a_href=$("<a/>", {'title': 'Cancelar Venta', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href':'/intranet/cancel/${id}/'+value.id});
+                            a_href=a_href.append($("<span />", { 'class': 'flaticon-erase16' }));
+                            td1=td1.append(a_href);
+
+                            a_href=$("<a/>", {'title': 'Survey', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href':'/intranet/survey/${id}/'+value.id });
+                            a_href=a_href.append($("<span />", { 'class': 'flaticon-lists10' }));
+                            td1=td1.append(a_href);
+
+                            a_href=$("<a/>", {'title': 'Reservar', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href': '/intranet/reserve/${id}/'+value.id, 'target':'_blank' });
+                            a_href=a_href.append($("<span />", { 'class': 'flaticon-ring37' }));
+                            td1=td1.append(a_href);
+
+                            if(value.campaign.typeCertificate==2){
+                                var certificateType=get_certificate_type(value.campaign.id);
+                                if(certificateType){
+                                    a_href=$("<a/>", {'title': 'Carta de Compra', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
+                                    a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
+                                    td1=td1.append(a_href);
+                                }
+                            }
+
+                            a_href=$("<a/>", {'title': 'Customer Service', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href':'/intranet/customer/${id}/'+value.id});
+                            a_href=a_href.append($("<span />", { 'class': 'flaticon-call37' }));
+                            td1=td1.append(a_href);
+
+                            table=table.append($("<tr />").append(td1));
+                            div=div.append(table);
+                            sale.append(div);
+                            $('[data-toggle="tooltip"]').tooltip()
+                            $("#home").find(".sk-chasing-dots").remove();
+                        });
+                        sale.show();
+                    }
+                },
+                error: function (err) {
+                    showError("error" + err);
+                }
+            });
+
+            //Cargar notas
+            $.ajax({
+                url: "/application/notelist/",
+                type: 'POST',
+                data: {'client': '${id}'},
+                success: function(msg){
+                    result = JSON.parse(msg);
+                    console.log(result);
+                    if(result.message != undefined){
+                        showError("No existe el cliente");
+                    }else if(result.errors){
+                        showError("No existe el cliente");
+                    }else{
+                        $(".feed-activity-list").find("h5").remove();
+                        $(".feed-activity-list").find(".sk-chasing-dots").remove();
+                        if(result.length>0){
+                            $.each(result, function(index, value){
+                                element=$("<div/>", {'class':'feed-element'});
+                                //data-toggle="tooltip" data-placement="bottom" title="" class="flaticon-book269" data-original-title="Address: P.O. Box 113402, LA"
+                                span=$("<a/>", {'class':'flaticon-'+value.status +' pull-left', 'data-toggle':'tooltip', 'data-placement':'left', 'data-original-title':value.mood});
+                                date=new Date(value.date);
+                                timeago=jQuery.timeago(date);
+                                var d  = date.getDate()+1;
+                                var day = (d < 10) ? '0' + d : d;
+                                var m = date.getMonth() + 1;
+                                var month = (m < 10) ? '0' + m : m;
+                                var yy = date.getYear();
+                                var year = (yy < 1000) ? yy + 1900 : yy;
+                                date=day + "/" + month + "/" + year;
+                                small=$("<small/>", {'class':'pull-right', 'html': date+'<br/>'+timeago});
+                                strong=$("<strong/>", {'text': value.username+ " "});
+                                tam=value.description.split(/\s+/).length;
+                                if(tam>50){
+                                    div_more=$("<div/>");
+                                    input_more=$("<input />", {'type':'checkbox', 'class': 'read-more-state', 'id':'post-'+value.id});
+                                    words1 = value.description.split(/\s+/).slice(0,50).join(" ");
+                                    words2 = value.description.split(/\s+/).slice(50,tam).join(" ");
+                                    span_more=$("<span/>", {'class':'read-more-target', 'text': " "+words2});
+                                    p=$("<p/>", {'text': words1, 'class': 'read-more-wrap'}).append(span_more);
+                                    label_more=$("<label/>",{'for':'post-'+value.id, 'class':'read-more-trigger'});
+                                    p=div_more.append(input_more, p, label_more);
+                                }else{
+                                    p=$("<p/>", {'text': value.description});
+                                }
+                                follow="", special="";
+                                if(value.contactDate){
+                                    var contactdate = new Date(value.contactDate);
+                                    contactdate.setDate(contactdate.getDate() + 1);
+                                    follow='<small><strong>Follow up:</strong> '+contactdate.toDateString()+'</small><br/>';
+                                }if(value.specialReq){
+                                    special='<small><strong>Special Request:</strong> '+value.specialReq+'</small><br/>';
+                                }
+                                media_body=$("<div/>",{'class':'media-body'}).append(small, strong, value.type,'<br/>'+follow+special,p);
+                                $(".feed-activity-list").append(element.append(span, media_body));
+                            });
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }else {
+                            $(".feed-activity-list").append($("<h5/>", {'text':'No existen notas para este cliente'}));
+                        }
+                    }
+                }, error: function(result){
+                    showError(result.responseJSON.message);
+                }
+            });
+
+            //Cargar estados de animo
+            $.ajax({
+                url:  '/TableList',
+                type:'POST',
+                data:{'url': '/moods'},
+                success:function(result){
+                    var result = JSON.parse(result);
+                    console.log(result);
+                    $.each(result, function (index, value) {
+                        if(index==0)
+                            var div=$("<div/>", { 'class':'radio col-sm-2', 'style': 'margin-top:-5px'});
+                        else
+                            var div=$("<div/>", { 'class':'radio col-sm-2'});
+                        var span=$("<a/>", { 'class':'flaticon-'+value.code, 'data-toggle':'tooltip', 'data-placement':'bottom', 'data-original-title':value.name});
+                        var input=$("<input/>", { 'type':'radio', 'name':'optionsRadios', 'value': value.id, 'class':'moodcheck'});
+                        div=div.append($("<label/>").append(input, span));
+                        $("#face").append(div);
+                    });
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function(result){
+                    showError(result);
+                }
+            });
+
+            //Limpiar formulario para crear nota
+            $(".add_note").click(function(e){
+                $("#notas form").clearForm();
+                $("#optionsRadios-error, .alert-danger, .alert-success").remove();
+                $(".follow_up").hide();
+            });
+
+            //Guardar nota
+            $("#savenote").validate({
+                rules: {
+                    nota: {
+                        required: true,
+                        maxlength: 1400
+                    },requesicion: {
+                        maxlength: 150
+                    },tipo_nota: {
+                        required: true
+                    }, optionsRadios: {
+                        required: true
+                    }, user:{
+                        required: {
+                            depends: function(element){
+                                return $("#follow_up").is(":checked");
+                            }
+                        }
+                    }, fecha_nota:{
+                        required: {
+                            depends: function(element){
+                                return $("#follow_up").is(":checked");
+                            }
+                        }
+                    }
+                },
+                submitHandler: function(form) {
+                   data={
+                        mood: $(".moodcheck:checked").val(),
+                        nota: $("#nota").val(),
+                       requesicion: $("#requesicion").val(),
+                       type: $("#tipo_nota").val(),
+                       client: '${id}',
+                       follow_up: $("#follow_up").is(":checked"),
+                       user: $("#user").val(),
+                       date: $("#fecha_nota").val()
+                   }
+                    console.log(data);
+                    $.ajax({
+                        url:  '/createNote',
+                        type:'post',
+                        data:data,
+                        success:function(result){
+                            var result = JSON.parse(result);
+                            console.log(result);
+                            if(result.responsestatus==200){
+                                showModalSuccess($("#notas"), "Nota creada correctamente");
+                                element=$("<div/>", {'class':'feed-element'});
+                                span=$("<a/>", {'class':'flaticon-'+result.status +' pull-left', 'data-toggle':'tooltip', 'data-placement':'left', 'data-original-title':result.mood});
+                                date=new Date(result.date);
+                                timeago=jQuery.timeago(date);
+                                var d  = date.getDate()+1;
+                                var day = (d < 10) ? '0' + d : d;
+                                var m = date.getMonth() + 1;
+                                var month = (m < 10) ? '0' + m : m;
+                                var yy = date.getYear();
+                                var year = (yy < 1000) ? yy + 1900 : yy;
+                                date=day + "/" + month + "/" + year;
+                                small=$("<small/>", {'class':'pull-right', 'html': date+'<br/>'+timeago});
+                                strong=$("<strong/>", {'text': result.username+" "});
+
+//                                p=$("<p/>", {'text': result.description});
+                                tam=result.description.split(/\s+/).length;
+                                if(tam>50){
+                                    div_more=$("<div/>");
+                                    input_more=$("<input />", {'type':'checkbox', 'class': 'read-more-state', 'id':'post-'+result.id});
+                                    words1 = result.description.split(/\s+/).slice(0,50).join(" ");
+                                    words2 = result.description.split(/\s+/).slice(50,tam).join(" ");
+                                    span_more=$("<span/>", {'class':'read-more-target', 'text': " "+words2});
+                                    p=$("<p/>", {'text': words1, 'class': 'read-more-wrap'}).append(span_more);
+                                    label_more=$("<label/>",{'for':'post-'+result.id, 'class':'read-more-trigger'});
+                                    p=div_more.append(input_more, p, label_more);
+                                }else{
+                                    p=$("<p/>", {'text': result.description});
+                                }
+                                follow="", special="";
+                                if(result.contactDate){
+                                    var contactdate = new Date(result.contactDate);
+                                    contactdate.setDate(contactdate.getDate() + 1);
+                                    follow='<small><strong>Follow up:</strong> '+contactdate.toDateString()+'</small><br/>';
+                                }if(result.specialReq){
+                                    special='<small><strong>Special Request:</strong> '+result.specialReq+'</small><br/>';
+                                }
+                                media_body=$("<div/>",{'class':'media-body'}).append(small, strong, result.type,'<br/>'+follow+special,p);
+                                $(".feed-activity-list").prepend(element.append(span, media_body));
+
+                                setTimeout(function(){
+                                    $("#notas").modal('hide');
+                                }, 3000);
+                            }
+                        },
+                        error: function(result){
+                            showModalError($("#notas"),result);
+                        }
+                    });
+                }
+            });
+
+        }else{
+            $("#redirect input[name=mode]").val("edit");
+        } // end if
+    });
+</script>
+<div class="col-lg-12 page-header">
+    <div class="row"><div class="col-lg-12"></div></div>
+</div>
+<input id="id-value" type="hidden" value="${id}"/>
+<div class="row">
+    <div class="col-sm-7" >
+        <div class="personal-information">
+            <div class="ibox-title">
+                <h5>Client Personal Information</h5>
+                <div class="ibox-tools pull-right">
+                    <a class="label label-primary" href="/clients/${id}/edit">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Edit
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="ibox-content">
+                <p class="pull-left name">
+                    <span class="flaticon-office-worker2"></span>
+                </p>
+                <p class="pull-right hidden-info">
+                    <a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>
+                    <a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>
+                </p>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        *{<ul id="myTabs" class="nav nav-tabs nav-justified" role="tablist">}*
+            *{<li role="presentation" class="active">}*
+                *{<a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">}*
+                    *{Sale Information}*
+                *{</a>}*
+            *{</li>}*
+            *{<li role="presentation">}*
+                *{<a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">}*
+                    *{Reservations}*
+                *{</a>}*
+            *{</li>}*
+        *{</ul>}*
+        <div class="ibox-title">
+            <h5>Sale Information</h5>
+            <div class="ibox-tools pull-right">
+                <a class="label label-primary add-sale" href="">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Add sale
+                </a>
+            </div>
+        </div>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">
+                <div class="clearfix"></div>
+                <br/>
+                <div class="sk-chasing-dots">
+                    <div class="sk-child sk-dot1"></div>
+                    <div class="sk-child sk-dot2"></div>
+                </div>
+                <div id="sale" style="display: none;">
+
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+                <div class="sk-chasing-dots">
+                    <div class="sk-child sk-dot1"></div>
+                    <div class="sk-child sk-dot2"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-5">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title" style="margin-bottom: 20px;">
+                <h5>Notas</h5>
+                <div class="ibox-tools pull-right">
+                    <a class="label label-primary add_note" data-toggle="modal" data-target="#notas">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add note
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="feed-activity-list">
+                    <div class="sk-chasing-dots">
+                        <div class="sk-child sk-dot1"></div>
+                        <div class="sk-child sk-dot2"></div>
+                    </div>
+                    *{Listar Notas}*
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade " id="terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Terms</h4>
+            </div>
+            <div class="modal-body text-justify">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade " id="campaign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"> Campaign </h4>
+            </div>
+            <div class="modal-body text-justify">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade " id="notas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Nota</h4>
+            </div>
+            <form action="" method="post" id="savenote">
+                <input type="hidden" id="id_note" value="" />
+                <div class="modal-body text-justify">
+                    <label for="Estado de ánimo">Estado de ánimo</label>
+                    <div class="clearfix"></div><br />
+                    <div id="face">
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group">
+                        <label for="Nota">Nota*</label>
+                        <textarea name="nota" class="form-control input-sm" id="nota" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="requesicion">Requesición especial*</label>
+                        <input type="text" name="requesicion" class="form-control input-sm" id="requesicion" />
+                    </div>
+                    <div class="form-group">
+                        <label for="Tipo de Nota">Tipo de Nota*</label>
+                        <select name="tipo_nota" class="form-control input-sm" id="tipo_nota" required></select>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="follow_up"> Follow up / Alert
+                        </label>
+                    </div>
+                    <div class="follow_up row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Departamento">Remider To*</label>
+                                <select name="departamento" class="form-control input-sm" id="departamento"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="User">User*</label>
+                                <select name="user" class="form-control input-sm" id="user"></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Fecha">Fecha</label>
+                                <input type="text" class="form-control input-sm" id="fecha_nota" name="fecha_nota" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="modal-footer">
+                #{secure.check 'EditarCliente'}
+                    <button type="submit" class="btn btn-default">Guardar</button>
+                #{/secure.check}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
