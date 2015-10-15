@@ -16,13 +16,13 @@
     #{if successfullyCreated}
         <div class="alert alert-success alert-dismissible " role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong>Well done!</strong> You successfully created the offer <strong><a href="/offers/${id}">${util.StringTools.decodestring(offerName)}</a></strong>
+            <strong>Well done!</strong> You successfully created the offer <strong><a href="/offers/${id}">${offerName}</a></strong>
         </div>
     #{/if}
     #{if successfullyUpdated}
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-             You successfully updated the offer <strong><a href="/offers/${id}">${util.StringTools.decodestring(offerName)}</a></strong>
+             You successfully updated the offer <strong><a href="/offers/${id}">${offerName}</a></strong>
         </div>
     #{/if}
         <div class="col-lg-10">
