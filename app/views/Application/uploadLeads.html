@@ -20,7 +20,7 @@
                 var id=$("#id-value").val();
                 var url='${urlservicio}/customers/import';
                 var button=$(this).find(".btn");
-                $(button).attr("disabled", true).val("creating....");
+                $(button).attr("disabled", true).val("&{'creating'}....");
                 $.ajax( {
                     url: url,
                     type: 'POST',
@@ -55,7 +55,7 @@
             <div class="row"><br />
                 <div class="alert alert-success oculto" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>&{well_done}!</strong> You successfully uploaded leads
+                    <strong>&{'well_done'}!</strong> &{'successfully_uploaded'} leads
                 </div>
                 <h1>
                     &{'li_uploadleads'}

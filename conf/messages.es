@@ -17,9 +17,12 @@ showing=Showing
 to=to
 of=of
 processing=Processing
-successfully_added=You successfully added
-well_done=Well done
-add=Add
+successfully_added=Agregada exitosamente
+successfully_uploaded=Editada exitosamente
+successfully_created=Creada exitosamente
+well_done=Bien hecho
+add=Agregar
+name=Nombre
 
 #Subir clientes
 code_campaign=Código de Campaña
@@ -57,3 +60,13 @@ uploading_file=Subiendo Archivo
 #Inventario
 serials_number=serial numbers
 serials_campaign=Serials of Campaign
+serial=Folio
+date=Fecha
+amount=Monto
+upload_image=Subir Imagen
+size=Tamaño
+format=Formato
+add_picture=Agregar Imagen
+
+#Hoteles
+new_hotel=Nuevo Hotel

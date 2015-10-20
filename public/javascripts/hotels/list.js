@@ -24,7 +24,7 @@ $(document).ready(function() {
             $('#hotels-datatable').dataTable( {
                 "data": dataSet,
                 "columns": [
-                    { "title": "Name" },
+                    { "title": "&{'name'}" },
                     { "title": "City" , "bSortable": false},
                     { "title": "Zip Code", "bSortable": false }
                 ]

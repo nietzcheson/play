@@ -63,9 +63,9 @@
                     $('#serials-datatable').dataTable( {
                         "data": dataSet,
                         "columns": [
-                            { "title": "Number", bSortable: false },
-                            { "title": "Type", bSortable: false },
-                            { "title": "Created", bSortable: false },
+                            { "title": "&{'number'}", bSortable: false },
+                            { "title": "&{'type'}", bSortable: false },
+                            { "title": "&{'created'}", bSortable: false },
                             { "title": "Excel", bSortable: false }
                         ],
                         "oLanguage": {
@@ -118,9 +118,9 @@
 
                     ],
                     "columns": [
-                        { "data": "name","title":"Folio"  },
-                        { "data": "dateUpdated","title":"Date" },
-                        { "data": "quantity","title":"Amount", bSortable: false },
+                        { "data": "name","title":"&{'serial'}"  },
+                        { "data": "dateUpdated","title":"&{'date'}" },
+                        { "data": "quantity","title":"&{'amount'}", bSortable: false },
                         { "data": "","title":"Excel", bSortable: false }
                     ],
                     "order": [[ 1, "desc" ]]

@@ -6,7 +6,7 @@ li_campania=Campaigns
 li_destino=Destinations
 li_hotel=Hotels
 li_certimage=Cert Images
-li_inventary=Inventary
+li_inventary=Inventory
 li_uploadleads=Upload Leads
 
 #General
@@ -19,9 +19,12 @@ of=of
 processing=Processing
 successfully_added=You successfully added
 successfully_uploaded=You successfully uploaded
+successfully_created=You successfully created
 well_done=Well done
 add=Add
-
+creating=Creating
+created=Created
+name=Name
 
 #Subir clientes
 code_campaign=Code Campaign
@@ -58,3 +61,15 @@ uploading_file=Uploading File
 #Inventario
 serials_number=serial numbers
 serials_campaign=Serials of Campaign
+type=Type
+number=Number
+serial=Serial
+date=Date
+amount=Amount
+upload_image=Upload Images File
+size=Size
+format=Format
+add_picture=Add Picture
+
+#Hoteles
+new_hotel=New Hotel
