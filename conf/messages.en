@@ -25,6 +25,14 @@ add=Add
 creating=Creating
 created=Created
 name=Name
+save=Save
+cancel=Cancel
+or=or
+english=English
+spanish=Spanish
+portuguese=Portuguese
+description=Description
+status=Status
 
 #Subir clientes
 code_campaign=Code Campaign
@@ -37,7 +45,7 @@ state=State
 zipcode=Zip Code
 phone=Phone
 country=Country
-email=email
+email=Email
 rule1=First row must contain headers
 rule2=Phone number must contain at least one separator such as - or ( )
 rule3=If certificate number must be asign dynamically, put the word ASIGNAR on every row of certificate column
@@ -73,3 +81,62 @@ add_picture=Add Picture
 
 #Hoteles
 new_hotel=New Hotel
+edit_hotel=Edit Hotel
+content=Content
+pictures=Pictures
+destination=Destination
+webpage=Web Page
+
+#Destinos
+active=Active
+new_destination=New Destination
+edit_destination= Edit Destination
+enabled=Enabled
+disabled=Disabled
+
+#Campañas
+new_campaign=New Campaign
+campaign=Campaign
+updated=Updated
+certificate_serial=Certificate Serial
+serial_numbers=Serial Numbers
+configuration=Configuration
+certificate_type=Certificate Type
+expiration=Expiration
+reservation_group=Reservation Group
+segment=Segment
+merchant=Merchant
+call_center=Call Center
+serial_type=Serial Type
+physical=Physical
+digital=Digital
+unique=Unique
+generic=Generic
+
+#Ofertas
+last_updated=Last Update
+nights=Nights
+price=Price
+activation_fee=Activation Fee
+new_offer=New Offer
+edit_offer=Edit Offer
+transportation=Transportation
+taxes=Taxes
+terms=Terms
+content_cancuncards=Content for CancunCards.com Website
+details=Details
+
+#Master Broker
+company=Company
+responsable=Responsable
+username=Username
+campaigns=Campaigns
+view=View
+new=New
+edit=Edit
+invoice=Invoice
+password=Password
+repeat_password=Repeat Password
+rule_password=If you would like to change the password type a new one. Otherwhise leave this blank.
+type_password=Type your new password again.
+
