@@ -1,0 +1,60 @@
+#Menu
+li_clients=Guest
+li_masterbroker=Master Brokers
+li_oferta=Offers
+li_campania=Campaigns
+li_destino=Destinations
+li_hotel=Hotels
+li_certimage=Cert Images
+li_inventary=Inventary
+li_uploadleads=Upload Leads
+
+#General
+show=Show
+entries=entries
+search=Search
+showing=Showing
+to=to
+of=of
+processing=Processing
+successfully_added=You successfully added
+successfully_uploaded=You successfully uploaded
+well_done=Well done
+add=Add
+
+
+#Subir clientes
+code_campaign=Code Campaign
+certificate=Certificate
+firstname=First Name
+lastname=Last Name
+address=Address
+city=City
+state=State
+zipcode=Zip Code
+phone=Phone
+country=Country
+email=email
+rule1=First row must contain headers
+rule2=Phone number must contain at least one separator such as - or ( )
+rule3=If certificate number must be asign dynamically, put the word ASIGNAR on every row of certificate column
+instruction=Use the follow codes from country column
+united_states=UNITED STATES
+canada=CANADA
+mexico=MEXICO
+germany=GERMANY
+spain=SPAIN
+france=FRANCE
+england=ENGLAND
+italy=ITALY
+philippines=PHILIPPINES
+argentine=ARGENTINE
+costa_rica=COSTA RICA
+brasil=BRASIL
+chile=CHILE
+china=CHINA
+uploading_file=Uploading File
+
+#Inventario
+serials_number=serial numbers
+serials_campaign=Serials of Campaign
