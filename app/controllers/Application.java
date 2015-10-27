@@ -172,8 +172,8 @@ public class Application extends MasterController {
         JsonObject jsonResponse;
         Integer pageLength =params.get("length",Integer.class);
         String searchValue = params.get("search[value]");
-        String searchable = params.get("searchable");
-        String start = params.get("start");
+//        String searchable = params.get("searchable");
+//        String start = params.get("start");
         String draw = params.get("draw");
         String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
         String page=String.valueOf(params.get("start",Integer.class)/pageLength +1);
@@ -225,8 +225,8 @@ public class Application extends MasterController {
         JsonObject jsonResponse;
         Integer pageLength =params.get("length",Integer.class);
         String searchValue = params.get("search[value]");
-        String searchable = params.get("searchable");
-        String start = params.get("start");
+//        String searchable = params.get("searchable");
+//        String start = params.get("start");
         String draw = params.get("draw");
         String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
         String page=String.valueOf(params.get("start",Integer.class)/pageLength +1);
@@ -285,8 +285,8 @@ public class Application extends MasterController {
         if(draw != null) {
             Integer pageLength = params.get("length", Integer.class);
             String searchValue = params.get("search[value]");
-            String searchable = params.get("searchable");
-            String start = params.get("start");
+//            String searchable = params.get("searchable");
+//            String start = params.get("start");
             String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
             String page = String.valueOf(params.get("start", Integer.class) / pageLength + 1);
             String orderColumn = params.get("order[0][column]");
@@ -354,8 +354,8 @@ public class Application extends MasterController {
         if(draw != null) {
             Integer pageLength = params.get("length", Integer.class);
             String searchValue = params.get("search[value]");
-            String searchable = params.get("searchable");
-            String start = params.get("start");
+//            String searchable = params.get("searchable");
+//            String start = params.get("start");
             String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
             String page = String.valueOf(params.get("start", Integer.class) / pageLength + 1);
 
@@ -446,8 +446,8 @@ public class Application extends MasterController {
         if(draw!=null) {
             Integer pageLength = params.get("length", Integer.class);
             String searchValue = params.get("search[value]");
-            String searchable = params.get("searchable");
-            String start = params.get("start");
+//            String searchable = params.get("searchable");
+//            String start = params.get("start");
             String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
             String page = String.valueOf(params.get("start", Integer.class) / pageLength + 1);
             String orderColumn = params.get("order[0][column]");

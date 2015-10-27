@@ -626,11 +626,11 @@
     <div class="col-sm-12" >
         <div class="personal-information">
             <div class="ibox-title">
-                <h5>#{if !bookingid} New #{/if}Sale</h5>
+                <h5>#{if !bookingid} &{'new'} #{/if} &{'sale'}</h5>
                 <div class="ibox-tools pull-right">
                     <a class="label label-primary" href="/clients/${clientid}">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Go Back
+                        &{'go_back'}
                     </a>
                 </div>
             </div>
@@ -639,14 +639,14 @@
                 #{if bookingid}
                 <div class="row detail-sale">
                     <div class="col-sm-6">
-                        <strong>Booking Id: </strong>  ${bookingid}<br />
-                        *{<label href="#" class="tag pull-right">Total: $ 100 </label>}*
+                        <strong>&{'id_booking'}: </strong>  ${bookingid}<br />
+                        <!-- *{<label href="#" class="tag pull-right">Total: $ 100 </label>}*
                         *{<strong>x Sunset World Gives Back H3R 2014</strong><br />}*
-                        *{<small class="text-muted">${sale.numCert}</small><br />}*
+                        *{<small class="text-muted">${sale.numCert}</small><br />}* -->
                     </div>
                     <div class="col-sm-6">
                         <strong>Call Center: </strong>  Certificados<br />
-                        *{<strong>Usuario: </strong>  ${sale.agent}<br />}*
+                        <!-- *{<strong>Usuario: </strong>  ${sale.agent}<br />}* -->
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -656,15 +656,15 @@
                 <form action="" class="row" id="sale">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Campaña*</label>
+                            <label for="lastname">&{'campaign'}*</label>
                             <select name="" id="campania" class="form-control input-sm">
-                                <option value="">Campaña</option>
+                                <option value="">&{'campaign'}</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="certnumber">Cert Number*</label>
+                            <label for="certnumber">&{'cert_number'}*</label>
                             <input type="text" class="form-control input-sm" id="certnumber" name="certnumber" #{if bookingid }readonly #{/if}/>
                         </div>
                     </div>
@@ -673,7 +673,7 @@
                 #{/else}
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Representante*</label>
+                            <label for="lastname">&{'sale_representative'}*</label>
                             <select name="rep" id="rep" class="form-control input-sm"></select>
                         </div>
                     </div>
@@ -691,30 +691,30 @@
                     *{</div>}*
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Extra Bonos*</label>
+                            <label for="lastname">&{'extra_bonus'}*</label>
                             <select name="bonos" id="bonos" class="form-control input-sm"></select>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Status*</label>
+                            <label for="lastname">&{'status'}*</label>
                             <select name="status" id="status" class="form-control input-sm" required></select>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Número de Grabación*</label>
+                            <label for="lastname">&{'record_number'}*</label>
                             <input type="text" class="form-control input-sm" id="grabacion" name="grabacion" />
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Observaciones*</label>
+                            <label for="lastname">&{'observations'}*</label>
                             <input type="text" class="form-control input-sm" id="observaciones" name="observaciones" />
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <input id="save" type="submit" class="btn pull-right btn-default" value="Guardar"/>
+                    <input id="save" type="submit" class="btn pull-right btn-default" value="&{'save'}"/>
                 </form>
             </div>
         </div>
@@ -723,11 +723,11 @@
     <div class="col-sm-6">
         <div class="ibox float-e-margins services">
             <div class="ibox-title" style="margin-bottom: 20px;">
-                <h5>Services</h5>
+                <h5>&{'services'}</h5>
                 <div class="ibox-tools pull-right">
                     <a class="label label-primary add-service" data-toggle="modal"  data-target="#service">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Add service
+                        &{'add_service'}
                     </a>
                 </div>
             </div>
@@ -736,11 +736,11 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        *{<th>Booking</th>}*
-                        <th>Subservicio</th>
-                        <th>Importe</th>
-                        <th>Descripción</th>
-                        <th>Usuario</th>
+                        <!-- *{<th>Booking</th>}* -->
+                        <th>&{'subservice'}</th>
+                        <th>&{'import'}</th>
+                        <th>&{'description'}</th>
+                        <th>&{'username'}</th>
                     </tr>
                     </thead>
                     <tbody style="display:none;">
@@ -756,11 +756,11 @@
     <div class="col-sm-6">
         <div class="ibox float-e-margins payments">
             <div class="ibox-title" style="margin-bottom: 20px;">
-                <h5>Payments</h5>
+                <h5>&{'payments'}</h5>
                 <div class="ibox-tools pull-right">
                     <a class="label label-primary add-payment" data-toggle="modal"  data-target="#payment">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Add payment
+                        &{'add_payment'}
                     </a>
                 </div>
             </div>
@@ -769,11 +769,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Pagos</th>
-                            <th>Banco</th>
-                            <th>Importe</th>
-                            <th>Fecha</th>
-                            <th>Agente</th>
+                            <th>&{'payments'}</th>
+                            <th>&{'bank'}</th>
+                            <th>&{'import'}</th>
+                            <th>&{'date'}</th>
+                            <th>&{'agent'}</th>
                         </tr>
                     </thead>
                     <tbody style="display:none;">
@@ -800,10 +800,10 @@
         <div class="modal-content ">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title col-sm-6" id="myModalLabel"><br />Payment</h4>
+                <h4 class="modal-title col-sm-6" id="myModalLabel"><br />&{'payment'}</h4>
                 <p class="col-sm-5 text-right" style="color: #ffffff">
                     <strong>Call Center: </strong>  Certificados<br />
-                    <strong>Booking Id: </strong>  ${bookingid}
+                    <strong>&{'id_booking'}: </strong>  ${bookingid}
                 </p>
                 <div class="clearfix"></div>
             </div>
@@ -812,25 +812,25 @@
                     <input type="hidden" id="id" value="" style="display:none;"/>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="Nombre">Nombre</label>
+                            <label for="Nombre">&{'firstname'}</label>
                             <input type="text" class="form-control input-sm" id="nombre_pago" name="nombre_pago" required />
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="Apellido">Apellido</label>
+                            <label for="Apellido">&{'lastname'}</label>
                             <input type="text" class="form-control input-sm" id="apellido_pago" name="apellido_pago" required  />
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="Num Tarjeta">Num Tarjeta</label>
+                            <label for="Num Tarjeta">&{'card_number'}</label>
                             <input type="text" class="form-control input-sm" id="tarjeta_pago" name="tarjeta_pago" required  />
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="Tipo de Tarjeta">Tipo de Tarjeta</label>
+                            <label for="Tipo de Tarjeta">&{'card_type'}</label>
                             <select class="form-control input-sm" name="tipo_pago" id="tipo_pago"  required></select>
                         </div>
                     </div>
@@ -844,13 +844,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="Código de Seguridad">Código de Seguridad</label>
+                                    <label for="Código de Seguridad">&{'secure_code'}</label>
                                     <input type="text" class="form-control input-sm" id="codigo_pago" name="codigo_pago" required />
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="Fecha de Vencimiento">Fecha de Vencimiento</label>
+                                    <label for="Fecha de Vencimiento">&{'expiry_date'}</label>
                                     <input type="text" class="form-control input-sm" id="vencimiento_pago" name="vencimiento_pago" required />
                                 </div>
                             </div>
@@ -866,7 +866,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="Importe">Importe</label>
+                                    <label for="Importe">&{'import'}</label>
                                     <div class="input-group">
                                         <div class="input-group-addon">$</div>
                                         <input type="text" class="form-control" id="importe_pago" name="importe_pago" required />
@@ -881,7 +881,7 @@
                             <div class="col-sm-6">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox"> Dolares
+                                        <input type="checkbox"> &{'dolars'}
                                     </label>
 
                                 </div>
@@ -889,7 +889,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="Tipo de Cambio">Tipo de Cambio</label>
+                                    <label for="Tipo de Cambio">&{'exchange_rate'}</label>
                                     <input type="text" class="form-control input-sm" id="cambio_pago" name="cambio_pago" />
                                 </div>
                             </div>
@@ -900,7 +900,7 @@
                         #{secure.check 'AsignacionUsuarioComision'}
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="Usuario Comisión">Usuario Comisión</label>
+                                    <label for="Usuario Comisión">&{'user_commission'}</label>
                                     <select class="form-control" name="usuario_comision" id="usuario_comision" ></select>
                                 </div>
                             </div>
@@ -908,7 +908,7 @@
                         #{secure.check 'AsignacionUsuarioPago'}
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="Usuario Pago">Usuario Pago</label>
+                                    <label for="Usuario Pago">&{'payment_user'}</label>
                                     <select class="form-control" name="usuario_pago" id="usuario_pago" ></select>
                                 </div>
                             </div>
@@ -917,7 +917,7 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            <label for="Fecha">Fecha</label>
+                            <label for="Fecha">&{'date'}</label>
                             <input type="text" class="form-control input-sm" id="fecha_pago" name="fecha_pago" required  />
                         </div>
                     </div>
@@ -927,11 +927,11 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Subservicio</th>
-                        <th>Importe</th>
-                        <th>Descripción</th>
-                        <th>Saldo</th>
-                        <th>Importe pago</th>
+                        <th>&{'subservice'}</th>
+                        <th>&{'import'}</th>
+                        <th>&{'description'}</th>
+                        <th>&{'remaining'}</th>
+                        <th>&{'amount_paid'}</th>
                     </tr>
                     </thead>
                     <tbody style="display: none;">
@@ -946,9 +946,9 @@
             </div>
             <div class="modal-footer">
             #{secure.check 'EditarCliente'}
-                <button type="submit" class="btn btn-default" id="submit-payment">Guardar</button>
+                <button type="submit" class="btn btn-default" id="submit-payment">&{'save'}</button>
             #{/secure.check}
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
             </div>
             </form>
         </div>
@@ -962,7 +962,7 @@
         <div class="modal-content ">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title col-sm-6" id="myModalLabel"><br />Service</h4>
+                <h4 class="modal-title col-sm-6" id="myModalLabel"><br />&{'service'}</h4>
                 <p class="col-sm-5 text-right" style="color: #ffffff">
                     <strong>Call Center: </strong>  Certificados<br />
                     <strong>Booking Id: </strong>  ${bookingid}
@@ -974,31 +974,31 @@
                 <div class="modal-body text-justify">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Servicio*</label>
+                            <label for="lastname">&{'service'}*</label>
                             <select name="servicios" class="form-control input-sm" id="servicios" required></select>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Importe*</label>
+                            <label for="lastname">&{'import'}*</label>
                             <input type="text" name="amount_service" class="form-control input-sm" id="amount_service" required/>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Adultos*</label>
+                            <label for="lastname">&{'adults'}*</label>
                             <input type="text" name="adults_service" class="form-control input-sm" id="adults_service" required/>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Menores*</label>
+                            <label for="lastname">&{'children'}*</label>
                             <input type="text" name="minor_service" class="form-control input-sm" id="minor_service" required/>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="lastname">Description*</label>
+                            <label for="lastname">&{'description'}*</label>
                             <input type="text" name="description_service" class="form-control input-sm" id="description_service"/>
                         </div>
                     </div>
@@ -1006,9 +1006,9 @@
                 </div>
                 <div class="modal-footer">
                 #{secure.check 'EditarCliente'}
-                    <button type="submit" class="btn btn-default">Guardar</button>
+                    <button type="submit" class="btn btn-default">&{'save'}</button>
                 #{/secure.check}
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
                 </div>
             </form>
         </div>

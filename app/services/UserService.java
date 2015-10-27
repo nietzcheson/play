@@ -45,6 +45,7 @@ public class UserService extends MasterController{
         if(res.getStatus() ==200) {
             Scope.Session.current().put("password",pass);
             setParamsSessionUser(jsonElement.getAsJsonObject());
+            System.out.println(jsonElement);
             return true;
         }
     return false;

@@ -77,7 +77,7 @@ public class Users extends MasterController {
         String  userm             = params.get("user");
         String  email            = params.get("email");
         String  passwordm         = params.get("password");
-        String  pass             = params.get("pass");
+//        String  pass             = params.get("pass");
         String addId;
         if(id != null && !id.isEmpty()) {
             addId = "/" + id;

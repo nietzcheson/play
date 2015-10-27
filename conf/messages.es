@@ -2,7 +2,7 @@
 li_clients=Clientes
 li_masterbroker=Master Brokers
 li_oferta=Ofertas
-li_campania=Campa馻s
+li_campania=Campa帽as
 li_destino=Destinos
 li_hotel=Hoteles
 li_certimage=Imagen Certificados
@@ -10,12 +10,12 @@ li_inventary=Inventario
 li_uploadleads=Subir Clientes
 
 #General
-show=Show
+show=Mostrar
 entries=entries
-search=Search
-showing=Showing
-to=to
-of=of
+search=Buscar
+showing=Mostrando
+to=a
+of=de
 processing=Processing
 successfully_added=Agregada exitosamente
 successfully_uploaded=Editada exitosamente
@@ -29,32 +29,32 @@ save=Guardar
 cancel=Cancelar
 or=o
 english=Ingles
-spanish=Espa駉l
-portuguese=Portugu閟
-description=Descripci髇
+spanish=Espa帽ol
+portuguese=Portugu茅s
+description=Descripci贸n
 status=Estatus
 
 #Subir clientes
-code_campaign=C骴igo de Campa馻
-certificate=Certificadp
-firstname=Nomber
+code_campaign=C贸digo de Campa帽a
+certificate=Certificad0
+firstname=Nombre
 lastname=Apellido
-address=Direcci髇
+address=Direcci贸n
 city=Ciudad
 state=Estado
-zipcode=C骴igo Postal
-phone=Tel閒ono
-country=Pa韘
+zipcode=C贸digo Postal
+phone=Tel茅fono
+country=Pa铆s
 email=Email
 rule1=La primera fila debe contener los encabezados
-rule2=El n鷐ero telef髇ico debe contener por lo menos un separador para los n鷐eros, ya sea - o ( )
-rule3=Si el n鷐ero de certificado debe ser asignado dinamicamente coloque la palabra ASIGNAR en todas \
+rule2=El n煤mero telef贸nico debe contener por lo menos un separador para los n煤meros, ya sea - o ( )
+rule3=Si el n煤mero de certificado debe ser asignado dinamicamente coloque la palabra ASIGNAR en todas \
   las filas de la columna Certificado
 united_states=ESTADOS UNIDOS
 canada=CANADA
 mexico=MEXICO
 germany=ALEMANIA
-spain=ESPA袮
+spain=ESPA脩A
 france=FRANCIA
 england=INGLATERRA
 italy=ITALIA
@@ -68,14 +68,14 @@ uploading_file=Subiendo Archivo
 
 #Inventario
 serials_number=serial numbers
-serials_campaign=Folios de Campa馻
+serials_campaign=Folios de Campa帽a
 type=Tipo
 number=Numero
 serial=Folio
 date=Fecha
 amount=Monto
 upload_image=Subir Imagen
-size=Tama駉
+size=Tama帽o
 format=Formato
 add_picture=Agregar Imagen
 
@@ -85,7 +85,7 @@ edit_hotel=Editar Hotel
 content=Contenido
 pictures=Imagenes
 destination=Destino
-webpage=P醙ina Web
+webpage=P谩gina Web
 
 #Destinos
 active=Activo
@@ -94,16 +94,16 @@ edit_destination= Editar Destino
 enabled=Activo
 disabled=Desactivo
 
-#Campa馻s
-new_campaign=Nueva Campa馻
-campaign=Campa馻
+#Campa帽as
+new_campaign=Nueva Campa帽a
+campaign=Campa帽a
 updated=Actualizado
 certificate_serial=Folios de Certificados
-serial_numbers=N鷐eros Foliados
-configuration=Configuraci髇
+serial_numbers=N煤meros Foliados
+configuration=Configuraci贸n
 certificate_type=Tipo de Certificado
-expiration=Expiraci髇
-reservation_group=Grupo de Reservaci髇
+expiration=Expiraci贸n
+reservation_group=Grupo de Reservaci贸n
 segment=Segmento
 merchant=Merchant
 call_center=Call Center
@@ -114,13 +114,13 @@ unique=Unico
 generic=Generico
 
 #Ofertas
-last_updated=趌tima Actualizaci髇
+last_updated=脷ltima Actualizaci贸n
 nights=Noches
 price=Precio
-activation_fee=Tarifa de Activaci髇
+activation_fee=Tarifa de Activaci贸n
 new_offer=Nueva Oferta
 edit_offer=Editar Oferta
-transportation=Transportaci髇
+transportation=Transportaci贸n
 taxes=Impuestos
 terms=Terminos y Condiciones
 content_cancuncards=Contenido para CancunCards.com
@@ -130,12 +130,79 @@ details=Detalles
 company=Compania
 responsable=Responsable
 username=Usuario
-campaigns=Campa馻s
+campaigns=Campa帽as
 view=Ver
 new=Nuevo
 edit=Editar
-invoice=Invoice Address
-password=Password
-repeat_password=Repeat Password
-rule_password=If you would like to change the password type a new one. Otherwhise leave this blank.
-type_password=Type your new password again.
+invoice=Direcci贸n de Facturaci贸n
+password=Contrase帽a
+repeat_password=Repite la contrase帽a
+rule_password=Si deseas cambiar la contrase帽a, ingresa una nueva. Si no, dejalo en blanco
+type_password=Ingresa tu nueva contrase帽a otra vez.
+create_new_master=Crea un nuevo master broker y agregalo al sistema
+
+#Broker
+new_broker=Crear nuevo broker
+
+#Clientes
+new_client=Nuevo Cliente
+client=Cliente
+id_booking=Id de Reservaci贸n
+certificate=Certificado
+date_created=Fecha de Creaci贸n
+date_updated=Fecha de Edici贸n
+date_birth=Fecha de nacimiento
+customer_interested=El cliente est谩 interesado en
+age=Edad
+day=D铆a
+month=Mes
+sale_information=Informaci贸n de Venta
+marital_status=Estatus Marital
+occupation=Ocupaci贸n
+year=A帽o
+close=Cerrar
+client_personal_information=Informaci贸n Personal del Client
+notes=Notas
+add_note=Agregar Nota
+add_sale=Agregar Venta
+date=Fecha
+note=Nota
+mood=Estado de 谩nimo
+special_request=Requesici贸n Especial
+note_type=Tipo de Nota
+follow_up=Seguir / Alerta
+reminder_to=Recordatorio para
+
+#venta
+new_sale=Nueva Venta
+cert_number=N煤mero de Certificado
+record_number=N煤mero de Grabaci贸n
+extra_bonus=Extra Bonos
+go_back=Regresar
+observations=Observaciones
+sale_representative=Representate
+sale=Venta
+
+#Servicios
+add_service=Agregar Servicio
+services=Servicios
+subservice=Subservicio
+import=Importe
+payments=Pagos
+bank=Banco
+agent=Agente
+add_payment=Agregar Pago
+service=Servicio
+adults=Adultos
+children=Menores
+card_number=N煤mero de Tarjeta
+card_type=Tipo de Tarjeta
+secure_code=C贸digo de Seguridad
+expiry_date=Fecha de Vencimiento
+exchange_rate=Tipo de Cambio
+dolars=Dolares
+payment_user=Usuario Pago
+remaining=Saldo
+amount_paid=Importe Pagado
+payment=Pago
+user_commission=Usuario Comisi贸n

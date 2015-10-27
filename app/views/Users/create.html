@@ -53,7 +53,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading" id="users-panel-title">
-                Create a new master broker and add them to the system
+                &{'create_new_master'}
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -129,7 +129,7 @@
                                 <label>&{'repeat_password'}</label>
                                 <input type="password" name="repeat-password" id="repeat-password" class="form-control" #{if !editMode}data-required="true" data-length="6"#{/if} maxlength="16" />
                                 #{if editMode}
-                                <em>&{'rule_password'}</em>
+                                <em>&{'type_password'}</em>
                                 #{/if}
                             </div>
                         #{if editMode}

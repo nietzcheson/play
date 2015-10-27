@@ -26,7 +26,7 @@ $(document).ready(function() {
                 "render":function(td, cellData, rowData, row, col){
                     var view="";
 
-                    view= '<a href="/brokers/' + rowData.id + '">View Brokers</a>';
+                    view= '<a href="/brokers/' + rowData.id + '">&{'view'} Brokers</a>';
                     return  view;
                 }
             }

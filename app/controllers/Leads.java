@@ -207,9 +207,9 @@ public class Leads extends MasterController {
     //Remover un pago del Lead
     public static void removePayment(String id) throws ParseException {
         String bookingId = params.get("bookingId");
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         JsonObject audit= MasterController.audit(new Integer(id), "Pagos", "Datos de la Venta", "Eliminar Pago", "Eliminar Pago");
-        JsonObject jsonObject;
+//        JsonObject jsonObject;
         WS.HttpResponse res;
         Logger.info("Eliminar Pago #" + id + " del bookingId: " + bookingId+" en: "+ Constants.API);
         Logger.info("Servicio Eliminar Pago: " + Constants.API + "/sales/" + bookingId+"/payments/"+id+"/delete");
@@ -268,7 +268,7 @@ public class Leads extends MasterController {
         String bookingId = params.get("bookingId");
 
         //Datos Audit
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         String text_module;
 
 //        JsonObject audit= new JsonObject();
@@ -386,7 +386,7 @@ public class Leads extends MasterController {
         String bookingId = params.get("bookingId");
 
         //Datos Audit
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         Integer idaudit;
         if(id==null)
             idaudit=0;
@@ -449,7 +449,7 @@ public class Leads extends MasterController {
     //Crear o Actualizar una Venta
     public static void createSale(String id) throws ParseException {
         //Datos Audit
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         Integer auditid;
         if(id==null)
             auditid=0;
@@ -513,7 +513,7 @@ public class Leads extends MasterController {
     public static void createNote(String id) throws ParseException {
         //Datos Audit
 //      String ip="200.79.231.94";
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         JsonObject audit= MasterController.audit(0, "Notas", "Datos de la Venta", "Crear Nota", "Crear Nota");
         JsonObject jsonObject;
         JsonObject note= new JsonObject();

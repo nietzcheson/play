@@ -6,11 +6,11 @@ $(document).ready(function (){
     var currentYear = (new Date).getFullYear();
 
     year = $('.year');
-    year.html("");
+//    year.html("");
     dd_cal = year.closest(".form-group");
     month = dd_cal.find($('.month'));
     day = dd_cal.find($('.day'));
-    year.append('<option value="0">Year</option>');
+//    year.append('<option value="0">Year</option>');
     for (i = currentYear-18; i >currentYear-80; i--) {
         year.append('<option value=' + i + '>' + i + '</option>');
     }
