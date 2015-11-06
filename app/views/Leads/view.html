@@ -136,31 +136,30 @@
                         content = content.append(country);
                     }
                     if (result.address) {
-                        $(".flaticon-book269").attr("title", "Address: "+result.address)
-                    }else{
-                        $(".flaticon-book269").hide();
+                        a_href=$("<a/>", {'title': 'Address'+result.address, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-book269' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.email) {
-                        $(".flaticon-email131").attr("title", result.email)
-                    }else{
-                        $(".flaticon-email131").hide();
+                        a_href=$("<a/>", {'title': result.email, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-email131' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.phone1) {
-                        $(".flaticon-phone21").attr("title", 'Home Phone: '+result.phone1)
-                    }else{
-                        $(".flaticon-phone21").hide();
+                        a_href=$("<a/>", {'title': 'Home Phone: '+result.phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.phone2) {
-                        $(".flaticon-phone72").attr("title", 'Work Phone: '+result.phone1)
-                    }else{
-                        $(".flaticon-phone72").hide();
+                        a_href=$("<a/>", {'title': 'Work Phone: '+result.phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone72' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.phone3) {
+                        a_href=$("<a/>", {'title': 'Cellphone: '+result.phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-smartphone24' }));
+                        $(".hidden-info").append(a_href);
                         strong = $("<strong/>", {'text': 'Cellphone: '});
-                        address = $("<p/>", {'text': result.phone3, 'id': 'cellphone'}).prepend(strong);
-                        content = content.append(address);
-                    }else{
-                        $(".flaticon-smartphone24").hide();
                     }
                     if (result.age) {
                         strong = $("<strong/>", {'text': 'Age: '});
@@ -198,9 +197,33 @@
                             offer, vendor, certificate, booking="";
                             if(value.campaign){
                                 if(value.campaign.description){
+                                    var destinations="", type_cert="";
+                                    if(value.campaign.offer.destinations){
+                                        var destinations="Destinities: ";
+                                        $.each(value.campaign.offer.destinations, function (index, value_d) {
+                                            if(destinations!="Destinities: ")
+                                                destinations=destinations+" ,";
+                                            destinations=destinations+value_d.offerDestinationId.destination.name;
+                                        });
+                                    }
+                                    if(value.campaign.offer.typeCertificate==1){
+                                        type_cert="Physical";
+                                    }else{
+                                        type_cert="Digital";
+                                    }
+
                                     campaign=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#campaign', 'text': 'View Campaign'});
                                     div=div.append(campaign);
-                                    p_campaign=$("<p/>", {'class': 'oculto campaign', 'text': Decodehtml(value.campaign.description)});
+                                    p_campaign=$("<p/>", {'class': 'oculto campaign', 'text': Decodehtml(
+                                            'Nights: '+value.campaign.offer.nights+' '+'Plan: '+value.campaign.offer.mealPlan.plan+' '
+                                            +destinations+" Cost: $"+value.campaign.offer.activationFee+" USD act. fee and $"
+                                            +value.campaign.offer.taxes+" USD taxes"
+                                            +", Certificate Type: "+type_cert+", "+"Transportation: "
+                                            +value.campaign.offer.transportation.name
+                                            +", Reservation Group: "+value.campaign.reservationGroup.name
+                                            +" ["+value.campaign.offer.hook.name+"], "
+                                            + value.campaign.description
+                                    )});
                                     div=div.append(p_campaign);
                                 }
                                 if(value.campaign.offer){
@@ -280,7 +303,7 @@
                             if(value.campaign.typeCertificate==2){
                                 var certificateType=get_certificate_type(value.campaign.id);
                                 if(certificateType){
-                                    a_href=$("<a/>", {'title': 'Carta de Compra', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
+                                    a_href=$("<a/>", {'title': 'Carta de Compra', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
                                     a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
                                     td1=td1.append(a_href);
                                 }
@@ -526,11 +549,11 @@
                     <span class="flaticon-office-worker2"></span>
                 </p>
                 <p class="pull-right hidden-info">
-                    <a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>
-                    <a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>
+                    *{<a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>}*
+                    *{<a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>}*
+                    *{<a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>}*
+                    *{<a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>}*
+                    *{<a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>}*
                 </p>
                 <div class="clearfix"></div>
             </div>

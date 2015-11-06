@@ -233,3 +233,6 @@ input.error, select.error {
     border: 1px solid #ddd;
     border-radius: .25em;
 }
+.hidden-info a{
+    margin-left: 5px;
+}

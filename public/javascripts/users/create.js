@@ -77,6 +77,9 @@ $(document).ready(function () {
                     $("#username").val(result.user.user).prop('readonly',true);
                     $("#email").val(result.user.email);
                     $("#pass_oculto").val(result.user.password);
+                    /*  Cert Link   */
+                    $("#username-cert").val(result.user.user).hide();
+                    $("#password-cert").val(result.user.password).hide();
                 }
                 var li, a="";
                 if(result.campaigns){

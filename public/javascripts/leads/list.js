@@ -10,28 +10,35 @@ $(document).ready(function() {
     "serverSide": true,
     "ajax":'/application/leadslist',
     "columnDefs": [
-    {
-        "targets":0,
-        "render": function (td, cellData, rowData, row, col) {
-                    return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
-                }
-},
-    {
-        "targets":4,
-        "render": function (datecreated) {
-                    d= new Date(datecreated);
-                    da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
-                    return da;
-                }
-            },
-            {
-                "targets":5,
-                "render": function (dateupdated) {
-                    d= new Date(dateupdated);
-                    da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
-                    return da;
-                }
+        {
+            "targets":0,
+            "render": function (td, cellData, rowData, row, col) {
+                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
+                    }
+        },
+        {
+            "targets":4,
+            "render": function (datecreated) {
+                        d= new Date(datecreated);
+                        da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+                        return da;
+                    }
+        },
+        {
+            "targets":5,
+            "render": function (dateupdated) {
+                d= new Date(dateupdated);
+                da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+                return da;
             }
+        },
+        {
+            "targets":6,
+            "render": function (td, cellData, rowData, row, col) {
+                console.log(rowData);
+                return "Info";
+            }
+        }
 
         ],
         "columns": [
@@ -40,7 +47,8 @@ $(document).ready(function() {
             { "data": "numcert","title":"Certificate"},
             { "data": "campaign","title":"Campaign"},
             { "data": "datecreated","title":"Date Created"},
-            { "data": "dateupdated","title":"Update Created" }
+            { "data": "dateupdated","title":"Update Created" },
+            { "data": "info","title":"Info" }
         ]
         ,"order": [[ 5, "desc" ]]
     });
