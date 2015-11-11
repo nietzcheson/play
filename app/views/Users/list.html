@@ -14,6 +14,16 @@ $(document).ready(function() {
         "processing": true,
         "serverSide": true,
         "ajax":'/application/userslist',
+        "oLanguage": {
+            "sSearch": "&{'searching'}",
+            "oPaginate": {
+                "sNext": "&{'next'}",
+                "sPrevious": "&{'previous'}"
+            },
+            "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+            "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+            "sProcessing": "&{'processing'}"
+        },
         "columnDefs": [
             {
                 "targets":0,

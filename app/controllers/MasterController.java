@@ -1,7 +1,10 @@
 package controllers;
 
 import com.google.gson.JsonObject;
+import com.sun.org.apache.xpath.internal.SourceTree;
 import play.Play;
+import play.i18n.Lang;
+import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Scope;
 import util.Constants;
@@ -27,10 +30,13 @@ public class MasterController extends Controller {
         String username= Scope.Session.current().get("username");
         String urlservicio= Constants.API;
         String urlecert= Constants.URL_ECERT;
+        String lan=Lang.get();
         renderArgs.put("user_name", name);
         renderArgs.put("username", username);
         renderArgs.put("urlservicio", urlservicio);
         renderArgs.put("urlecert", urlecert);
+        renderArgs.put("lan", lan);
+        System.out.println("Idioma: "+lan);
     }
 
     public static JsonObject audit(Integer bookingid, String  modulo, String ventana, String accion, String detalle){

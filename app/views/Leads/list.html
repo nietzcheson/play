@@ -18,6 +18,16 @@
 	        var dtable=$('#leads-datatable').dataTable({
 	        "processing": true,
 	        "serverSide": true,
+			"oLanguage": {
+				"sSearch": "&{'searching'}",
+				"oPaginate": {
+					"sNext": "&{'next'}",
+					"sPrevious": "&{'previous'}"
+				},
+				"sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+				"sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+				"sProcessing": "&{'processing'}"
+			},
 	        "ajax":'/application/leadslist',
 	        "columnDefs": [
 	        {
@@ -97,7 +107,7 @@
                     <div class="dataTable_wrapper">
                         <div class="col-sm-3 pull-right">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="myInput" placeholder="Search for...">
+                                <input type="text" class="form-control" id="myInput" placeholder="&{'search'}...">
                                   <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" id="search-client">
                                         <span class="glyphicon glyphicon-search"></span>

@@ -985,6 +985,21 @@ $.fn.clearForm = function() {
 };
 
 $(document).ready(function() {
+        $(".change_language").click(function (e) {
+            e.preventDefault();
+            var lan=$(this).attr("data-lan");
+            $.ajax({
+                url:  '/changeLanguage/' +lan,
+                type:'GET',
+                success:function(result){
+                    location.reload();
+                },
+                error: function(err){
+                    alert(err);
+                }
+            });
+        });
+
         $("textarea, input[type='text'] ").each(function () {
             val= limit($(this));
         });

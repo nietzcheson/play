@@ -1,3 +1,12 @@
+#Change language
+lan=en
+lan_text=English
+lans=es
+lans_text=Español
+searching=Buscando
+next=Siguiente
+previous=Anterior
+
 #Menu
 li_clients=Clientes
 li_masterbroker=Master Brokers
@@ -16,7 +25,7 @@ search=Buscar
 showing=Mostrando
 to=a
 of=de
-processing=Processing
+processing=Procesando...
 successfully_added=Agregada exitosamente
 successfully_uploaded=Editada exitosamente
 successfully_created=Creada exitosamente
@@ -36,7 +45,7 @@ status=Estatus
 
 #Subir clientes
 code_campaign=Código de Campaña
-certificate=Certificad0
+certificate=Certificado
 firstname=Nombre
 lastname=Apellido
 address=Dirección
@@ -148,7 +157,6 @@ new_broker=Crear nuevo broker
 new_client=Nuevo Cliente
 client=Cliente
 id_booking=Id de Reservación
-certificate=Certificado
 date_created=Fecha de Creación
 date_updated=Fecha de Edición
 date_birth=Fecha de nacimiento
@@ -165,7 +173,6 @@ client_personal_information=Información Personal del Client
 notes=Notas
 add_note=Agregar Nota
 add_sale=Agregar Venta
-date=Fecha
 note=Nota
 mood=Estado de ánimo
 special_request=Requesición Especial

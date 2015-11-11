@@ -1,6 +1,7 @@
 package controllers;
 import com.google.gson.JsonObject;
 import play.Logger;
+import play.i18n.Lang;
 import play.libs.WS;
 import java.io.*;
 import java.util.*;
@@ -42,6 +43,11 @@ public class Application extends MasterController {
 
     public static void successfulRecovery() {
         renderTemplate("/Application/successful-recovery.html");
+    }
+
+    public static void change_language(String lan)
+    {
+        Lang.change(lan);
     }
 
     public static void campaignsSearch(){

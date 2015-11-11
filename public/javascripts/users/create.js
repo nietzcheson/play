@@ -75,6 +75,8 @@ $(document).ready(function () {
                 $("#city").val(result.city);
                 if(result.user){
                     $("#username").val(result.user.user).prop('readonly',true);
+                    $("#username_cert").val(result.user.user);
+                    $("#password_cert").val(result.user.password);
                     $("#email").val(result.user.email);
                     $("#pass_oculto").val(result.user.password);
                 }

@@ -1,3 +1,12 @@
+#Change language
+lan=es
+lan_text=Español
+lans=en
+lans_text=English
+searching=Searching
+next=Next
+previous=Previous
+
 #Menu
 li_clients=Guest
 li_masterbroker=Master Brokers
