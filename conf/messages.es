@@ -20,7 +20,7 @@ li_uploadleads=Subir Clientes
 
 #General
 show=Mostrar
-entries=entries
+entries=entradas
 search=Buscar
 showing=Mostrando
 to=a

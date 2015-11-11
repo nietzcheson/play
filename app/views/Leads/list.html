@@ -35,7 +35,7 @@
 	            "render": function (td, cellData, rowData, row, col) {
 	                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
 	                    }
-	    },
+	    	},
 	        {
 	            "targets":4,
 	            "render": function (datecreated) {
@@ -43,32 +43,32 @@
 	                        da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 	                        return da;
 	                    }
-	                },
-	                {
-	                    "targets":5,
-	                    "render": function (dateupdated) {
-	                        d= new Date(dateupdated);
-	                        da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
-	                        return da;
-	                    }
-	                }
-	
-	            ],
-	            "columns": [
-	                { "data": "name","title":"&{'name'}"},
-	                { "data": "idbooking","title":"&{'id_booking'}" },
-	                { "data": "numcert","title":"&{'certificate'}"},
-	                { "data": "campaign","title":"&{'campaign'}"},
-	                { "data": "datecreated","title":"&{'date_created'}"},
-	                { "data": "dateupdated","title":"&{'date_updated'}" }
-	            ]
-	            ,"order": [[ 5, "desc" ]]
+			},
+			{
+				"targets":5,
+				"render": function (dateupdated) {
+					d= new Date(dateupdated);
+					da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+					return da;
+				}
+			}
+
+			],
+			"columns": [
+				{ "data": "name","title":"&{'name'}"},
+				{ "data": "idbooking","title":"&{'id_booking'}" },
+				{ "data": "numcert","title":"&{'certificate'}"},
+				{ "data": "campaign","title":"&{'campaign'}"},
+				{ "data": "datecreated","title":"&{'date_created'}"},
+				{ "data": "dateupdated","title":"&{'date_updated'}" }
+			]
+			,"order": [[ 5, "desc" ]]
 	        });
 	
 	        $('#myInput').on( 'keyup', function (e) {
 	            //if(this.value.length >= 3 && e.keyCode == 13) {
 	            if(e.keyCode == 13) {
-	                dtable.fnFilter(this.value);
+	                dtable.fnFilter($.trim(this.value));
 	            }else if(this.value == "") {
 	                dtable.fnFilter("");
 	            }
@@ -77,7 +77,7 @@
 	
 	        $("#search-client").click(function (e) {
 	            e.preventDefault();
-	            var value_search=$("#myInput").val();
+	            var value_search=$.trim($("#myInput").val());
 	            dtable.fnFilter(value_search);
 	        });
 	    });
