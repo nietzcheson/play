@@ -221,9 +221,7 @@ input.error, select.error {
 
 .read-more-state:checked ~ .read-more-trigger:before {
     content: 'Show less';
-}
-
-.read-more-trigger {
+}.read-more-trigger {
     cursor: pointer;
     display: inline-block;
     padding: 0 .5em;
@@ -232,4 +230,13 @@ input.error, select.error {
     line-height: 2;
     border: 1px solid #ddd;
     border-radius: .25em;
+}.glyphicon-info-sign:before{
+    font-size: 20px;
+    margin-right: 10px;
 }
+.media-body{
+    width: 90%;
+    float: right;
+}.label-default {
+     background-color: #40739e;
+ }

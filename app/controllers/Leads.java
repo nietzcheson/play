@@ -124,12 +124,13 @@ public class Leads extends MasterController {
             addId = "/" + id;
         else
             addId = "";
-        Logger.info("creando..");
+        Logger.info("Creando..");
         String firstname = params.get("firstname");
         String lastname = params.get("lastname");
         String certificate = params.get("certificate");
+        String campaign = params.get("campaign");
         String birthdate = params.get("birthdate");
-        Logger.info("birthdate: >>>" + birthdate);
+        Logger.info("Birthdate: >>>" + birthdate);
         String year = params.get("year");
         String month = params.get("month");
         String day = params.get("day");
@@ -151,12 +152,9 @@ public class Leads extends MasterController {
         System.out.println(phone2);
         String phone_text="  \""+ typephone + "\": \" "+ phone + "\", \n";
         if(typephone1!= null) {
-            Logger.info("if 1");
-
             phone_text=phone_text.concat("  \""+ typephone1 + "\": \" "+ phone1 + "\", \n");
         }
         if(typephone2!= null) {
-            Logger.info("if 2");
             phone_text=phone_text.concat("  \""+ typephone2 + "\": \" "+ phone2 + "\", \n");
         }
         Logger.info("phone_text: >>>" + phone_text);
@@ -186,7 +184,8 @@ public class Leads extends MasterController {
                 "  \"statusMarital\": \""+status+"\", \n"+
                 "  \"sale\" : " +
                 "{\n" +
-                "  \"certificate\": \"" + certificate + "\" \n" +
+                "  \"certificate\": \"" + certificate + "\", \n" +
+                "  \"campaignId\": \"" + campaign + "\" \n" +
                 "},\n" +
                 "  \"featureLst\" : [" +
                         interested+

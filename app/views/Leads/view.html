@@ -280,7 +280,7 @@
                             if(value.campaign.typeCertificate==2){
                                 var certificateType=get_certificate_type(value.campaign.id);
                                 if(certificateType){
-                                    a_href=$("<a/>", {'title': 'Carta de Compra', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
+                                    a_href=$("<a/>", {'data-toggle': 'tooltip', 'data-placement':'bottom','title': 'Carta de Compra', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
                                     a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
                                     td1=td1.append(a_href);
                                 }
@@ -333,7 +333,7 @@
                                 var yy = date.getYear();
                                 var year = (yy < 1000) ? yy + 1900 : yy;
                                 date=day + "/" + month + "/" + year;
-                                small=$("<small/>", {'class':'pull-right', 'html': date+'<br/>'+timeago});
+                                small=$("<small/>", {'class':'pull-right label label-default', 'html': date+'<br/>'+timeago});
                                 strong=$("<strong/>", {'text': value.username+ " "});
                                 tam=value.description.split(/\s+/).length;
                                 if(tam>50){
@@ -357,7 +357,7 @@
                                     special='<small><strong>Special Request:</strong> '+value.specialReq+'</small><br/>';
                                 }
                                 media_body=$("<div/>",{'class':'media-body'}).append(small, strong, value.type,'<br/>'+follow+special,p);
-                                $(".feed-activity-list").append(element.append(span, media_body));
+                                $(".feed-activity-list").append(element.append(span, media_body, $("<div/>", {class: 'clearfix'})));
                             });
                             $('[data-toggle="tooltip"]').tooltip();
                         }else {

@@ -3,6 +3,9 @@
 <link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
 <link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
+<link rel="stylesheet" href="/public/stylesheets/libs/bootstrap-select/ajax-bootstrap-select.css"/>
+<link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">
 #{set 'moreStyles'}
 #{/set}
 #{set 'moreScripts'}
@@ -10,6 +13,128 @@
 <script src="/public/javascripts/leads/create.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="/public/javascripts/vendor/masked-input/jquery.maskedinput.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="/public/javascripts/libs/bootstrap-select/ajax-bootstrap-select.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var options = {
+            ajax: {
+                url: '/application/campaignsearch/',
+                type: 'GET',
+                dataType: 'json',
+                // Use "{{{q}}}" as a placeholder and Ajax Bootstrap Select will
+                // automatically replace it with the value of the search query.
+                data: {
+                    draw: '{{{q}}}'
+                }
+            },
+            locale: {
+                emptyTitle: 'Select and Begin Typing'
+            },
+            log: 3,
+            preprocessData: function (data) {
+                console.log(data);
+                data = data.elements;
+
+                var i, l = data.length, array = [];
+                if (l) {
+                    for (i = 0; i < l; i++) {
+                        company = "";
+                        if (data[i].certCustomer)
+                            company = data[i].certCustomer.companyName
+                        array.push($.extend(true, data[i], {
+                            text: data[i].name,
+                            value: data[i].id,
+                            data: {
+                                subtext: company
+                            }
+                        }));
+                    }
+                }
+                // You must always return a valid array when processing data. The
+                // data argument passed is a clone and cannot be modified directly.
+                return array;
+            }
+        };
+
+        $('.selectpicker').selectpicker().filter('.with-ajax').ajaxSelectPicker(options);
+        $('.selectpicker ').on('change', function(){
+            var selected = $(this).find("option:selected").val();
+            var info_certificate=$(this).closest(".info-certificate");
+            $.ajax({
+                url:  '/application/campaignslist/'+selected,
+                type: 'GET',
+                success:function(result) {
+                    var result =  $.parseJSON(result);
+                    var terms="", destinies="", type_certificate="", lan="en";
+                    $("#info-campaign").html("");
+                    if(!result.message){
+                        var span=$("<span/>",{
+                            'aria-hidden': 'true',
+                            'class': 'glyphicon glyphicon-ok form-control-feedback'
+                        });
+                        tam= result.offer.translations.length;
+                        switch(result.callCenter.id) {
+                            case 201:
+                                lan="en"
+                                break;
+                            case 1541:
+                                lan="es"
+                                break;
+                            case 5962:
+                                lan="pt-br"
+                                break;
+                        }
+                        if(tam>1){
+                            $.each(result.offer.translations, function(index, value){
+                                if((value.language.code==lan || index==tam)&&value.websiteTerms )
+                                    terms=value.websiteTerms;
+                            });
+                        }else{
+                            terms= result.offer.translations[0].websiteTerms;
+                        }
+                        if(result.offer.destinations){
+                            $.each(result.offer.destinations, function(index, value){
+                                if(destinies==""){
+                                    destinies+=value.offerDestinationId.destination.name;
+                                }else{
+                                    destinies+=", "+value.offerDestinationId.destination.name;
+                                }
+                            });
+                        }
+                        if(result.typeCertificate==1){
+                            type_certificate="Physical";
+                        }else {
+                            type_certificate="Digital";
+                        }
+                        $(info_certificate).find(".terms").html(terms);
+                        $(info_certificate).find(".offer").html("Nights: "+result.offer.nights+", Plan: " +
+                                result.offer.mealPlan.plan+ ", Destinies: " +destinies+
+                                ", Cost: $"+result.offer.activationFee+" USD act. fee and $"+result.offer.taxes+
+                                " USD taxes, certificate type: "+type_certificate+", " +
+                                "Transportation: "+result.offer.transportation.name+", Reservation Group: " +
+                                result.reservationGroup.name+" ["+result.offer.hook.name+"], "+result.description);
+                        a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#terms", 'rel':"tooltip", 'data-placement':'bottom','title': 'Terminos', 'class': 'pull-right'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
+                        $("#info-campaign").append(a_href);
+                        a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#offer-details",'rel':"tooltip", 'data-placement':'bottom','title': 'Oferta', 'class': 'pull-right'});
+                        a_href=a_href.append($("<span />", { 'class': 'glyphicon glyphicon-info-sign'}));
+                        $("#info-campaign").append(a_href);
+                        $(".terms, #offer").removeClass("oculto");
+                        $('[data-toggle="tooltip"]').tooltip();
+                    }else{
+                        $(div).addClass("has-error has-feedback");
+                        var span=$("<span/>",{
+                            'aria-hidden': 'true',
+                            'class': 'glyphicon glyphicon-remove form-control-feedback'
+                        });
+                        $(".terms, #offer").hide();
+                    }
+                }
+            });
+        });
+    });
+</script>
 #{/set}
 <div class="col-lg-12 page-header">
     <div class="row">
@@ -44,6 +169,27 @@
                 <form id="lead-form">
                     <input id="id-value" type="hidden" value="${id}"/>
                     <div class="row">
+                        <div class="col-sm-6 info-certificate">
+                            <div class="form-group certificate">
+                                <label>&{'certificate'}* </label>
+                                <input type="text" class="form-control" id="certificate" name="certificate"  />
+                                <input type="hidden" class="form-control" id="valid-certificate" name="valid-certificate" />
+                                <p class="offer oculto"></p>
+                                <p class="terms oculto"></p>
+                            </div>
+                            <div id="info-certificate"></div>
+                        </div>
+                        <div class="col-sm-6 info-certificate">
+                            <div class="form-group campaign">
+                                <label for="exampleInputEmail1">Campaign</label>
+                                <select id="campaign" class="selectpicker with-ajax form-control" data-live-search="true"></select>
+                                <p class="offer oculto"></p>
+                                <p class="terms oculto"></p>
+                            </div>
+                            <div id="info-campaign"></div>
+                        </div>
+                        <div class="clearfix"></div>
+
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <div class="row">
@@ -175,7 +321,6 @@
                         <div class="col-sm-12">
                             <label>&{'address'}</label>
                             <div class="form-group">
-                                *{<input type="text" class="form-control" id="street" name="street" />}*
                                 <div class="row">
                                     <div class="col-sm-11">
                                         <textarea class="form-control col-sm-10" maxlength="500" id="street" rows="3" data-length="2"/></textarea>
@@ -184,16 +329,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>&{'certificate'}*</label>
-                                <input type="text" class="form-control" id="certificate" name="certificate" data-required="true" data-length="2" maxlength="100" />
-                            </div>
-                            <div id="offer" class="oculto">
-                                <h3><span class="text"></span> <a><span class="glyphicon glyphicon-menu-down"></span></a></h3>
-                                <p class="oculto"></p>
-                            </div>
-                        </div>
+                        *{<div id="offer" class="oculto">}*
+                            *{<h3><span class="text"></span> <a><span class="glyphicon glyphicon-menu-down"></span></a></h3>}*
+                            *{<p class="oculto"></p>}*
+                        *{</div>}*
                         <div class="col-sm-6">
                             <a class="terms oculto" data-toggle="modal" data-target="#terms">View terms</a>
                         </div>
@@ -247,6 +386,24 @@
                 <h4 class="modal-title" id="myModalLabel">&{'terms'}</h4>
             </div>
             <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="offer-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Oferta </h4>
+            </div>
+            <div class="modal-body">
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>

@@ -74,11 +74,11 @@ $(document).ready(function () {
                 $("#phone").val(result.phone);
                 $("#city").val(result.city);
                 if(result.user){
-                    $("#username").val(result.user.user).prop('readonly',true);
-                    $("#username_cert").val(result.user.user);
-                    $("#password_cert").val(result.user.password);
+                    $("#username, #username_cert").val(result.user.user);
                     $("#email").val(result.user.email);
+                    $("#pass_oculto, #password_cert").val(result.user.password);
                     $("#pass_oculto").val(result.user.password);
+                    $(".label_pass").html("Password: "+result.user.password);
                 }
                 var li, a="";
                 if(result.campaigns){

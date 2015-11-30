@@ -224,10 +224,18 @@ $(document).ready(function (){
         load_feature();
         load_countries();
     }
-
+    $(document).on('click', '#info-campaign a:eq(1), #info-certificate a:eq(1)', function() {
+        var offer=$(this).closest(".info-certificate").find("p.offer").html();
+        $("#offer-details .modal-body").html(Decodehtml(offer));
+    });
+    $(document).on('click', '#info-campaign a:eq(0), #info-certificate a:eq(0)', function() {
+        var terms=$(this).closest(".info-certificate").find("p.terms").html();
+        $("#terms .modal-body").html(Decodehtml(terms));
+    });
     $("#certificate").keyup(function(){
+        $("#valid-certificate").val("");
         var tam=$(this).val().length;
-        if(tam>=12){
+        if(tam>=4){
             var id=$(this).val();
             id = (id == "") ? "" : "/" + id;
             var div=$(this).closest(".form-group");
@@ -237,10 +245,12 @@ $(document).ready(function (){
                 url: certificates
             }).done(function (msg) {
                     var result = JSON.parse(msg);
-                    var terms="";
+                    var terms="", destinies="", type_certificate="", lan="en";
                     console.log(result);
                     $(div).find(".form-control-feedback").remove();
                     $(div).removeClass("has-success has-feedback has-error");
+                    $("#info-certificate").html("");
+                    $("#valid-certificate").val(result.certificate);
                     if(!result.message){
                         var span=$("<span/>",{
                             'aria-hidden': 'true',
@@ -248,19 +258,55 @@ $(document).ready(function (){
                         });
                         $(div).addClass("has-success has-feedback");
                         tam= result.campaign.offer.translations.length;
+                        switch(result.campaign.callCenter.id) {
+                            case 201:
+                                lan="en"
+                                break;
+                            case 1541:
+                                lan="es"
+                                break;
+                            case 5962:
+                                lan="pt-br"
+                                break;
+                        }
                         if(tam>1){
                             $.each(result.campaign.offer.translations, function(index, value){
-                                if(value.language.code=="en" || index==tam)
+                                if((value.language.code==lan || index==tam)&&value.websiteTerms )
                                     terms=value.websiteTerms;
                             });
                         }else{
                             terms= result.campaign.offer.translations[0].websiteTerms;
                         }
-                        $("#terms .modal-body").html(Decodehtml(terms));
-                        $("#offer .text").html(result.campaign.offer.name);
-                        $("#offer p").html(result.campaign.offer.description);
+                        if(result.campaign.offer.destinations){
+                            $.each(result.campaign.offer.destinations, function(index, value){
+                                if(destinies==""){
+                                    destinies+=value.offerDestinationId.destination.name;
+                                }else{
+                                    destinies+=", "+value.offerDestinationId.destination.name;
+                                }
+                            });
+                        }
+                        if(result.campaign.typeCertificate==1){
+                            type_certificate="Physical";
+                        }else {
+                            type_certificate="Digital";
+                        }
+                        console.log("Terms: "+terms)
+                        $(".certificate .terms").html(terms);
+                        $(".certificate .offer").html("Nights: "+result.campaign.offer.nights+", Plan: " +
+                            result.campaign.offer.mealPlan.plan+ ", Destinies: " +destinies+
+                            ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
+                            " USD taxes, certificate type: "+type_certificate+", " +
+                            "Transportation: "+result.campaign.offer.transportation.name+", Reservation Group: " +
+                            result.campaign.reservationGroup.name+" ["+result.campaign.offer.hook.name+"], "+result.campaign.description+"");
+                        a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#terms", 'rel':"tooltip", 'data-placement':'bottom','title': 'Terminos', 'class': 'pull-right'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
+                        $("#info-certificate").append(a_href);
+                        a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#offer-details",'rel':"tooltip", 'data-placement':'bottom','title': 'Oferta', 'class': 'pull-right'});
+                        a_href=a_href.append($("<span />", { 'class': 'glyphicon glyphicon-info-sign'}));
+                        $("#info-certificate").append(a_href);
                         $(".terms, #offer").removeClass("oculto");
-
+                        $('[data-toggle="tooltip"]').tooltip();
                     }else{
                         $(div).addClass("has-error has-feedback");
                         var span=$("<span/>",{
@@ -281,86 +327,92 @@ $(document).ready(function (){
         var instanceId = (idValue == "") ? "" : "/" + idValue;
         var createOfferURL = "/createLead" + instanceId;
         var validcertificate;
-        if(idValue!="")
+        var certificate=$("#valid-certificate").val();
+        var campaign=$('.selectpicker').find("option:selected").val();
+        if(idValue!="" || campaign || certificate!="")
             validcertificate=true;
         else
-            validcertificate= $(".terms").is(":visible");
+            validcertificate=false;
         var valid_phone=validphone();
         if(!validcertificate)
             showError("Please Enter a valid certificate");
         else if(!valid_phone)
             showError("Please Enter a phone");
-        var form= formValidate($("#lead-form"));
-        if(form && valid_phone){
-            var $submitButton = $('#submit');
-            var myform= $(this).closest("form");
-            var disabled = myform.find(':input:disabled').removeAttr('disabled');
-            var data= $(this).closest("form").serialize();
-            var street=Encode($("#street").val());
-            var interested = $("#features input:checkbox:checked").map(function(){
-                return $(this).val();
-            }).get();
+        else{
+            var form= formValidate($("#lead-form"));
+            if(form && valid_phone){
+                var $submitButton = $('#submit');
+                var myform= $(this).closest("form");
+                var disabled = myform.find(':input:disabled').removeAttr('disabled');
+                var data= $(this).closest("form").serialize();
+                var street=Encode($("#street").val());
+                var interested = $("#features input:checkbox:checked").map(function(){
+                    return $(this).val();
+                }).get();
 
-            interested=interested.join(", ");
-            var data = {
-                title: $("#title").val(),
-                firstname: Encode($('#firstname').val()),
-                lastname: Encode($("#lastname").val()),
-                //birthdate: $("#birthdate").val(),
-                year: $("#year").val(),
-                month: $("#month").val(),
-                day: $("#day").val(),
-                certificate: $("#certificate").val(),
-                phone: $("#phone").val(),
-                type_phone: $("#type-phone").val(),
-                phone1: $("#phone1").val(),
-                type_phone1: $("#type-phone1").val(),
-                phone2: $("#phone2").val(),
-                type_phone2: $("#type-phone2").val(),
-                email: Encode($("#email").val()),
-                countries: $("#countries").val(),
-                states: $("#states").val(),
-                city: Encode($("#city").val()),
-                zipcode: Encode($("#zipcode").val()),
-                occupation: Encode($("#occupation").val()),
-                //age: $("#age").val(),
-                street: Encode($("#street").val()),
-                status: $("#marital input:checked").val(),
-                features: interested
+                interested=interested.join(", ");
+                var data = {
+                    title: $("#title").val(),
+                    firstname: Encode($('#firstname').val()),
+                    lastname: Encode($("#lastname").val()),
+                    //birthdate: $("#birthdate").val(),
+                    year: $("#year").val(),
+                    month: $("#month").val(),
+                    day: $("#day").val(),
+                    certificate: certificate,
+                    campaign: $('.selectpicker').find("option:selected").val(),
+                    phone: $("#phone").val(),
+                    type_phone: $("#type-phone").val(),
+                    phone1: $("#phone1").val(),
+                    type_phone1: $("#type-phone1").val(),
+                    phone2: $("#phone2").val(),
+                    type_phone2: $("#type-phone2").val(),
+                    email: Encode($("#email").val()),
+                    countries: $("#countries").val(),
+                    states: $("#states").val(),
+                    city: Encode($("#city").val()),
+                    zipcode: Encode($("#zipcode").val()),
+                    occupation: Encode($("#occupation").val()),
+                    //age: $("#age").val(),
+                    street: Encode($("#street").val()),
+                    status: $("#marital input:checked").val(),
+                    features: interested
 
-            };
-            disabled.attr('disabled','disabled');
-            console.log("se envía:");
-            console.log(data);
-            $submitButton.attr("disabled", true).val("creating....");
-            $.ajax({
-                type: "POST",
-                url: createOfferURL,
-                //data: data+ '&features='+interested+ '&street='+street
-                data: data
-            })
-                .done(function (msg) {
-                    var result = JSON.parse(msg);
-                    console.log("result>>>");
-                    console.log(result);
-                    if(result.responsestatus==200 || result.responsestatus==201){
+                };
+                disabled.attr('disabled','disabled');
+                console.log("se envía:");
+                console.log(data);
+                $submitButton.attr("disabled", true).val("creating....");
+                $.ajax({
+                        type: "POST",
+                        url: createOfferURL,
+                        //data: data+ '&features='+interested+ '&street='+street
+                        data: data
+                    })
+                    .done(function (msg) {
+                        var result = JSON.parse(msg);
+                        console.log("result>>>");
+                        console.log(result);
+                        if(result.responsestatus==200 || result.responsestatus==201){
+                            $submitButton.attr("disabled", false).val("Save");
+                            $("#redirect").attr("action", "/clients/"+result.id);
+                            $("#redirect").submit();
+                        }else{
+                            if(result.message)
+                                showError(result.message);
+                            else
+                                showError("An error occured. Please try again");
+                            $submitButton.attr("disabled", false).val("Save");
+                        }
+                    })
+                    .error(function (err) {
+                        console.log("Error: " + err);
+                        showError(err);
                         $submitButton.attr("disabled", false).val("Save");
-                        $("#redirect").attr("action", "/clients/"+result.id);
-                        $("#redirect").submit();
-                    }else{
-                        if(result.message)
-                            showError(result.message);
-                        else
-                            showError("An error occured. Please try again");
-                        $submitButton.attr("disabled", false).val("Save");
-                    }
-                })
-                .error(function (err) {
-                    console.log("Error: " + err);
-                    showError(err);
-                    $submitButton.attr("disabled", false).val("Save");
-                }); // end ajax
+                    }); // end ajax
+            }
         }
+
     }); // end click
 
 
