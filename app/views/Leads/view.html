@@ -203,12 +203,19 @@
                                     p_campaign=$("<p/>", {'class': 'oculto campaign', 'text': Decodehtml(value.campaign.description)});
                                     div=div.append(p_campaign);
                                 }
+                                var lan="en";
+                                console.log(value.campaign.callCenter.id);
+                                if(value.campaign.callCenter.id==1541)
+                                    lan="es"
+                                else if(value.campaign.callCenter.id==5962)
+                                    lan="pt-br"
+
                                 if(value.campaign.offer){
                                     tam= value.campaign.offer.translations.length;
                                     if(tam>0){
                                         terms=Decodehtml(value.campaign.offer.translations[0].websiteTerms);
                                         $.each(value.campaign.offer.translations, function(index, value){
-                                            if(value.language.code=="en" || index==tam)
+                                            if(value.language.code==lan || index==tam)
                                                 terms=Decodehtml(value.websiteTerms);
                                         });
 
@@ -238,7 +245,7 @@
                             date=$("<strong />",{'text': "&{'date'}: "});
                             date_text=new Date(value.saleDate);
 //                            alert(new Date(value.saleDate).getFullYear());
-                            td2=$("<td />").append(date, date_text.getDate()+"/"+date_text.getMonth()+"/"+date_text.getFullYear() );
+                            td2=$("<td />").append(date, date_text.getDate()+"/"+(date_text.getMonth()+1)+"/"+date_text.getFullYear() );
                             table=table.append($("<tr />").append(td1, td2));
 
                             user=$("<strong />",{'text': "&{'username'}: "});
