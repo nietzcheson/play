@@ -124,10 +124,10 @@
             <div class="row">
                 <h1>
                 #{if editMode}
-                    Edit hotel - <span id="nombre-hotel"></span>
+                    &{'edit_hotel'} - <span id="nombre-hotel"></span>
                 #{/if}
                 #{else}
-                    New Hotel
+                &{'new_hotel'}
                 #{/else}
                 </h1>
                 <div class="alert alert-danger alert-dismissible oculto" role="alert">
@@ -145,8 +145,8 @@
 <div class="panel-heading">
     <ul class="nav nav-tabs tabs-main">
         <li class="active"><a href="#tab1default" data-toggle="tab">General</a></li>
-        <li><a href="#tab2default" data-toggle="tab">Content</a></li>
-        <li><a href="#tab3default" data-toggle="tab">Pictures</a></li>
+        <li><a href="#tab2default" data-toggle="tab">&{'content'}</a></li>
+        <li><a href="#tab3default" data-toggle="tab">&{'pictures'}</a></li>
     </ul>
 </div>
         <div class="panel-body">
@@ -158,36 +158,36 @@
                         <div class="col-lg-6">
                             <form role="form" id="form-hotel-part">
                                 <div class="form-group">
-                                    <label>Name*</label>
+                                    <label>&{'name'}*</label>
                                     <input id="hotel-name" class="form-control" type="text" data-required="true" data-length="2" maxlength="100" />
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <label>Destination</label>
+                                            <label>&{'destination'}</label>
                                             <select class="form-control" id="hotel-destination"></select>
                                         </div>
                                     </div>
                                     <div class="clearfix"></div><br />
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label>City*</label>
+                                            <label>&{'city'}*</label>
                                             <input id="hotel-city" class="form-control" type="text"  data-required="true" data-length="2" maxlength="200" />
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label>Zip code*</label>
+                                            <label>&{'zipcode'}*</label>
                                             <input id="hotel-zip" class="form-control" type="text"  data-required="true" data-length="2" maxlength="10" />
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Web Page*</label>
+                                    <label>&{'webpage'}*</label>
                                     <input id="hotel-url" class="form-control" type="text"  data-required="true" data-length="2" name="hotel-url"  maxlength="50" />
                                 </div>
                                 <div class="form-group">
-                                    <label>Address</label>
+                                    <label>&{'address'}</label>
                                     *{<textarea id="hotel-address" maxlength="250" class="form-control" rows="3" style="max-width: 200%"  data-required="true" data-length="2"></textarea>}*
                                     <div class="clearfix"></div>
                                     <div class="row">
@@ -206,9 +206,9 @@
                     <div class="panel with-nav-tabs panel-default">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tabterms1default" data-toggle="tab" aria-expanded="true" id="english-tab">English</a></li>
-                                <li class=""><a href="#tabterms2default" data-toggle="tab" aria-expanded="false" id="spanish-tab">Spanish</a></li>
-                                <li class=""><a href="#tabterms3default" data-toggle="tab" aria-expanded="false" id="portuguese-tab">Portuguese</a></li>
+                                <li class="active"><a href="#tabterms1default" data-toggle="tab" aria-expanded="true" id="english-tab">&{'english'}</a></li>
+                                <li class=""><a href="#tabterms2default" data-toggle="tab" aria-expanded="false" id="spanish-tab">&{'spanish'}</a></li>
+                                <li class=""><a href="#tabterms3default" data-toggle="tab" aria-expanded="false" id="portuguese-tab">&{'portuguese'}</a></li>
                             </ul>
                         </div>
                         <div class="panel-body">
@@ -218,7 +218,7 @@
                                         <!-- Contenido de la "pestaña English" -->
                                         <div class="tab-pane fade in active" id="language-tab1">
                                             <div class="form-group">
-                                                <label>Description</label>
+                                                <label>&{'description'}</label>
                                                 *{<textarea class="form-control description-translation" rows="3" maxlength="250"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -236,7 +236,7 @@
                                     <div class="tab-content" id="spanish">
                                         <div class="tab-pane fade in active" id="language-tab2">
                                             <div class="form-group">
-                                                <label>Description</label>
+                                                <label>&{'description'}</label>
                                                 *{<textarea class="form-control description-translation" rows="3" maxlength="250"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -254,7 +254,7 @@
                                     <div class="tab-content" id="portuguese">
                                         <div class="tab-pane fade in active" id="language-tab3">
                                             <div class="form-group">
-                                                <label>Description</label>
+                                                <label>&{'description'}</label>
                                                 *{<textarea class="form-control description-translation" rows="3" maxlength="250"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -283,7 +283,7 @@
                             <div class="col-sm-9 col-lg-9">
                                 <input type="file" name="image" class="form-control" id="image"/>
                             </div>
-                            <input value="Add Picture" type="submit" class="btn btn-primary" />
+                            <input value="&{'add_picture'}" type="submit" class="btn btn-primary" />
                         </div>
                     </div>
                 </form>
@@ -297,15 +297,15 @@
             <div style="display: inline-block; margin-top: 10px;">
             #{if id }
                 #{secure.check 'EditarHotel'}
-                    <input id="submit" value="Save" type="submit" class="btn btn-primary" />&nbsp;or
+                    <input id="submit" value="&{'save'}" type="submit" class="btn btn-primary" />&nbsp;&{'or'}
                 #{/secure.check}
             #{/if}
             #{else }
                 #{secure.check 'CrearHotel'}
-                    <input id="submit" value="Save" type="submit" class="btn btn-primary" />&nbsp;or
+                    <input id="submit" value="&{'save'}" type="submit" class="btn btn-primary" />&nbsp;&{'or'}
                 #{/secure.check}
             #{/else}
-                <a href="/hotels" class="btn">Cancel</a>
+                <a href="/hotels" class="btn">&{'cancel'}</a>
             </div>
         </form>
 </div>

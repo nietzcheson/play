@@ -6,12 +6,87 @@
     #{/set}
     <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-    <script src="/public/javascripts/leads/list.js"></script>
+    <!-- <script src="/public/javascripts/leads/list.js"></script> -->
+    <script>
+	    /**
+	     * Created by desarrollo1 on 13/04/2015.
+	     */
+	    $(document).ready(function() {
+	        var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+	        var months = ['January', 'February', 'March', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
+	        var context;
+	        var dtable=$('#leads-datatable').dataTable({
+	        "processing": true,
+	        "serverSide": true,
+			"oLanguage": {
+				"sSearch": "&{'searching'}",
+				"oPaginate": {
+					"sNext": "&{'next'}",
+					"sPrevious": "&{'previous'}"
+				},
+				"sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+				"sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+				"sProcessing": "&{'processing'}"
+			},
+	        "ajax":'/application/leadslist',
+	        "columnDefs": [
+	        {
+	            "targets":0,
+	            "render": function (td, cellData, rowData, row, col) {
+	                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
+	                    }
+	    	},
+	        {
+	            "targets":4,
+	            "render": function (datecreated) {
+	                        d= new Date(datecreated);
+	                        da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+	                        return da;
+	                    }
+			},
+			{
+				"targets":5,
+				"render": function (dateupdated) {
+					d= new Date(dateupdated);
+					da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+					return da;
+				}
+			}
+
+			],
+			"columns": [
+				{ "data": "name","title":"&{'name'}"},
+				{ "data": "idbooking","title":"&{'id_booking'}" },
+				{ "data": "numcert","title":"&{'certificate'}"},
+				{ "data": "campaign","title":"&{'campaign'}"},
+				{ "data": "datecreated","title":"&{'date_created'}"},
+				{ "data": "dateupdated","title":"&{'date_updated'}" }
+			]
+			,"order": [[ 5, "desc" ]]
+	        });
+	
+	        $('#myInput').on( 'keyup', function (e) {
+	            //if(this.value.length >= 3 && e.keyCode == 13) {
+	            if(e.keyCode == 13) {
+	                dtable.fnFilter($.trim(this.value));
+	            }else if(this.value == "") {
+	                dtable.fnFilter("");
+	            }
+	            return;
+	        } );
+	
+	        $("#search-client").click(function (e) {
+	            e.preventDefault();
+	            var value_search=$.trim($("#myInput").val());
+	            dtable.fnFilter(value_search);
+	        });
+	    });
+    </script>
     <div class="col-lg-12 page-header">
         <div class="row">
             <div class="col-lg-10">
                 <div class="row">
-                    <h1>Clients</h1>
+                    <h1>&{'li_clients'}</h1>
                 </div>
             </div>
             #{secure.check 'CrearCliente'}
@@ -19,7 +94,7 @@
                     <div class="row">
                         <a href="/clients/create" class="btn btn-sm btn-primary pull-right top-separation">
                             <i class="glyphicon glyphicon-plus"></i>
-                            &nbsp;New Client
+                            &nbsp;&{'new_client'}
                         </a>
                     </div>
                 </div>
@@ -32,7 +107,7 @@
                     <div class="dataTable_wrapper">
                         <div class="col-sm-3 pull-right">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="myInput" placeholder="Search for...">
+                                <input type="text" class="form-control" id="myInput" placeholder="&{'search'}...">
                                   <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" id="search-client">
                                         <span class="glyphicon glyphicon-search"></span>

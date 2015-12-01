@@ -17,7 +17,7 @@ public class Brokers extends MasterController {
         Boolean successfullyUpdated = false;
         String mode = params.get("mode");
         String name = params.get("name");
-        String idBroker = params.get("id-value");
+//        String idBroker = params.get("id-value");
         Logger.info("name: >>>" + name);
 
         if(mode != null && !mode.isEmpty()) {
@@ -82,7 +82,7 @@ public class Brokers extends MasterController {
         }
         String requestURI = "/certLogin" + addId;
         // Cuerpo de la petición
-        String textpass="";
+//        String textpass="";
 //        if(!password.isEmpty()){
 //            textpass=textpass.concat("  \"password\": \""       + password + "\",\n" );
 //        }

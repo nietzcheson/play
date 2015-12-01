@@ -43,7 +43,7 @@ $(document).ready(function() {
             { "data": "dateUpdated","title":"Updated" },
             { "data": "brokerCRM","title":"Master Broker", bSortable: false },
             { "data": "offer.name","title":"Offer", bSortable: false },
-            { "data": "activationFee","title":"Certificate Serial", bSortable: false }
+            { "data": "activationFee","title":"&{'serial_numbers'}", bSortable: false }
         ],
         "order": [[ 1, "desc" ]]
 

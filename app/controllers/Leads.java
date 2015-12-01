@@ -124,12 +124,13 @@ public class Leads extends MasterController {
             addId = "/" + id;
         else
             addId = "";
-        Logger.info("creando..");
+        Logger.info("Creando..");
         String firstname = params.get("firstname");
         String lastname = params.get("lastname");
         String certificate = params.get("certificate");
+        String campaign = params.get("campaign");
         String birthdate = params.get("birthdate");
-        Logger.info("birthdate: >>>" + birthdate);
+        Logger.info("Birthdate: >>>" + birthdate);
         String year = params.get("year");
         String month = params.get("month");
         String day = params.get("day");
@@ -151,12 +152,9 @@ public class Leads extends MasterController {
         System.out.println(phone2);
         String phone_text="  \""+ typephone + "\": \" "+ phone + "\", \n";
         if(typephone1!= null) {
-            Logger.info("if 1");
-
             phone_text=phone_text.concat("  \""+ typephone1 + "\": \" "+ phone1 + "\", \n");
         }
         if(typephone2!= null) {
-            Logger.info("if 2");
             phone_text=phone_text.concat("  \""+ typephone2 + "\": \" "+ phone2 + "\", \n");
         }
         Logger.info("phone_text: >>>" + phone_text);
@@ -186,7 +184,8 @@ public class Leads extends MasterController {
                 "  \"statusMarital\": \""+status+"\", \n"+
                 "  \"sale\" : " +
                 "{\n" +
-                "  \"certificate\": \"" + certificate + "\" \n" +
+                "  \"certificate\": \"" + certificate + "\", \n" +
+                "  \"campaignId\": \"" + campaign + "\" \n" +
                 "},\n" +
                 "  \"featureLst\" : [" +
                         interested+
@@ -207,9 +206,9 @@ public class Leads extends MasterController {
     //Remover un pago del Lead
     public static void removePayment(String id) throws ParseException {
         String bookingId = params.get("bookingId");
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         JsonObject audit= MasterController.audit(new Integer(id), "Pagos", "Datos de la Venta", "Eliminar Pago", "Eliminar Pago");
-        JsonObject jsonObject;
+//        JsonObject jsonObject;
         WS.HttpResponse res;
         Logger.info("Eliminar Pago #" + id + " del bookingId: " + bookingId+" en: "+ Constants.API);
         Logger.info("Servicio Eliminar Pago: " + Constants.API + "/sales/" + bookingId+"/payments/"+id+"/delete");
@@ -268,7 +267,7 @@ public class Leads extends MasterController {
         String bookingId = params.get("bookingId");
 
         //Datos Audit
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         String text_module;
 
 //        JsonObject audit= new JsonObject();
@@ -386,7 +385,7 @@ public class Leads extends MasterController {
         String bookingId = params.get("bookingId");
 
         //Datos Audit
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         Integer idaudit;
         if(id==null)
             idaudit=0;
@@ -449,7 +448,7 @@ public class Leads extends MasterController {
     //Crear o Actualizar una Venta
     public static void createSale(String id) throws ParseException {
         //Datos Audit
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         Integer auditid;
         if(id==null)
             auditid=0;
@@ -513,7 +512,7 @@ public class Leads extends MasterController {
     public static void createNote(String id) throws ParseException {
         //Datos Audit
 //      String ip="200.79.231.94";
-        String ip=request.remoteAddress;
+//        String ip=request.remoteAddress;
         JsonObject audit= MasterController.audit(0, "Notas", "Datos de la Venta", "Crear Nota", "Crear Nota");
         JsonObject jsonObject;
         JsonObject note= new JsonObject();

@@ -202,7 +202,7 @@
         <div class="col-lg-12">
             <div class="row">
                 <h1>
-                ${id} Campaign
+                ${id} &{'campaign'}
                 </h1>
             </div>
         </div>
@@ -229,7 +229,7 @@
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Name*</label>
+                                    <label>&{'name'}*</label>
                                     <input id="campaign-name" name="name" type="text" class="form-control"
                                            maxlength="100"/>
                                 </div>
@@ -237,7 +237,7 @@
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <input id="offerId" name="offerId" value="${id_offer}" type="hidden"/>
-                                    <label>Offer  &nbsp;</label>
+                                    <label>&{'li_oferta'}  &nbsp;</label>
                                     <input class="form-control" type="text" name="offer" id="offer" style=""/>
                                 </div>
                             </div>
@@ -246,25 +246,25 @@
 
                         <div class="col-lg-5">
                             <div class="form-group">
-                                <label>Certificate type</label><br>
+                                <label>&{'certificate_type'}</label><br>
                                 <label class="radio-inline">
                                     <input type="radio" name="typeCert" class="typeCert" id="inlineRadio1" value="1"
-                                           checked>Physical
+                                           checked>&{'physical'}
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="typeCert" class="typeCert" id="2" value="2">Digital
+                                    <input type="radio" name="typeCert" class="typeCert" id="2" value="2">&{'digital'}
                                 </label>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label>Serial type</label><br>
+                                <label>&{'serial_type'}</label><br>
                                 <label class="radio-inline">
                                     <input type="radio" name="typeFolio" class="typeFolio" id="inlineRadio1" value="1"
-                                           checked>Unique
+                                           checked>&{'unique'}
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="typeFolio" class="typeFolio" id="inlineRadio2" value="2">Generic
+                                    <input type="radio" name="typeFolio" class="typeFolio" id="inlineRadio2" value="2">&{'generic'}
                                 </label>
                             </div>
                         </div>
@@ -291,7 +291,7 @@
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Country</label>
+                                    <label>&{'country'}</label>
                                     <select class="form-control" name="country" id="country">
                                     *{ Aquí se recorre el objeto }*
                                     #{list countries}
@@ -308,7 +308,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Expiration*</label>
+                                    <label>&{'expiration'}*</label>
                                     <input type="number" name="expiration" class="form-control" id="campaign-expiration"
                                            maxlength="2" min="0" max="99">
                                 </div>
@@ -320,7 +320,7 @@
 
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Reservation group</label>
+                                    <label>&{'reservation_group'}</label>
                                     <select class="form-control" name="reservationGroup" id="reservationGroup">
                                     *{ Aquí se recorre el objeto }*
                                     #{list reservationGroup}
@@ -336,7 +336,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Segment</label>
+                                    <label>&{'segment'}</label>
                                     <select class="form-control" name="segment" id="segment">
                                     *{ Aquí se recorre el objeto }*
                                     #{list segments}
@@ -352,7 +352,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Merchant</label>
+                                    <label>&{'merchant'}</label>
                                     <select class="form-control" name="merchant" id="merchant">
                                     *{ Aquí se recorre el objeto }*
                                     #{list merchants}
@@ -368,7 +368,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <div class="form-group">
-                                    <label>Call center</label>
+                                    <label>&{'call_center'}</label>
                                     <select class="form-control" name="callcenter" id="callcenter">
                                     *{ Aquí se recorre el objeto }*
                                     #{list callcenters}
@@ -384,7 +384,7 @@
                             </div>
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <label>Description*</label>
+                                    <label>&{'description'}*</label>
                                     <div class="clearfix"></div>
                                     <div class="row">
                                         <div class="col-sm-11">
@@ -399,15 +399,15 @@
                         <input name="brokerToken" type="hidden" value="0o987yui6512"/>
                         #{if id }
                             #{secure.check 'EditarCampania'}
-                                <input class="btn btn-primary" type="submit" value="Save"/>&nbsp;&nbsp;or
+                                <input class="btn btn-primary" type="submit" value="&{'save'}"/>&nbsp;&nbsp;&{'or'}
                             #{/secure.check}
                         #{/if}
                         #{else }
                             #{secure.check 'CrearCampania'}
-                                <input class="btn btn-primary" type="submit" value="Save"/>&nbsp;&nbsp;or
+                                <input class="btn btn-primary" type="submit" value="&{'save'}"/>&nbsp;&nbsp;&{'or'}
                             #{/secure.check}
                         #{/else}
-                        <a href="/campaigns" class="btn">Cancel</a>
+                        <a href="/campaigns" class="btn">&{'cancel'}</a>
                     </form>
                     <br>
                     <br>

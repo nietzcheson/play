@@ -12,7 +12,7 @@ public class Ecert extends MasterController {
         Boolean successfullyUpdated = false;
         String mode = params.get("mode");
         String name = params.get("name");
-        String idBroker = params.get("id-value");
+//        String idBroker = params.get("id-value");
         Logger.info("name: >>>" + name);
 
         if(mode != null && !mode.isEmpty()) {

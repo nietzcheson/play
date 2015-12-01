@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -72,11 +72,23 @@
             <ul class="nav navbar-top-links navbar-right">
 
                 <!-- /.dropdown -->
-                <li class="dropdown" style="color: white !important;">
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>&nbsp; ${user_name} <b class="caret"></b></a>
                     <ul class="dropdown-menu dropdown-user">
                         <li>
                             <a href="@{Secure.logout()}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="/public/images/&{'lans'}.png" alt="">  <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user" style="min-width: 20px;">
+                        <li>
+                            <a data-lan="&{'lan'}" class="change_language">
+                                <img src="/public/images/&{'lan'}.png" alt=""> </a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -92,7 +104,7 @@
                         <li>
                             <a href="/clients">
                                 <i class="fa fa-users fa-fw"></i>
-                                Clients
+                                &{'li_clients'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -100,7 +112,7 @@
                         <li>
                             <a href="/master-brokers">
                                 <i class="fa fa-user fa-fw"></i>
-                                Master brokers
+                                &{'li_masterbroker'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -108,7 +120,7 @@
                         <li>
                             <a href="/offers">
                                 <i class="fa fa-tag fa-fw"></i>
-                                Offers
+                                &{'li_oferta'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -116,7 +128,7 @@
                         <li>
                             <a href="/campaigns">
                                 <i class="fa fa-file-text fa-fw"></i>
-                                Campaigns
+                                &{'li_campania'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -124,7 +136,7 @@
                         <li>
                             <a href="/destinations">
                                 <i class="fa fa-map-marker fa-fw"></i>
-                                Destinations
+                                &{'li_destino'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -132,7 +144,7 @@
                         <li>
                             <a href="/hotels">
                                 <i class="fa fa-building fa-fw"></i>
-                                Hotels
+                                &{'li_hotel'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -140,7 +152,7 @@
                         <li>
                             <a href="/ecerts">
                                 <i class="fa fa-photo fa-fw"></i>
-                                Cert Images
+                                &{'li_certimage'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -148,7 +160,7 @@
                         <li>
                             <a href="/serials">
                                 <i class="fa fa-cube fa-fw"></i>
-                                Inventory
+                                &{'li_inventary'}
                             </a>
                         </li>
                         #{/secure.check}
@@ -156,7 +168,7 @@
                         <li>
                             <a href="/upload-leads">
                                 <i class="fa fa-upload fa-fw"></i>
-                                Upload Leads
+                                &{'li_uploadleads'}
                             </a>
                         </li>
                         #{/secure.check}

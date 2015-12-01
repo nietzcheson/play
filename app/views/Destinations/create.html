@@ -59,7 +59,7 @@
         <div class="col-lg-12">
             <div class="row">
                 <h1>
-                    Destination
+                    &{'li_destino'}
                 </h1>
                 <div class="alert alert-danger alert-dismissible oculto" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -74,7 +74,7 @@
 <div class="col-lg-12">
 <div class="panel panel-default">
 <div class="panel-heading">
-    New Destination
+    &{'new_destination'}
 </div>
 <div class="panel-body">
 <form id="createDestination" action="" method="post">
@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-xs-7">
                     <div class="form-group">
-                        <label>Description*</label>
+                        <label>&{'description'}*</label>
                         <div class="clearfix"></div>
                         <div class="row">
                             <div class="col-sm-11">
@@ -101,11 +101,11 @@
                     </div>
                 </div>
                 <div class="col-xs-7">
-                    <label>Country*</label>
+                    <label>&{'country'}*</label>
                     <select class="form-control" id="countries"></select>
                 </div>
                 <div class="col-xs-7">
-                    <label>State*</label>
+                    <label>&{'state'}*</label>
                     <select class="form-control" id="states"></select>
                 </div>
                 <br/>
@@ -113,26 +113,26 @@
         </div>
     </div>
     <div class="form-group">
-        <label>Status</label><br>
+        <label>&{'status'}</label><br>
         <label class="radio-inline">
-            <input type="radio" name="inlineRadioOptions" class="destination-status" id="status1" value="1" checked>Enabled
+            <input type="radio" name="inlineRadioOptions" class="destination-status" id="status1" value="1" checked>&{'enabled'}
         </label>
         <label class="radio-inline">
-            <input type="radio" name="inlineRadioOptions" class="destination-status" id="status0" value="0">Disabled
+            <input type="radio" name="inlineRadioOptions" class="destination-status" id="status0" value="0">&{'disabled'}
         </label>
     </div>
     <br/>
     #{if id }
         #{secure.check 'EditarDestino'}
-            <input type="submit" class="btn btn-primary" value="Save">&nbsp;&nbsp;or
+            <input type="submit" class="btn btn-primary" value="Save">&nbsp;&nbsp;&{'or'}
         #{/secure.check}
     #{/if}
     #{else }
         #{secure.check 'CrearDestino'}
-            <input type="submit" class="btn btn-primary" value="Save">&nbsp;&nbsp;or
+            <input type="submit" class="btn btn-primary" value="Save">&nbsp;&nbsp;&{'or'}
         #{/secure.check}
     #{/else}
-    <a href="/destinations" class="btn">Cancel</a>
+    <a href="/destinations" class="btn">&{'cancel'}</a>
 </form>
 <br>
 <br>

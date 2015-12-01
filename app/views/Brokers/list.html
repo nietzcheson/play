@@ -20,7 +20,7 @@
             success:function(result){
                 console.log("result >>>" + result);
                 var result =  $.parseJSON(result);
-                $("h1").html("Brokers of "+result.companyName);
+                $("h1").html("Brokers &{'of'} "+result.companyName);
             },
             error: function(err){
                 showError("error" + err);
@@ -46,24 +46,25 @@
                     );
                     dataSet.push(content);
                 });
-//                for(var i=0; i < result.brokers.length; i++) {
-//                    //var myDate = new Date( result[i].dateCreated);
-//                    var content = new Array(
-//                            '<a href="/hotels/' + result[i].id + '">' + result[i].name + '</a>',
-//                            result[i].address
-//
-//                    );
-//                    dataSet.push(content);
-//                } //Termina el For
 
                 $('#brokers-datatable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
 
                 $('#brokers-datatable').dataTable( {
                     "data": dataSet,
+                    "oLanguage": {
+                        "sSearch": "&{'searching'}",
+                        "oPaginate": {
+                            "sNext": "&{'next'}",
+                            "sPrevious": "&{'previous'}"
+                        },
+                        "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+                        "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                        "sProcessing": "&{'processing'}"
+                    },
                     "columns": [
-                        { "title": "User" },
-                        { "title": "Name"},
-                        { "title": "Campaign" }
+                        { "title": "&{'username'}" },
+                        { "title": "&{'name'}"},
+                        { "title": "&{'campaign'}" }
                     ]
                 } );
             },
@@ -71,40 +72,6 @@
                 alert(err);
             }
         });
-
-//        $('#brokers-datatable').dataTable({
-//            "processing": true,
-//            "serverSide": true,
-//            "ajax":'/application/userslist',
-//            "columnDefs": [
-//                {
-//                    "targets":0,
-//                    "render": function (td, cellData, rowData, row, col) {
-//                        return  '<a href="/brokers/218529/' + rowData.id + '">' + rowData.name + '</a>';
-//                    }
-//                },
-//                {
-//                    "targets":1,
-//                    "render": function (td, cellData, rowData, row, col) {
-//                        return  "User 1";
-//                    }
-//                },
-//                { "targets": 2,
-//                    "render":function(td, cellData, rowData, row, col){
-////                    return new Date(rowData.dateUpdated).toDateString();
-//                        return "Campaign 1";
-//                    }
-//                }
-//            ],
-//            "columns": [
-//                { "data": "name","title":"Name"  },
-////            { "data": "userName","title":"Username" },
-//                { "data": "email","title":"User" },
-//                { "data": "email","title":"Campaigns", bSortable: false }
-//            ],
-//            "order": [[ 0, "desc" ]]
-//
-//        });
     });
 </script>
 <div class="col-lg-12 page-header">
@@ -112,25 +79,25 @@
     #{if successfullyCreated}
         <div class="alert alert-success alert-dismissible " role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong>Well done!</strong> You successfully created the broker <strong><a href="/brokers/${id}/${name}">${name}</a></strong>
+            <strong>&{'well_done'}!</strong> &{'successfully_created'} broker <strong><a href="/brokers/${id}/${name}">${name}</a></strong>
         </div>
     #{/if}
     #{if successfullyUpdated}
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            You successfully updated the broker <strong><a href="/brokers/${id}/${name}">${name}</a></strong>
+            &{'successfully_updated'} broker <strong><a href="/brokers/${id}/${name}">${name}</a></strong>
         </div>
     #{/if}
         <div class="col-lg-10">
             <div class="row">
-                <h1>Brokers of patricio</h1>
+                <h1>Brokers &{'of'} patricio</h1>
             </div>
         </div>
         <div class="col-lg-2">
             <div class="row">
                 <a href="/brokers/${id}/create"  class="btn btn-sm btn-primary pull-right top-separation">
                     <i class="glyphicon glyphicon-plus"></i>
-                    &nbsp;New  Broker
+                    &nbsp;&{'new'}  Broker
                 </a>
             </div>
         </div>

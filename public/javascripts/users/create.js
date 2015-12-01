@@ -74,12 +74,11 @@ $(document).ready(function () {
                 $("#phone").val(result.phone);
                 $("#city").val(result.city);
                 if(result.user){
-                    $("#username").val(result.user.user).prop('readonly',true);
+                    $("#username, #username_cert").val(result.user.user);
                     $("#email").val(result.user.email);
+                    $("#pass_oculto, #password_cert").val(result.user.password);
                     $("#pass_oculto").val(result.user.password);
-                    /*  Cert Link   */
-                    $("#username-cert").val(result.user.user).hide();
-                    $("#password-cert").val(result.user.password).hide();
+                    $(".label_pass").html("Password: "+result.user.password);
                 }
                 var li, a="";
                 if(result.campaigns){

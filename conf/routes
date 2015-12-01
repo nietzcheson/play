@@ -19,6 +19,7 @@ GET     /logout                                 Secure.logout
 #Funciones Generales Jquery
 POST   /TableList/?                             Application.TableList   #Listado Jquery para Tablas y Selects
 GET    /application/UsersGroupList/?            Application.UsersGroupList
+GET /changeLanguage/{lan}/?                     Application.change_language
 
 # Leads
 *     /clients/?                                         Leads.list

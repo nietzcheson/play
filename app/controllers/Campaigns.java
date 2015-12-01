@@ -70,7 +70,7 @@ public class Campaigns extends MasterController {
     public static void createCampaign() {
         JsonObject jsonObject;
         String id = params.get("id");
-        String cerCustomer = params.get("id");
+//        String cerCustomer = params.get("id");
         Logger.info("empty: >>>" + id.isEmpty());
         Logger.info("lenght: >>>" + id.length());
         Logger.info("lenght: >>>" + id.length());

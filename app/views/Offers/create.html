@@ -125,10 +125,10 @@ $(document).ready(function() {
             <div class="row">
                 <h1>
                 #{if editMode}
-                    Edit Offer - <span id="nombre-oferta"></span>
+                    &{'edit_offer'} - <span id="nombre-oferta"></span>
                 #{/if}
                 #{else}
-                    New Offer
+                    &{'new_offer'}
                 #{/else}
                 </h1>
             </div>
@@ -142,8 +142,8 @@ $(document).ready(function() {
     <div class="panel with-nav-tabs panel-default">
         <div class="panel-heading">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#tab1default" data-toggle="tab" id="configuration-tab-link">Configuration</a></li>
-                <li><a href="#tab2default"  data-toggle="tab" id="terms-tab-link">Terms</a></li>
+                <li class="active"><a href="#tab1default" data-toggle="tab" id="configuration-tab-link">&{'configuration'}</a></li>
+                <li><a href="#tab2default"  data-toggle="tab" id="terms-tab-link">&{'terms'}</a></li>
             </ul>
 
         </div>
@@ -160,52 +160,52 @@ $(document).ready(function() {
                                 <span id="offer-name" style="font-size: 28px;"></span>
                             #{/if}
                             #{else}
-                                <label>Name*:</label>
+                                <label>&{'name'}*:</label>
                                 <input type="text" id="offer-name" name="offer-name" class="form-control" required maxlength="250"/>
                             #{/else}
                             <span class="message-span"></span>
                         </div>
                         <div class="form-group">
-                            <label class="radio">Status</label>
+                            <label class="radio">&{'status'}</label>
 
                             <label class="radio-inline">
                                 <input type="radio" name="status" class="status" value="1" id="status1" checked>
-                                Active
+                                &{'enabled'}
                             </label>
                             <label class="radio-inline">
                                 <input type="radio" name="status" class="status" value="0" id="status0">
-                                Inactive
+                                &{'disabled'}
                             </label>
                         </div>
                         <div class="form-group">
-                                <label for="select-destination">Destination*:</label>
+                                <label for="select-destination">&{'destination'}*:</label>
                                 <select id="select-destination" class="demo-default" placeholder="Select destinations..." values="fasdfasd">
                                 </select>
                         </div>
                         <div id="hook" class="form-group">
-                            <label class="radio">Hook Type* </label>
+                            <label class="radio">&{'hook_type'}* </label>
 
                             <label for="hook0" class="radio-inline">
                             <input type="radio" name="hook" id="hook0" value="0" class="hook-id" checked="checked">
-                            Hook</label>
+                            &{'hook'}</label>
 
                             <label for="hook1" class="radio-inline">
                             <input type="radio" name="hook" id="hook1" value="1" class="hook-id">
-                            Soft-hook</label>
+                            &{'soft_hook'}Soft-hook</label>
 
                             <label for="hook2" class="radio-inline">
                             <input type="radio" name="hook" id="hook2" value="2" class="hook-id">
-                            Non-hook</label>
+                            &{'non_hook'}Non-hook</label>
 
                         </div>
 
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <label>Transportation</label>
+                                    <label>&{'transportation'}</label>
                                     <select class="form-control" id="offer-transportation">
-                                        <option value="1">One Way</option>
-                                        <option id="optionb" value="2">Round Trip</option>
+                                        <option value="1">&{'one_way'}</option>
+                                        <option id="optionb" value="2">&{'round_trip'}</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-4">
@@ -214,7 +214,7 @@ $(document).ready(function() {
                                     </select>
                                 </div>
                                 <div class="col-lg-4">
-                                    <label>Nights*</label>
+                                    <label>&{'nights'}*</label>
                                     <input id="offer-nights" class="form-control" type="number" maxlength="2" min="0" max="99" required>
                                     <span class="message-span"></span>
                                 </div>
@@ -222,23 +222,23 @@ $(document).ready(function() {
                             <br/>
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <label>Price</label>
+                                    <label>&{'price'}</label>
                                     <input id="offer-price" class="form-control" placeholder="$0.0" maxlength="6">
                                     <span class="message-span"></span>
                                 </div>
                                 <div class="col-lg-4">
-                                    <label>Activacion Fee</label>
+                                    <label>&{'activation_fee'}</label>
                                     <input class="form-control" placeholder="$0.0" id="activation-fee" maxlength="6">
                                 </div>
                                 <div class="col-lg-4">
-                                    <label>Taxes</label>
+                                    <label>&{'taxes'}</label>
                                     <input class="form-control" id="offer-taxes" placeholder="$0.0" maxlength="6">
                                     <span class="message-span"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Description*</label>
+                            <label>&{'description'}*</label>
                             *{<textarea id="offer-description" class="form-control" rows="3" style="max-width: 200%" requiredd maxlength="4000"></textarea>}*
                             <div class="clearfix"></div>
                             <div class="row">
@@ -254,7 +254,7 @@ $(document).ready(function() {
             </div>
             <!-- Contenido de la "pestaña 2" -->
             <div class="tab-pane fade" id="tab2default">
-                    <h4>Content for CancunCards.com Website</h4>
+                    <h4>&{'content_cancuncards'}</h4>
                     <div class="panel with-nav-tabs panel-default">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs">
@@ -271,7 +271,7 @@ $(document).ready(function() {
                                         <!-- Contenido de la "pestaña English" -->
                                         <div class="tab-pane fade in active" id="language-tab1">
                                                 <div class="form-group">
-                                                    <label>Description</label>
+                                                    <label>&{'description'}</label>
                                                     *{<textarea class="form-control description-translation" rows="3" maxlength="2000"></textarea>}*
                                                     <div class="clearfix"></div>
                                                     <div class="row">
@@ -282,7 +282,7 @@ $(document).ready(function() {
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>Details</label>
+                                                    <label>&{'details'}</label>
                                                     *{<textarea class="form-control details-translation" rows="3" maxlength="2000"></textarea>}*
                                                     <div class="clearfix"></div>
                                                     <div class="row">
@@ -293,7 +293,7 @@ $(document).ready(function() {
                                                     </div>
                                                 </div>
                                             <div class="form-group">
-                                                <label>Terms</label>
+                                                <label>&{'terms'}</label>
                                                 <textarea class="form-control terms-translation" rows="3"></textarea>
                                             </div>
                                         </div>
@@ -305,7 +305,7 @@ $(document).ready(function() {
                                     <div class="tab-content" id="spanish">
                                         <div class="tab-pane fade in active" id="language-tab2">
                                             <div class="form-group">
-                                                <label>Description</label>
+                                                <label>&{'description'}</label>
                                                 *{<textarea class="form-control description-translation" rows="3"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -316,7 +316,7 @@ $(document).ready(function() {
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Details</label>
+                                                <label>&{'details'}</label>
                                                 *{<textarea class="form-control details-translation" rows="3"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -328,7 +328,7 @@ $(document).ready(function() {
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Terms</label>
+                                                <label>&{'terms'}</label>
                                                 <textarea class="form-control terms-translation" rows="3"></textarea>
                                             </div>
                                         </div>
@@ -339,7 +339,7 @@ $(document).ready(function() {
                                     <div class="tab-content" id="portuguese">
                                         <div class="tab-pane fade in active" id="language-tab3">
                                             <div class="form-group">
-                                                <label>Description</label>
+                                                <label>&{'description'}</label>
                                                 *{<textarea class="form-control description-translation" rows="3"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -350,7 +350,7 @@ $(document).ready(function() {
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Details</label>
+                                                <label>&{'details'}</label>
                                                 *{<textarea class="form-control details-translation" rows="3"></textarea>}*
                                                 <div class="clearfix"></div>
                                                 <div class="row">
@@ -361,7 +361,7 @@ $(document).ready(function() {
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Terms</label>
+                                                <label>&{'terms'}</label>
                                                 <textarea class="form-control terms-translation" rows="3"></textarea>
                                             </div>
                                         </div>
@@ -379,22 +379,22 @@ $(document).ready(function() {
             </div>
             #{if id }
                 #{secure.check 'EditarOferta'}
-                    <input id="submit" value="Save" type="submit" class="btn btn-primary" />&nbsp;or
+                    <input id="submit" value="&{'save'}" type="submit" class="btn btn-primary" />&nbsp;&{'or'}
                 #{/secure.check}
             #{/if}
             #{else }
                 #{secure.check 'CrearOferta'}
-                    <input id="submit" value="Save" type="submit" class="btn btn-primary" />&nbsp;or
+                    <input id="submit" value="&{'save'}" type="submit" class="btn btn-primary" />&nbsp;&{'or'}
                 #{/secure.check}
             #{/else}
-            <a href="/offers" class="btn">Cancel</a>
+            <a href="/offers" class="btn">&{'cancel'}</a>
             </div>
         </div>
             <!-- /.row (nested) -->
         </div>
 
     <!-- /.panel-body -->
-    </div>
+    *{</div>}*
     </form>
     <!-- /.panel -->
 </div>

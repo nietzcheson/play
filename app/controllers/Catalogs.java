@@ -12,7 +12,7 @@ import util.Constants;
  */
 @With(Secure.class)
 public class Catalogs extends MasterController{
-    private static final MasterController masterController = new MasterController();
+//    private static final MasterController masterController = new MasterController();
     public static void countriesList(){
         WS.WSRequest req = WS.url(Constants.API + "/countries").authenticate(user, password);
         WS.HttpResponse res = req.get();

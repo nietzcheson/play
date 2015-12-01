@@ -136,43 +136,44 @@
                         content = content.append(country);
                     }
                     if (result.address) {
-                        a_href=$("<a/>", {'title': 'Address'+result.address, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-book269' }));
-                        $(".hidden-info").append(a_href);
+                        $(".flaticon-book269").attr("title", "&{'address'}: "+result.address)
+                    }else{
+                        $(".flaticon-book269").hide();
                     }
                     if (result.email) {
-                        a_href=$("<a/>", {'title': result.email, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-email131' }));
-                        $(".hidden-info").append(a_href);
+                        $(".flaticon-email131").attr("title", result.email)
+                    }else{
+                        $(".flaticon-email131").hide();
                     }
                     if (result.phone1) {
-                        a_href=$("<a/>", {'title': 'Home Phone: '+result.phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
-                        $(".hidden-info").append(a_href);
+                        $(".flaticon-phone21").attr("title", 'Home Phone: '+result.phone1)
+                    }else{
+                        $(".flaticon-phone21").hide();
                     }
                     if (result.phone2) {
-                        a_href=$("<a/>", {'title': 'Work Phone: '+result.phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone72' }));
-                        $(".hidden-info").append(a_href);
+                        $(".flaticon-phone72").attr("title", 'Work Phone: '+result.phone1)
+                    }else{
+                        $(".flaticon-phone72").hide();
                     }
                     if (result.phone3) {
-                        a_href=$("<a/>", {'title': 'Cellphone: '+result.phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-smartphone24' }));
-                        $(".hidden-info").append(a_href);
                         strong = $("<strong/>", {'text': 'Cellphone: '});
+                        address = $("<p/>", {'text': result.phone3, 'id': 'cellphone'}).prepend(strong);
+                        content = content.append(address);
+                    }else{
+                        $(".flaticon-smartphone24").hide();
                     }
                     if (result.age) {
-                        strong = $("<strong/>", {'text': 'Age: '});
+                        strong = $("<strong/>", {'text': "&{'age'}: "});
                         occupation = $("<p/>", {'text': result.age}).prepend(strong);
                         content = content.append(occupation);
                     }
                     if (result.occupation) {
-                        strong = $("<strong/>", {'text': 'Occupation: '});
+                        strong = $("<strong/>", {'text': "&{'occupation'}: "});
                         occupation = $("<p/>", {'text': Decode(result.occupation)}).prepend(strong);
                         content = content.append(occupation);
                     }
                     if (result.maritalStatus) {
-                        strong = $("<strong/>", {'text': 'Marital Status: '});
+                        strong = $("<strong/>", {'text': "&{'marital_status'}: "});
                         maritalStatus = $("<p/>", {'text': result.maritalStatus.civilEng}).prepend(strong);
                         content = content.append(maritalStatus);
                     }
@@ -181,7 +182,7 @@
                         $.each(result.featuresesLst, function (index, value) {
                             ul.append($("<li/>", {'text': value.customerFeaturesId.features.name}));
                         });
-                        strong = $("<strong/>", {'text': 'Customer is interted in:'});
+                        strong = $("<strong/>", {'text': "&{'customer_interested'}: "});
                         maritalStatus = $("<p/>").append(strong, ul);
                         content = content.append(maritalStatus);
                     }
@@ -197,33 +198,9 @@
                             offer, vendor, certificate, booking="";
                             if(value.campaign){
                                 if(value.campaign.description){
-                                    var destinations="", type_cert="";
-                                    if(value.campaign.offer.destinations){
-                                        var destinations="Destinities: ";
-                                        $.each(value.campaign.offer.destinations, function (index, value_d) {
-                                            if(destinations!="Destinities: ")
-                                                destinations=destinations+" ,";
-                                            destinations=destinations+value_d.offerDestinationId.destination.name;
-                                        });
-                                    }
-                                    if(value.campaign.offer.typeCertificate==1){
-                                        type_cert="Physical";
-                                    }else{
-                                        type_cert="Digital";
-                                    }
-
-                                    campaign=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#campaign', 'text': 'View Campaign'});
+                                    campaign=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#campaign', 'text': "&{'view'} &{'campaign'}"});
                                     div=div.append(campaign);
-                                    p_campaign=$("<p/>", {'class': 'oculto campaign', 'text': Decodehtml(
-                                            'Nights: '+value.campaign.offer.nights+' '+'Plan: '+value.campaign.offer.mealPlan.plan+' '
-                                            +destinations+" Cost: $"+value.campaign.offer.activationFee+" USD act. fee and $"
-                                            +value.campaign.offer.taxes+" USD taxes"
-                                            +", Certificate Type: "+type_cert+", "+"Transportation: "
-                                            +value.campaign.offer.transportation.name
-                                            +", Reservation Group: "+value.campaign.reservationGroup.name
-                                            +" ["+value.campaign.offer.hook.name+"], "
-                                            + value.campaign.description
-                                    )});
+                                    p_campaign=$("<p/>", {'class': 'oculto campaign', 'text': Decodehtml(value.campaign.description)});
                                     div=div.append(p_campaign);
                                 }
                                 if(value.campaign.offer){
@@ -236,7 +213,7 @@
                                         });
 
                                         if (terms != ""){
-                                            terms_a=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#terms', 'text': 'View Terms'});
+                                            terms_a=$("<a/>",{'class': 'label label-primary pull-right view-terms', 'data-toggle': 'modal', 'data-target': '#terms', 'text': "&{'view'} &{'terms'}"});
                                             div=div.append(terms_a);
                                             p_terms=$("<p/>", {'class': 'oculto terms', 'text': terms});
                                             div=div.append(p_terms);
@@ -254,20 +231,20 @@
                             }
                             table=$("<table />", {'class': 'table'}).append($("<tbody />"));
 
-                            booking=$("<strong />",{'text': 'Booking Id: '});
+                            booking=$("<strong />",{'text': "&{'id_booking'}: "});
                             booking=$("<a/>", {'href': '/clients/'+idValue+'/payments/'+value.id+'/'+callcenter}).append(booking, value.id);
                             td1=$("<td />").append(booking);
 
-                            date=$("<strong />",{'text': 'Date: '});
+                            date=$("<strong />",{'text': "&{'date'}: "});
                             date_text=new Date(value.saleDate);
 //                            alert(new Date(value.saleDate).getFullYear());
                             td2=$("<td />").append(date, date_text.getDate()+"/"+date_text.getMonth()+"/"+date_text.getFullYear() );
                             table=table.append($("<tr />").append(td1, td2));
 
-                            user=$("<strong />",{'text': 'User: '});
+                            user=$("<strong />",{'text': "&{'username'}: "});
                             td1=$("<td />").append(user, value.user);
 
-                            st=$("<strong />",{'text': 'Status: '});
+                            st=$("<strong />",{'text': "&{'status'}: "});
                             td2=$("<td />").append(st, value.status);
                             table=table.append($("<tr />").append(td1, td2));
 
@@ -277,7 +254,7 @@
 
                             td1=$("<td />", {'colspan': '2', 'class':'text-right'});
                             if(value.record){
-                                a_href=$("<a/>", {'title': 'Grabación', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href':'/intranet/record/${id}/'+value.id});
+                                a_href=$("<a/>", {'title': 'Grabaci�n', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'class':'openwindow', 'href':'/intranet/record/${id}/'+value.id});
                                 a_href=a_href.append($("<span />", { 'class': 'flaticon-mic' }));
                                 td1=td1.append(a_href);
                             }
@@ -303,7 +280,7 @@
                             if(value.campaign.typeCertificate==2){
                                 var certificateType=get_certificate_type(value.campaign.id);
                                 if(certificateType){
-                                    a_href=$("<a/>", {'title': 'Carta de Compra', 'data-toggle': 'tooltip', 'data-placement':'bottom', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
+                                    a_href=$("<a/>", {'data-toggle': 'tooltip', 'data-placement':'bottom','title': 'Carta de Compra', 'data-url':'${urlecert}','data-type':certificateType, 'data-booking':value.id, 'class':'ecert_link'});
                                     a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
                                     td1=td1.append(a_href);
                                 }
@@ -356,7 +333,7 @@
                                 var yy = date.getYear();
                                 var year = (yy < 1000) ? yy + 1900 : yy;
                                 date=day + "/" + month + "/" + year;
-                                small=$("<small/>", {'class':'pull-right', 'html': date+'<br/>'+timeago});
+                                small=$("<small/>", {'class':'pull-right label label-default', 'html': date+'<br/>'+timeago});
                                 strong=$("<strong/>", {'text': value.username+ " "});
                                 tam=value.description.split(/\s+/).length;
                                 if(tam>50){
@@ -380,7 +357,7 @@
                                     special='<small><strong>Special Request:</strong> '+value.specialReq+'</small><br/>';
                                 }
                                 media_body=$("<div/>",{'class':'media-body'}).append(small, strong, value.type,'<br/>'+follow+special,p);
-                                $(".feed-activity-list").append(element.append(span, media_body));
+                                $(".feed-activity-list").append(element.append(span, media_body, $("<div/>", {class: 'clearfix'})));
                             });
                             $('[data-toggle="tooltip"]').tooltip();
                         }else {
@@ -535,11 +512,11 @@
     <div class="col-sm-7" >
         <div class="personal-information">
             <div class="ibox-title">
-                <h5>Client Personal Information</h5>
+                <h5>&{'client_personal_information'}</h5>
                 <div class="ibox-tools pull-right">
                     <a class="label label-primary" href="/clients/${id}/edit">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Edit
+                        &{'edit'}
                     </a>
                 </div>
             </div>
@@ -549,17 +526,17 @@
                     <span class="flaticon-office-worker2"></span>
                 </p>
                 <p class="pull-right hidden-info">
-                    *{<a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>}*
-                    *{<a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>}*
-                    *{<a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>}*
-                    *{<a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>}*
-                    *{<a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>}*
+                    <a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>
+                    <a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>
                 </p>
                 <div class="clearfix"></div>
             </div>
         </div>
 
-        *{<ul id="myTabs" class="nav nav-tabs nav-justified" role="tablist">}*
+        <!-- *{<ul id="myTabs" class="nav nav-tabs nav-justified" role="tablist">}*
             *{<li role="presentation" class="active">}*
                 *{<a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">}*
                     *{Sale Information}*
@@ -570,13 +547,13 @@
                     *{Reservations}*
                 *{</a>}*
             *{</li>}*
-        *{</ul>}*
+        *{</ul>}* -->
         <div class="ibox-title">
-            <h5>Sale Information</h5>
+            <h5>&{'sale_information'}</h5>
             <div class="ibox-tools pull-right">
                 <a class="label label-primary add-sale" href="">
                     <span class="glyphicon glyphicon-plus"></span>
-                    Add sale
+                    &{'add_sale'}
                 </a>
             </div>
         </div>
@@ -604,11 +581,11 @@
     <div class="col-sm-5">
         <div class="ibox float-e-margins">
             <div class="ibox-title" style="margin-bottom: 20px;">
-                <h5>Notas</h5>
+                <h5>&{'notes'}</h5>
                 <div class="ibox-tools pull-right">
                     <a class="label label-primary add_note" data-toggle="modal" data-target="#notas">
                         <span class="glyphicon glyphicon-plus"></span>
-                        Add note
+                        &{'add_note'}
                     </a>
                 </div>
             </div>
@@ -618,7 +595,7 @@
                         <div class="sk-child sk-dot1"></div>
                         <div class="sk-child sk-dot2"></div>
                     </div>
-                    *{Listar Notas}*
+                    <!-- *{Listar Notas}* -->
                 </div>
             </div>
         </div>
@@ -633,12 +610,12 @@
         <div class="modal-content ">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Terms</h4>
+                <h4 class="modal-title" id="myModalLabel">&{'terms'}</h4>
             </div>
             <div class="modal-body text-justify">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
             </div>
         </div>
     </div>
@@ -650,12 +627,12 @@
         <div class="modal-content ">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"> Campaign </h4>
+                <h4 class="modal-title" id="myModalLabel"> &{'campaign'} </h4>
             </div>
             <div class="modal-body text-justify">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
             </div>
         </div>
     </div>
@@ -667,50 +644,50 @@
         <div class="modal-content ">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Nota</h4>
+                <h4 class="modal-title" id="myModalLabel">&{'note'}</h4>
             </div>
             <form action="" method="post" id="savenote">
                 <input type="hidden" id="id_note" value="" />
                 <div class="modal-body text-justify">
-                    <label for="Estado de ánimo">Estado de ánimo</label>
+                    <label for="Estado de �nimo">&{'mood'}</label>
                     <div class="clearfix"></div><br />
                     <div id="face">
 
                     </div>
                     <div class="clearfix"></div>
                     <div class="form-group">
-                        <label for="Nota">Nota*</label>
+                        <label for="Nota">&{'note'}*</label>
                         <textarea name="nota" class="form-control input-sm" id="nota" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="requesicion">Requesición especial*</label>
+                        <label for="requesicion">&{'special_request'}*</label>
                         <input type="text" name="requesicion" class="form-control input-sm" id="requesicion" />
                     </div>
                     <div class="form-group">
-                        <label for="Tipo de Nota">Tipo de Nota*</label>
+                        <label for="Tipo de Nota">&{'note_type'}*</label>
                         <select name="tipo_nota" class="form-control input-sm" id="tipo_nota" required></select>
                     </div>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" id="follow_up"> Follow up / Alert
+                            <input type="checkbox" id="follow_up"> &{'follow_up'}
                         </label>
                     </div>
                     <div class="follow_up row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="Departamento">Remider To*</label>
+                                <label for="Departamento">&{'reminder_to'}*</label>
                                 <select name="departamento" class="form-control input-sm" id="departamento"></select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="User">User*</label>
+                                <label for="User">&{'username'}*</label>
                                 <select name="user" class="form-control input-sm" id="user"></select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="Fecha">Fecha</label>
+                                <label for="Fecha">&{'date'}</label>
                                 <input type="text" class="form-control input-sm" id="fecha_nota" name="fecha_nota" />
                             </div>
                         </div>
@@ -719,9 +696,9 @@
                 </div>
                 <div class="modal-footer">
                 #{secure.check 'EditarCliente'}
-                    <button type="submit" class="btn btn-default">Guardar</button>
+                    <button type="submit" class="btn btn-default">&{'save'}</button>
                 #{/secure.check}
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
                 </div>
             </form>
         </div>

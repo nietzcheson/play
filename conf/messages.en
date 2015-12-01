@@ -1,0 +1,217 @@
+#Change language
+lan=es
+lan_text=Español
+lans=en
+lans_text=English
+searching=Searching
+next=Next
+previous=Previous
+
+#Menu
+li_clients=Guest
+li_masterbroker=Master Brokers
+li_oferta=Offers
+li_campania=Campaigns
+li_destino=Destinations
+li_hotel=Hotels
+li_certimage=Cert Images
+li_inventary=Inventory
+li_uploadleads=Upload Leads
+
+#General
+show=Show
+entries=entries
+search=Search
+showing=Showing
+to=to
+of=of
+processing=Processing
+successfully_added=You successfully added
+successfully_uploaded=You successfully uploaded
+successfully_created=You successfully created
+well_done=Well done
+add=Add
+creating=Creating
+created=Created
+name=Name
+save=Save
+cancel=Cancel
+or=or
+english=English
+spanish=Spanish
+portuguese=Portuguese
+description=Description
+status=Status
+
+#Subir clientes
+code_campaign=Code Campaign
+certificate=Certificate
+firstname=First Name
+lastname=Last Name
+address=Address
+city=City
+state=State
+zipcode=Zip Code
+phone=Phone
+country=Country
+email=Email
+rule1=First row must contain headers
+rule2=Phone number must contain at least one separator such as - or ( )
+rule3=If certificate number must be asign dynamically, put the word ASIGNAR on every row of certificate column
+instruction=Use the follow codes from country column
+united_states=UNITED STATES
+canada=CANADA
+mexico=MEXICO
+germany=GERMANY
+spain=SPAIN
+france=FRANCE
+england=ENGLAND
+italy=ITALY
+philippines=PHILIPPINES
+argentine=ARGENTINE
+costa_rica=COSTA RICA
+brasil=BRASIL
+chile=CHILE
+china=CHINA
+uploading_file=Uploading File
+
+#Inventario
+serials_number=serial numbers
+serials_campaign=Serials of Campaign
+type=Type
+number=Number
+serial=Serial
+date=Date
+amount=Amount
+upload_image=Upload Images File
+size=Size
+format=Format
+add_picture=Add Picture
+
+#Hoteles
+new_hotel=New Hotel
+edit_hotel=Edit Hotel
+content=Content
+pictures=Pictures
+destination=Destination
+webpage=Web Page
+
+#Destinos
+active=Active
+new_destination=New Destination
+edit_destination= Edit Destination
+enabled=Enabled
+disabled=Disabled
+
+#Campa�as
+new_campaign=New Campaign
+campaign=Campaign
+updated=Updated
+certificate_serial=Certificate Serial
+serial_numbers=Serial Numbers
+configuration=Configuration
+certificate_type=Certificate Type
+expiration=Expiration
+reservation_group=Reservation Group
+segment=Segment
+merchant=Merchant
+call_center=Call Center
+serial_type=Serial Type
+physical=Physical
+digital=Digital
+unique=Unique
+generic=Generic
+
+#Ofertas
+last_updated=Last Update
+nights=Nights
+price=Price
+activation_fee=Activation Fee
+new_offer=New Offer
+edit_offer=Edit Offer
+transportation=Transportation
+taxes=Taxes
+terms=Terms
+content_cancuncards=Content for CancunCards.com Website
+details=Details
+
+#Master Broker
+company=Company
+responsable=Responsable
+username=Username
+campaigns=Campaigns
+view=View
+new=New
+edit=Edit
+invoice=Invoice
+password=Password
+repeat_password=Repeat Password
+rule_password=If you would like to change the password type a new one. Otherwhise leave this blank.
+type_password=Type your new password again.
+create_new_master=Create a new master broker and add them to the system
+
+#Broker
+new_broker=Create new broker
+
+#Clientes
+new_client=New Client
+client=Client
+id_booking=Booking Id
+certificate=Certificate
+date_created=Date Created
+date_updated=Date Updated
+date_birth=Date of birth
+customer_interested=Customer is interested in 
+age=Age
+day=Day
+month=Month
+sale_information=Sale Information
+marital_status=Marital Status
+occupation=Occupation
+year=Year
+close=Close
+client_personal_information=Client Personal Information
+notes=Notes
+add_note=Add Note
+add_sale=Add Sale
+date=Date
+note=Note
+mood=Mood
+special_request=Special Request
+note_type=Note Type
+follow_up=Follow up / Alert
+reminder_to=Reminder to
+
+#venta
+new_sale=New Sale
+cert_number=Cert Number
+record_number=Record Number
+extra_bonus=Extra Bonus
+go_back=Go Back
+observations=Observations
+sale_representative=Sale Representative
+sale=Sale
+
+#Servicios
+add_service=Add Service
+services=Services
+subservice=Subservice
+import=Import
+payments=Payments
+bank=Bank
+agent=Agent
+add_payment=Add Payment
+service=Service
+adults=Adults
+children=Children
+card_number=Card Number
+card_type=Card Type
+secure_code=CVV
+expiry_date=Expiry Date
+exchange_rate=Exchange Rate
+dolars=Dolars
+payment_user=Payment Username
+remaining=Remaining
+amount_paid=Amount Paid
+payment=Payment
+user_commission=User Commission

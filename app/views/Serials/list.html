@@ -63,12 +63,20 @@
                     $('#serials-datatable').dataTable( {
                         "data": dataSet,
                         "columns": [
-                            { "title": "Number", bSortable: false },
-                            { "title": "Type", bSortable: false },
-                            { "title": "Created", bSortable: false },
+                            { "title": "&{'number'}", bSortable: false },
+                            { "title": "&{'type'}", bSortable: false },
+                            { "title": "&{'created'}", bSortable: false },
                             { "title": "Excel", bSortable: false }
                         ],
                         "oLanguage": {
+                            "sSearch": "&{'searching'}",
+                            "oPaginate": {
+                                "sNext": "&{'next'}",
+                                "sPrevious": "&{'previous'}"
+                            },
+                            "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+                            "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                            "sProcessing": "&{'processing'}",
                             "sEmptyTable":     'This campaign does not have any serial number.'
                         },
                         "bFilter": false
@@ -117,10 +125,20 @@
                         }
 
                     ],
+                    "oLanguage": {
+                        "sSearch": "&{'searching'}",
+                        "oPaginate": {
+                            "sNext": "&{'next'}",
+                            "sPrevious": "&{'previous'}"
+                        },
+                        "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+                        "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                        "sProcessing": "&{'processing'}"
+                    },
                     "columns": [
-                        { "data": "name","title":"Folio"  },
-                        { "data": "dateUpdated","title":"Date" },
-                        { "data": "quantity","title":"Amount", bSortable: false },
+                        { "data": "name","title":"&{'serial'}"  },
+                        { "data": "dateUpdated","title":"&{'date'}" },
+                        { "data": "quantity","title":"&{'amount'}", bSortable: false },
                         { "data": "","title":"Excel", bSortable: false }
                     ],
                     "order": [[ 1, "desc" ]]
@@ -146,16 +164,16 @@
             #{if success}
                 <div class="alert alert-success alert-dismissible " role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Well done!</strong> You successfully added ${QTYofSerials} serial numbers to  <strong id="campaignPlaceHolder">${campaignName}</strong>  campaign
+                    <strong>&{'well_done'}!</strong> &{'successfully_added'} ${QTYofSerials} &{'serials_number'}  &{'to'}  <strong id="campaignPlaceHolder">${campaignName}</strong>  campaign
                 </div>
             #{/if}
             <div class="col-lg-10">
                 <div class="row">
                 #{if idCampaign!= null }
-                    <h1>Serials of Campaign: <span id="campaign-name"></span></h1>
+                    <h1>&{'serials_campaign'}: <span id="campaign-name"></span></h1>
                 #{/if}
                 #{else}
-                    <h1>Inventory</h1>
+                    <h1>&{'li_inventary'}</h1>
                 #{/else}
                 </div>
             </div>
@@ -164,7 +182,7 @@
                 <div class="row">
                     <a href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create" class="btn btn-sm btn-primary pull-right top-separation">
                         <i class="glyphicon glyphicon-plus"></i>
-                        &nbsp;Add serial numbers
+                        &nbsp;&{'add'} &{'serials_number'}
                     </a>
                 </div>
             </div>
@@ -177,7 +195,7 @@
             <div class="dataTable_wrapper">
                 <table class="table table-striped table-bordered table-hover" id="serials-datatable">
                     <tr class="odd gradeX">
-                        <td>Processing...</td>
+                        <td>&{'processing'}...</td>
                     </tr>
                 </table>
             </div>

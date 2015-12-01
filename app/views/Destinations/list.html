@@ -7,7 +7,61 @@
 #{/set}
 
 #{set 'moreScripts'}
-<script type="text/javascript" src="/public/javascripts/destinations/list.js"></script>
+*{<script type="text/javascript" src="/public/javascripts/destinations/list.js"></script>}*
+<script>
+    /**
+     * Created by Orlando on 25/02/2015.
+     */
+    $(document).ready(function() {
+        var dataSet = new Array();
+        $.ajax({
+            url:  '/TableList',
+            data:{'url': '/destinations'},
+            type:'POST',
+            success:function(result){
+                var result = JSON.parse(result);
+                for(i=0; i < result.length; i++) {
+                    var myDate = new Date( result[i].dateCreated);
+                    var resultActive = (result[i].active == true) ? "Active" : "Inactive";
+                    var content = new Array(
+                            "<a href='/destinations/" + result[i].id + "'>" + result[i].name + "</a>",
+                            resultActive
+                    );
+                    dataSet.push(content);
+                } //Termina el For
+
+                $('#leads-datatable').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+
+                $('#leads-datatable').dataTable( {
+                    "data": dataSet,
+                    "oLanguage": {
+                        "sSearch": "&{'searching'}",
+                        "oPaginate": {
+                            "sNext": "&{'next'}",
+                            "sPrevious": "&{'previous'}"
+                        },
+                        "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+                        "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                        "sProcessing": "&{'processing'}"
+                    },
+                    "columns": [
+                        { "title": "&{'name'}" },
+                        { "title": "&{'active'}", bSortable: false }
+                    ],
+                    "order": [[ 0, "asc" ]]
+                });
+            },
+            error: function(result){
+                alert(result);
+            },
+            statusCode: {
+                500: function() {
+                    alert("status 500")
+                }
+            }
+        });
+    });
+</script>
 <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 #{/set}
@@ -17,7 +71,7 @@
         #{if successfullyCreated}
             <div class="alert alert-success alert-dismissible " role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Well done!</strong> You successfully created the destination <strong><a href="/destinations/${id}">${destinationName}</a></strong>
+                <strong>&{'well_done'}!</strong> You successfully created the destination <strong><a href="/destinations/${id}">${destinationName}</a></strong>
             </div>
         #{/if}
         #{if successfullyUpdated}
@@ -28,7 +82,7 @@
         #{/if}
         <div class="col-lg-10">
             <div class="row">
-                <h1>Destinations</h1>
+                <h1>&{'li_destino'}</h1>
             </div>
         </div>
         #{secure.check 'CrearDestino'}
@@ -36,7 +90,7 @@
             <div class="row">
                 <a href="/destinations/create" class="btn btn-sm btn-primary pull-right top-separation">
                     <i class="glyphicon glyphicon-plus"></i>
-                    &nbsp;New destination
+                    &nbsp;&{'new_destination'}
                 </a>
             </div>
         </div>

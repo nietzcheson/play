@@ -31,8 +31,8 @@ body{
 }
 
 .dropdown-toggle:hover, .dropdown-toggle:focus{
-    background-color: #337ab7!important;
-    border-color: #2e6da4!important;
+    background-color: transparent!important;
+    border-color: transparent!important;
 }
 
 #side-menu li{
@@ -221,9 +221,7 @@ input.error, select.error {
 
 .read-more-state:checked ~ .read-more-trigger:before {
     content: 'Show less';
-}
-
-.read-more-trigger {
+}.read-more-trigger {
     cursor: pointer;
     display: inline-block;
     padding: 0 .5em;
@@ -232,7 +230,13 @@ input.error, select.error {
     line-height: 2;
     border: 1px solid #ddd;
     border-radius: .25em;
+}.glyphicon-info-sign:before{
+    font-size: 20px;
+    margin-right: 10px;
 }
-.hidden-info a{
-    margin-left: 5px;
-}
+.media-body{
+    width: 90%;
+    float: right;
+}.label-default {
+     background-color: #40739e;
+ }

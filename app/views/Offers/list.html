@@ -6,7 +6,54 @@
 <link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
 #{/set}
 #{set 'moreScripts'}
-<script type="text/javascript" src="/public/javascripts/offers/list.js"></script>
+*{<script type="text/javascript" src="/public/javascripts/offers/list.js"></script>}*
+<script>
+    /**
+     * Created by Orlando on 16/02/2015.
+     */
+    $(document).ready(function() {
+
+        $('#demo').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax":'/application/offerslist',
+            "oLanguage": {
+                "sSearch": "&{'searching'}",
+                "oPaginate": {
+                    "sNext": "&{'next'}",
+                    "sPrevious": "&{'previous'}"
+                },
+                "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+                "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                "sProcessing": "&{'processing'}"
+            },
+            "columnDefs": [
+
+                {
+                    "targets":0,
+                    "render": function (td, cellData, rowData, row, col) {
+                        return  '<a href="/offers/' + rowData.id + '">' + rowData.name + '</a>';
+                    }
+                },
+                { "targets": 1,
+                    "render":function(dateCreated){
+                        return new Date(dateCreated).toDateString();
+                    }
+                }
+            ],
+            "columns": [
+                { "data": "name","title":"&{'li_oferta'}"  },
+                { "data": "dateUpdated","title":"&{'last_updated'}" },
+                { "data": "nights","title":"&{'nights'}", bSortable: false },
+                { "data": "price","title":"&{'price'}", bSortable: false },
+                { "data": "activationFee","title":"&{'activation_fee'}", bSortable: false },
+                { "data": "status","title":"&{'active'}", bSortable: false }
+            ],
+            "order": [[ 1, "desc" ]]
+
+        });
+    });
+</script>
 <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 #{/set}
@@ -16,19 +63,19 @@
     #{if successfullyCreated}
         <div class="alert alert-success alert-dismissible " role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong>Well done!</strong> You successfully created the offer <strong><a href="/offers/${id}">${offerName}</a></strong>
+            <strong>&{'well_done'}!</strong> &{'successfully_created'} the offer <strong><a href="/offers/${id}">${offerName}</a></strong>
         </div>
     #{/if}
     #{if successfullyUpdated}
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-             You successfully updated the offer <strong><a href="/offers/${id}">${offerName}</a></strong>
+            &{'successfully_updated'} the offer <strong><a href="/offers/${id}">${offerName}</a></strong>
         </div>
     #{/if}
         <div class="col-lg-10">
             <div class="row">
               <h1>
-                  Offers
+              &{'li_oferta'}
               </h1>
             </div>
         </div>
@@ -37,7 +84,7 @@
                 #{secure.check 'CrearOferta'}
                 <a href="/offers/create"  class="btn btn-sm btn-primary pull-right top-separation">
                     <i class="glyphicon glyphicon-plus"></i>
-                    &nbsp;New offer
+                    &nbsp;&{'new_offer'}
                 </a>
                 #{/secure.check}
             </div>
@@ -52,7 +99,7 @@
         <table id="demo" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <tr>
 
-                <td class="center">Processing...</td>
+                <td class="center">&{'processing'}...</td>
             </tr>
 
         </table>

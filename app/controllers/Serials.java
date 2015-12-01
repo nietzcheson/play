@@ -15,7 +15,7 @@ public class Serials extends MasterController {
     public static void list(Integer id) {
         Boolean successfullyCreated = false;
         String QTYofSerials = params.get("QTYofSerials");
-        String offerName = params.get("offerName");
+//        String offerName = params.get("offerName");
 
         if(QTYofSerials != null && !QTYofSerials.isEmpty()) {
             successfullyCreated = true;

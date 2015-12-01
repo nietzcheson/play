@@ -20,7 +20,7 @@
                 var id=$("#id-value").val();
                 var url='${urlservicio}/customers/import';
                 var button=$(this).find(".btn");
-                $(button).attr("disabled", true).val("creating....");
+                $(button).attr("disabled", true).val("&{'creating'}....");
                 $.ajax( {
                     url: url,
                     type: 'POST',
@@ -55,10 +55,10 @@
             <div class="row"><br />
                 <div class="alert alert-success oculto" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Well done!</strong> You successfully uploaded leads <strong><a href="/hotels/${id}">${hotelName}</a></strong>
+                    <strong>&{'well_done'}!</strong> &{'successfully_uploaded'} leads
                 </div>
                 <h1>
-                    Upload Leads
+                    &{'li_uploadleads'}
                 </h1>
                 <div class="alert alert-danger alert-dismissible oculto" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -73,7 +73,7 @@
     <div class="col-lg-12">
         <div class="panel with-nav-tabs panel-default">
             <div class="panel-heading">
-                Upload Leads
+            &{'li_uploadleads'}
             </div>
             <div class="panel-body">
                 <div class="clearfix"></div><br />
@@ -87,24 +87,24 @@
                             <input value="Add Leads" type="submit" class="btn btn-primary" />
                             <div class="col-sm-9 text-center uploading">
                                 <img src="/public/images/ajax-loader.gif" /><br />
-                                Uploading File
+                                &{'uploading_file'}
                             </div>
                         </div>
                         File format
                         <table class="table-bordered table">
                             <thead>
                                 <tr>
-                                    <th>Código Campaña</th>
-                                    <th>Certificado</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
-                                    <th>Dirección</th>
-                                    <th>Ciudad</th>
-                                    <th>Estado</th>
-                                    <th>CP</th>
-                                    <th>Telefono</th>
-                                    <th>País</th>
-                                    <th>Email</th>
+                                    <th>&{'code_campaign'}</th>
+                                    <th>&{'certificate'}</th>
+                                    <th>&{'firstname'}</th>
+                                    <th>&{'lastname'}</th>
+                                    <th>&{'address'}</th>
+                                    <th>&{'city'}</th>
+                                    <th>&{'state'}</th>
+                                    <th>&{'zipcode'}</th>
+                                    <th>&{'phone'}</th>
+                                    <th>&{'country'}</th>
+                                    <th>&{'email'}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -124,29 +124,28 @@
                             </tbody>
                         </table>
                         <ul>
-                            <li>La primera fila debe contener los encabezados</li>
-                            <li>El número telefónico debe contener por lo menos un separador para los números, ya sea - o ( )</li>
-                            <li>Si el número de certificado debe ser asignado dinamicamente coloque la palabra ASIGNAR en todas las filas de la columna Certificado</li>
-                            <li>Si no conoce el código de la campaña puede ser proporcionado por el administrador de certificados</li>
+                            <li>&{'rule1'}</li>
+                            <li>&{'rule2'}</li>
+                            <li>&{'rule3'}</li>
                         </ul>
                         <p>
-                            <strong>Utilice los siguientes codigos para la columna de PAIS</strong>
+                            <strong>&{'instruction'}</strong>
                         </p>
                         <ul>
-                            <li>USA	-ESTADOS UNIDOS</li>
-                            <li>CAN	-CANADA</li>
-                            <li>MEX	-MEXICO</li>
-                            <li>ALE	-ALEMANIA</li>
-                            <li>ESP	-ESPAÑA</li>
-                            <li>FRA	-FRANCE</li>
-                            <li>ING	-ENGLAND</li>
-                            <li>ITA	-ITALY</li>
-                            <li>PHL	-FILIPINAS</li>
-                            <li>ARG	-ARGENTINA</li>
-                            <li>CR	-COSTA RICA</li>
-                            <li>BRA	-BRASIL</li>
-                            <li>CHI	-CHILE</li>
-                            <li>CHN	-CHINA</li>
+                            <li>USA	-&{'united_states'}</li>
+                            <li>CAN	-&{'canada'}</li>
+                            <li>MEX	-&{'mexico'}</li>
+                            <li>ALE	-&{'germany'}</li>
+                            <li>ESP	-&{'spain'}</li>
+                            <li>FRA	-&{'france'}</li>
+                            <li>ING	-&{'england'}</li>
+                            <li>ITA	-&{'italy'}</li>
+                            <li>PHL	-&{'philippines'}</li>
+                            <li>ARG	-&{'argentine'}</li>
+                            <li>CR	-&{'costa_rica'}</li>
+                            <li>BRA	-&{'brasil'}</li>
+                            <li>CHI	-&{'chile'}</li>
+                            <li>CHN	-&{'china'}</li>
                         </ul>
                     </div>
                 </form>
