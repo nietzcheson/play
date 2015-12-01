@@ -15,11 +15,10 @@ $(document).ready(function (){
     var instanceId = (idValue == "") ? "" : "/" + idValue;
     if(idValue != "") {
         $.ajax({
-            url:  'TableList',
+            url:  '/TableList',
             type:'POST',
             data: {'url': '/certLogin/'+idValue },
             success:function(result){
-                console.log("result >>>");
                 var result =  $.parseJSON(result);
                 console.log(result);
                 $("#broker-name").val(result.name);
