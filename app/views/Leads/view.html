@@ -136,24 +136,24 @@
                         content = content.append(country);
                     }
                     if (result.address) {
-                        $(".flaticon-book269").attr("title", "&{'address'}: "+result.address)
-                    }else{
-                        $(".flaticon-book269").hide();
+                        a_href=$("<a/>", {'title': "&{'address'}: "+result.address, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-book269' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.email) {
-                        $(".flaticon-email131").attr("title", result.email)
-                    }else{
-                        $(".flaticon-email131").hide();
+                        a_href=$("<a/>", {'title': result.email, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-email131' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.phone1) {
-                        $(".flaticon-phone21").attr("title", 'Home Phone: '+result.phone1)
-                    }else{
-                        $(".flaticon-phone21").hide();
+                        a_href=$("<a/>", {'title': 'Home Phone: '+result.phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.phone2) {
-                        $(".flaticon-phone72").attr("title", 'Work Phone: '+result.phone1)
-                    }else{
-                        $(".flaticon-phone72").hide();
+                        a_href=$("<a/>", {'title': 'Work Phone: '+result.phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
+                        $(".hidden-info").append(a_href);
                     }
                     if (result.phone3) {
                         strong = $("<strong/>", {'text': 'Cellphone: '});
@@ -533,11 +533,11 @@
                     <span class="flaticon-office-worker2"></span>
                 </p>
                 <p class="pull-right hidden-info">
-                    <a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>
+                    *{<a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>
                     <a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>
                     <a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>
                     <a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>
+                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>}*
                 </p>
                 <div class="clearfix"></div>
             </div>
@@ -656,7 +656,7 @@
             <form action="" method="post" id="savenote">
                 <input type="hidden" id="id_note" value="" />
                 <div class="modal-body text-justify">
-                    <label for="Estado de �nimo">&{'mood'}</label>
+                    <label for="Estado de ánimo">&{'mood'}</label>
                     <div class="clearfix"></div><br />
                     <div id="face">
 

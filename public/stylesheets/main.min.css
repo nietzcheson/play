@@ -239,4 +239,6 @@ input.error, select.error {
     float: right;
 }.label-default {
      background-color: #40739e;
- }
+ }.hidden-info a{
+   margin-right: 6px;
+}
