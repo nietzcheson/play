@@ -51,6 +51,7 @@ public class Users extends MasterController {
         }
         renderArgs.put("editMode", editMode);
         renderArgs.put("id", id);
+        renderArgs.put("ecertlink", Constants.CertLink);
         Logger.info("was here");
 
         render();
