@@ -177,9 +177,10 @@ function load_states(country, state){
     $.ajax({
         url:  '/TableList',
         type:'POST',
-        data:{'url': '/states'},
+        data:{'url': '/states/country/'+country},
         success:function(result){
             var result = JSON.parse(result);
+            result= result.states;
             $("#states").html("");
             $.each(result, function (index, value) {
                 if(value.country.code==country)
