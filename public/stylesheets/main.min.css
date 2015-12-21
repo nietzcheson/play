@@ -9,6 +9,7 @@ body{
 
 .navbar-brand{
     font-size: 28px;
+    width: 258px;
 }
 
 .page-header{
@@ -241,4 +242,11 @@ input.error, select.error {
      background-color: #40739e;
  }.hidden-info a{
    margin-right: 6px;
-}
+}.version{
+    float: right;
+    font-size: 16px;
+    color: #194a74;
+    margin-top: 2px;
+}.navbar-brand>img {
+    float: left;
+ }

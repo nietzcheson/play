@@ -30,12 +30,14 @@ public class MasterController extends Controller {
         String username= Scope.Session.current().get("username");
         String urlservicio= Constants.API;
         String urlecert= Constants.URL_ECERT;
+        String version= Constants.version;
         String lan=Lang.get();
         renderArgs.put("user_name", name);
         renderArgs.put("username", username);
         renderArgs.put("urlservicio", urlservicio);
         renderArgs.put("urlecert", urlecert);
         renderArgs.put("lan", lan);
+        renderArgs.put("version", version);
         System.out.println("Idioma: "+lan);
     }
 
