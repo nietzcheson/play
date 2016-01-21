@@ -13,7 +13,7 @@
 	     */
 	    $(document).ready(function() {
 	        var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
-	        var months = ['January', 'February', 'March', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
+	        var months = ['January', 'February', 'March','April', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
 	        var context;
 	        var dtable=$('#leads-datatable').dataTable({
 	        "processing": true,
@@ -40,7 +40,7 @@
 	            "targets":4,
 	            "render": function (datecreated) {
 	                        d= new Date(datecreated);
-	                        da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+	                        da=days[d.getUTCDay()]+" "+months[d.getMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 	                        return da;
 	                    }
 			},
@@ -48,7 +48,7 @@
 				"targets":5,
 				"render": function (dateupdated) {
 					d= new Date(dateupdated);
-					da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()-1]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+					da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 					return da;
 				}
 			}

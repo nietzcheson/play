@@ -13,6 +13,8 @@
          * Created by Orlando on 16/02/2015.
          */
         $(document).ready(function() {
+            var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+            var months = ['January', 'February', 'March','April', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
             var context;
             $('#campaigns-datatable').dataTable({
                 "processing": true,
@@ -36,8 +38,9 @@
                     },
                     { "targets": 1,
                         "render":function(dateCreated){
-                            return new Date(dateCreated).toDateString();
-                            //return dateCreated;
+                            d= new Date(dateCreated);
+                            da=days[d.getUTCDay()]+" "+months[d.getMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+                            return da;
                         }
                     },
                     {
