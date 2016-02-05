@@ -9,7 +9,7 @@ body{
 
 .navbar-brand{
     font-size: 28px;
-    width: 258px;
+    width: 270px;
 }
 
 .page-header{
@@ -249,4 +249,6 @@ input.error, select.error {
     margin-top: 2px;
 }.navbar-brand>img {
     float: left;
- }
+ }.table tr a{
+      margin-right: 8px;
+  }

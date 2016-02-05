@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 
 import play.mvc.Scope;
+import services.AsteriskServer;
 import util.Constants;
 import util.StringTools;
 
@@ -513,6 +514,17 @@ public class Application extends MasterController {
             WS.HttpResponse res = req.get();
             System.out.println(res.getJson());
             renderText(res.getJson());
+        }
+    }
+
+    /*  Click to dial */
+    public static void clictodial(){
+        String agenteEXT = "6160";
+        String agenteDEPTO = "";
+        try{
+            AsteriskServer.originateCall("Karla", "SIP/"+agenteEXT, "0459982234569", "texto_reservations" ,"9");
+        }catch (Exception e){
+            Logger.error("Error al marcar");
         }
     }
 }

@@ -53,6 +53,7 @@ GET   /application/paymentlist/{bookingid}/{paymentid}/? Application.paymentList
 GET   /intranet/{page}/{id}/?                            Leads.reservations
 GET   /intranet/{page}/{id}/{booking}?                   Leads.reservations
 GET   /intranet/{page}/{id}/{booking}/{callcenter}/?     Leads.reservations
+GET  /clictodial                                         Application.clictodial
 
 # Serial Numbers
 *     /serials/create/?                         Serials.create

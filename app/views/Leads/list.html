@@ -3,6 +3,7 @@
     #{set 'moreStyles'}
     <link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
     <link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">
     #{/set}
     <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
@@ -15,6 +16,12 @@
 	        var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 	        var months = ['January', 'February', 'March','April', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
 	        var context;
+			$( document ).on( "click", ".openwindow", function(e){
+				//$('.openwindow').click(function(e) {
+				e.preventDefault();
+				window.open($(this).attr("href"), "popupWindow", "menubar=1,resizable=1,width=1000,height=1000, toolbar=1");
+			});
+
 	        var dtable=$('#leads-datatable').dataTable({
 	        "processing": true,
 	        "serverSide": true,
@@ -46,10 +53,11 @@
 			},
 			{
 				"targets":5,
-				"render": function (dateupdated) {
-					d= new Date(dateupdated);
-					da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
-					return da;
+				"render": function (td, cellData, rowData, row, col) {
+					var response='<a data-toggle="tooltip" data-placement="bottom" title="" data-url="http://10.194.18.210:8080" data-type="FUNCCARDS_ENG" data-booking="350569" class="ecert_link"><span class="flaticon-purchase1"></span></a>';
+					response+='<a title="" data-toggle="tooltip" data-placement="bottom" class="openwindow" href="/intranet/survey/1766060/350636" data-original-title="Survey"><span class="flaticon-lists10"></span></a>';
+					response+='<a class="glyphicon glyphicon-trash openwindow" href="/intranet/deletecert/'+ rowData.idcliente +'/'+ rowData.idbooking+'/'+ rowData.numcert+'" data-id="1"></a>';
+                    return  response;
 				}
 			}
 
@@ -60,9 +68,9 @@
 				{ "data": "numcert","title":"&{'certificate'}"},
 				{ "data": "campaign","title":"&{'campaign'}"},
 				{ "data": "datecreated","title":"&{'date_created'}"},
-				{ "data": "dateupdated","title":"&{'date_updated'}" }
+				//{ "data": "dateupdated","title":"&{'date_updated'}" }
 			]
-			,"order": [[ 5, "desc" ]]
+			,"order": [[ 4, "desc" ]]
 	        });
 	
 	        $('#myInput').on( 'keyup', function (e) {

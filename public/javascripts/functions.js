@@ -957,6 +957,12 @@ function formTerms(){
     }
     return result;
 }
+function replace_phone(phone){
+    var ast=phone.length-3;
+    phone=phone.substring(ast);
+    phone="*".repeat(ast)+phone;
+    return phone;
+}
 
 $.fn.sumaEle = function () {
     sum=parseFloat(0);

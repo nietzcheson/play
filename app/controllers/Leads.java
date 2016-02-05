@@ -105,6 +105,8 @@ public class Leads extends MasterController {
             pageurl=urlintranet + "/CustomerServiceSurvey.jsp?IDCLIENTE="+id+"&IDBOOKING="+booking;
         }else if(page.equals("file")){
             pageurl=urlfile + "/M4CArchivoDigital.jsp?idbook="+booking+"&idcc="+callcenter+"&idcliente="+id+"&area=C&iduser="+username;
+        }else if(page.equals("deletecert")){
+            pageurl=urlintranet + "/Certificados/deleteCertificate.jsp?IDCLIENTE="+id+"&IDBOOKING="+booking+"&NUMCERT="+callcenter;
         }else{
             pageurl=urlintranet + "/Certificados/CERCLIENTERecord.jsp?IDCLIENTE="+id;
         }
