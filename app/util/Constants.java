@@ -11,5 +11,5 @@ public final class Constants {
     public static final String CertLink = "http://bpo.it.sunset.com.mx:9010";
     public static final String user = "sistemas";
     public static final String password = "sys73xrv";
-    public static final String version="1.5.2";
+    public static final String version="1.5.3";
 }

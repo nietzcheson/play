@@ -42,8 +42,8 @@ public class MasterController extends Controller {
     }
 
     public static JsonObject audit(Integer bookingid, String  modulo, String ventana, String accion, String detalle){
-//        String ip = request.remoteAddress;
-        String ip = "10.194.17.25";
+        String ip = request.remoteAddress;
+//        String ip = "10.194.17.25";
         System.out.println("IP: " + ip);
         JsonObject audit = new JsonObject();
         audit.addProperty("username", Scope.Session.current().get("username"));
