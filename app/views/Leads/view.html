@@ -12,7 +12,8 @@
 <script src="/public/javascripts/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function (){
-        $( document ).bind("contextmenu copy paste cut drag drop",function(event){ return false; });
+        //Todo: Antes de subir quitar este comentario
+//        $( document ).bind("contextmenu copy paste cut drag drop",function(event){ return false; });
         load_catalog("/noteTypes?ignore_dept=10", $("#tipo_nota"));
         //Cargar usuarios
         id=$("#user");
@@ -145,21 +146,21 @@
                     }
                     if (result.phone1) {
                         var phone1=replace_phone(result.phone1);
-                        a_href=$("<a/>", {'data-phone': result.phone1, 'title': 'Home Phone: '+phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=$("<a/>", {'data-phone': result.phone1, 'title': 'Home Phone: '+phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
                         $(".hidden-info").append(a_href);
                     }
                     if (result.phone2) {
                         var phone2=replace_phone(result.phone2);
-                        a_href=$("<a/>", {'data-phone': result.phone2, 'title': 'Work Phone: '+phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom'});
+                        a_href=$("<a/>", {'data-phone': result.phone2, 'title': 'Work Phone: '+phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
                         $(".hidden-info").append(a_href);
                     }
                     if (result.phone3) {
                         var phone3=replace_phone(result.phone3);
-                        strong = $("<strong/>", {'text': 'Cellphone: '});
-                        address = $("<p/>", {'data-phone': result.phone3, 'text': phone3, 'id': 'cellphone'}).prepend(strong);
-                        content = content.append(address);
+                        a_href=$("<a/>", {'data-phone': result.phone3, 'title': 'Work Phone: '+phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone72' }));
+                        $(".hidden-info").append(a_href);
                     }else{
                         $(".flaticon-smartphone24").hide();
                     }
@@ -641,6 +642,17 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade " id="clictodial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content ">
+            <div class="modal-body text-center">
+                <h3> Marcando... </h3>
             </div>
         </div>
     </div>

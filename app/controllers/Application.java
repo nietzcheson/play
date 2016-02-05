@@ -519,6 +519,7 @@ public class Application extends MasterController {
 
     /*  Click to dial */
     public static void clictodial(){
+        String phone=params.get("phone");
         String agenteEXT = "6160";
         String agenteDEPTO = "";
         try{

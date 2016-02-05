@@ -26,6 +26,28 @@ $(document).ready(function (){
         event.preventDefault();
         $("#personal-information-container").slideToggle("600");
     });
+    $(document).on("click", ".phone", function (event) {
+        $('#clictodial').modal('show');
+        var phone= $(this).attr("data-phone");
+        var lada="";
+        var cellphone= $(this).find("span").hasClass("flaticon-phone72") ? '045': lada;
+        phone=lada+phone;
+        //Obtener lada por país
+        //$.ajax({
+        //    url:  '/clictodial',
+        //    type:'POST',
+        //    data:{
+        //        phone: phone,
+        //        cellphone: cellphone
+        //    },
+        //    success:function(result){
+        //        $('#clictodial').modal('hide');
+        //    },
+        //    error: function(result){
+        //        showError(result);
+        //    }
+        //});
+    });
     $( "#certificate-code" ).keyup(function() {
         var length = $(this).val().length;
         if(length >= 8) {
