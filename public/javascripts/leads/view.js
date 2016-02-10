@@ -33,20 +33,20 @@ $(document).ready(function (){
         var cellphone= $(this).find("span").hasClass("flaticon-phone72") ? '045': lada;
         phone=lada+phone;
         //Obtener lada por país
-        //$.ajax({
-        //    url:  '/clictodial',
-        //    type:'POST',
-        //    data:{
-        //        phone: phone,
-        //        cellphone: cellphone
-        //    },
-        //    success:function(result){
-        //        $('#clictodial').modal('hide');
-        //    },
-        //    error: function(result){
-        //        showError(result);
-        //    }
-        //});
+        $.ajax({
+            url:  '/clictodial',
+            type:'POST',
+            data:{
+                phone: phone,
+                cellphone: cellphone
+            },
+            success:function(result){
+                $('#clictodial').modal('hide');
+            },
+            error: function(result){
+                showError(result);
+            }
+        });
     });
     $( "#certificate-code" ).keyup(function() {
         var length = $(this).val().length;
@@ -66,16 +66,7 @@ $(document).ready(function (){
             $("#campaign .modal-body").html(text);
         }
     });
-    $( document ).on( "click", ".ecert_link", function(e){
-        var cert=$(this).attr("data-type");
-        var booking=$(this).attr("data-booking");
-        var url=$(this).attr("data-url");
-        if(cert !='null' && cert != '')	{
-            //window.open("http://bpo.m4sunset.com:8080/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
-            console.log(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
-            window.open(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
-        }
-    });
+
     $( document ).on( "click", ".read-more", function(e){
         var height=$(this).closest("p").find("span").height();
         if(height==20){

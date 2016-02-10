@@ -118,13 +118,11 @@
                 type: 'GET',
                 success: function (result) {
                     var result = $.parseJSON(result);
-                    console.log(result);
                     //  Cargar personal information
-                    if(result.title){
-                        if(result.title.id==2){
-                            $(".name").find("span").removeClass("flaticon-office-worker2").addClass("flaticon-woman139");
-                        }
-                    }
+                    var title= result.title ? result.title.id : 1;
+                    if(title==2)
+                        $(".name").find("span").removeClass("flaticon-office-worker2").addClass("flaticon-woman139");
+
                     $(".name").append(result.firstName+" "+result.lastName);
                     var content=$(".personal-information").find(".ibox-content");
                     if(result.country){

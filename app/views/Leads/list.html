@@ -40,6 +40,7 @@
 	        {
 	            "targets":0,
 	            "render": function (td, cellData, rowData, row, col) {
+							console.log(rowData);
 	                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
 	                    }
 	    	},
@@ -54,9 +55,20 @@
 			{
 				"targets":5,
 				"render": function (td, cellData, rowData, row, col) {
-					var response='<a data-toggle="tooltip" data-placement="bottom" title="" data-url="http://10.194.18.210:8080" data-type="FUNCCARDS_ENG" data-booking="350569" class="ecert_link"><span class="flaticon-purchase1"></span></a>';
-					response+='<a title="" data-toggle="tooltip" data-placement="bottom" class="openwindow" href="/intranet/survey/1766060/350636" data-original-title="Survey"><span class="flaticon-lists10"></span></a>';
-					response+='<a class="glyphicon glyphicon-trash openwindow" href="/intranet/deletecert/'+ rowData.idcliente +'/'+ rowData.idbooking+'/'+ rowData.numcert+'" data-id="1"></a>';
+					//Si existe el certificado es 2
+                    var typeCertificate=2;
+					var CampaingId=4031;
+					var OfferId=196;
+                    var response='';
+                    if(typeCertificate==2){
+                        var certificateType=get_certificate_type(CampaingId);
+                        if(certificateType){}
+                            response+='<a data-toggle="tooltip" data-placement="bottom" title="Certificado" data-url="${urlecert}" data-type='+certificateType+' data-booking='+rowData.idbooking+' class="ecert_link"><span class="flaticon-purchase1"></span> </a>';
+                    }
+					response+='<a data-offer="'+OfferId+'" class="OfferInfo" data-toggle="modal" data-target="#OfferInfo"><span class="glyphicon glyphicon-info-sign"></span></a>';
+					#{secure.check 'EliminarCliente'}
+						response+='<a class="glyphicon glyphicon-trash openwindow" href="/intranet/deletecert/'+ rowData.idcliente +'/'+ rowData.idbooking+'/'+ rowData.numcert+'" data-id="1"></a>';
+					#{/secure.check}
                     return  response;
 				}
 			}
@@ -68,7 +80,6 @@
 				{ "data": "numcert","title":"&{'certificate'}"},
 				{ "data": "campaign","title":"&{'campaign'}"},
 				{ "data": "datecreated","title":"&{'date_created'}"},
-				//{ "data": "dateupdated","title":"&{'date_updated'}" }
 			]
 			,"order": [[ 4, "desc" ]]
 	        });
@@ -88,6 +99,41 @@
 	            var value_search=$.trim($("#myInput").val());
 	            dtable.fnFilter(value_search);
 	        });
+
+            $( document ).on( "click", ".OfferInfo", function(e){
+				//Get info de oferta
+				var offerId=$(this).attr("data-offer");
+                $("#OfferInfo .modal-body p").html("");
+                var Offerbutton=$(this);
+                $.ajax({
+                    url:  '/TableList',
+                    type:'POST',
+                    data:{'url': '/offers/'+offerId},
+                    success:function(result){
+                        var result =  $.parseJSON(result);
+						var destinies="";
+                        if(result.destinations){
+                            for(var j = 0; j < result.destinations.length; j++) {
+								var coma= j == 0 ? " ": ", ";
+                                destinies+=coma+result.destinations[j].offerDestinationId.destination.name;
+                            }
+                        }
+						var certificateType = $(Offerbutton).closest("td").find(".ecert_link").length==0 ? 1: 2;
+                        console.log(certificateType)
+						var Reservation_Group= "Ingles";
+						certificateType= certificateType==1 ? "PHYSICAL": "DIGITAL";
+                        $("#OfferInfo .modal-body p").html("Nights: "+result.nights+", Plan: All Inclusive, " +
+                                "Destinies: "+destinies+", Cost: "+result.price+" USD all inclusive, " +
+                                result.activationFee+" USD axt. fee and $"+result.taxes+" USD taxes" +
+								", certificate type: "+certificateType+", " +
+                                "Transportation: "+result.transportation.name+", Reservation Group: " +
+								Reservation_Group+"["+result.hook.name+"], "+Decode(result.description)+". ");
+					},
+                    error: function(err){
+                        alert("error" + err);
+                    }
+                });
+        	});
 	    });
     </script>
     <div class="col-lg-12 page-header">
@@ -134,3 +180,15 @@
         </div>
     </div>
     <!-- /.col-lg-12 -->
+
+
+    <!-- Modal Oferta -->
+    <div class="modal fade " id="OfferInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content ">
+                <div class="modal-body text-center">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>

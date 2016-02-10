@@ -924,7 +924,6 @@ function get_certificate_type(CampaignId){
     $.ajax({
         success:function(result){
             var result =  $.parseJSON(result);
-            console.log(result);
             certificateType=result.certificate;
             //console.log(certificateType);
         },
@@ -932,7 +931,6 @@ function get_certificate_type(CampaignId){
         type: 'GET',
         async: false,
         error: function(err){
-            console.log("error");
             console.log(err);
         }
     });
@@ -992,7 +990,20 @@ $.fn.clearForm = function() {
 };
 
 $(document).ready(function() {
-        $(".change_language").click(function (e) {
+
+    //Download Ecert
+    $( document ).on( "click", ".ecert_link", function(e){
+        var cert=$(this).attr("data-type");
+        var booking=$(this).attr("data-booking");
+        var url=$(this).attr("data-url");
+        if(cert !='null' && cert != '')	{
+            //window.open("http://bpo.m4sunset.com:8080/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
+            console.log(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
+            window.open(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
+        }
+    });
+
+    $(".change_language").click(function (e) {
             e.preventDefault();
             var lan=$(this).attr("data-lan");
             $.ajax({
