@@ -56,16 +56,16 @@
 				"targets":5,
 				"render": function (td, cellData, rowData, row, col) {
 					//Si existe el certificado es 2
-                    var typeCertificate=2;
-					var CampaingId=4031;
-					var OfferId=196;
+                    var typeCertificate=rowData.tipocert;
+					var CampaingId=rowData.idcampania;
+					var OfferId=rowData.offerid;
                     var response='';
                     if(typeCertificate==2){
                         var certificateType=get_certificate_type(CampaingId);
                         if(certificateType){}
                             response+='<a data-toggle="tooltip" data-placement="bottom" title="Certificado" data-url="${urlecert}" data-type='+certificateType+' data-booking='+rowData.idbooking+' class="ecert_link"><span class="flaticon-purchase1"></span> </a>';
                     }
-					response+='<a data-offer="'+OfferId+'" class="OfferInfo" data-toggle="modal" data-target="#OfferInfo"><span class="glyphicon glyphicon-info-sign"></span></a>';
+					response+='<a data-reservationgroup="'+rowData.reservationgroup+'" data-campaign="'+rowData.campaign+'" data-offer="'+OfferId+'" class="OfferInfo" data-toggle="modal" data-target="#OfferInfo"><span class="glyphicon glyphicon-info-sign"></span></a>';
 					#{secure.check 'EliminarCliente'}
 						response+='<a class="glyphicon glyphicon-trash openwindow" href="/intranet/deletecert/'+ rowData.idcliente +'/'+ rowData.idbooking+'/'+ rowData.numcert+'" data-id="1"></a>';
 					#{/secure.check}
@@ -119,10 +119,10 @@
                             }
                         }
 						var certificateType = $(Offerbutton).closest("td").find(".ecert_link").length==0 ? 1: 2;
-                        console.log(certificateType)
-						var Reservation_Group= "Ingles";
+						var Reservation_Group= $(Offerbutton).attr("data-reservationgroup");
 						certificateType= certificateType==1 ? "PHYSICAL": "DIGITAL";
-                        $("#OfferInfo .modal-body p").html("Nights: "+result.nights+", Plan: All Inclusive, " +
+                        var plan= result.mealPlan.plan;
+                        $("#OfferInfo .modal-body p").html("Nights: "+result.nights+", Plan: "+plan+", " +
                                 "Destinies: "+destinies+", Cost: "+result.price+" USD all inclusive, " +
                                 result.activationFee+" USD axt. fee and $"+result.taxes+" USD taxes" +
 								", certificate type: "+certificateType+", " +
