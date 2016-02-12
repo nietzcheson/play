@@ -3,10 +3,12 @@
     #{set 'moreStyles'}
     <link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
     <link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
-    <link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">
+    <link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
     #{/set}
     <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <!-- <script src="/public/javascripts/leads/list.js"></script> -->
     <script>
 	    /**
@@ -21,6 +23,20 @@
 				e.preventDefault();
 				window.open($(this).attr("href"), "popupWindow", "menubar=1,resizable=1,width=1000,height=1000, toolbar=1");
 			});
+            $( "#from" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
 
 	        var dtable=$('#leads-datatable').dataTable({
 	        "processing": true,
@@ -46,8 +62,8 @@
 	    	},
 	        {
 	            "targets":4,
-	            "render": function (datecreated) {
-	                        d= new Date(datecreated);
+	            "render": function (fechaventa) {
+	                        d= new Date(fechaventa);
 	                        da=days[d.getUTCDay()]+" "+months[d.getMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 	                        return da;
 	                    }
@@ -79,17 +95,23 @@
 				{ "data": "idbooking","title":"&{'id_booking'}" },
 				{ "data": "numcert","title":"&{'certificate'}"},
 				{ "data": "campaign","title":"&{'campaign'}"},
-				{ "data": "datecreated","title":"&{'date_created'}"},
+				{ "data": "fechaventa","title":"&{'date_created'}"},
 			]
 			,"order": [[ 4, "desc" ]]
 	        });
 	
 	        $('#myInput').on( 'keyup', function (e) {
 	            //if(this.value.length >= 3 && e.keyCode == 13) {
+                var from=$.trim($("#from").val());
+                var to=$.trim($("#to").val());
 	            if(e.keyCode == 13) {
-	                dtable.fnFilter($.trim(this.value));
+                    var value_search=$.trim(this.value);
+                    value_search+=","+from+","+to;
+                    dtable.fnFilter(value_search);
 	            }else if(this.value == "") {
-	                dtable.fnFilter("");
+                    var value_search="";
+                    value_search+=","+from+","+to;
+                    dtable.fnFilter(value_search);
 	            }
 	            return;
 	        } );
@@ -97,6 +119,10 @@
 	        $("#search-client").click(function (e) {
 	            e.preventDefault();
 	            var value_search=$.trim($("#myInput").val());
+                var from=$.trim($("#from").val());
+                var to=$.trim($("#to").val());
+                value_search+=","+from+","+to;
+                console.log(value_search)
 	            dtable.fnFilter(value_search);
 	        });
 
@@ -169,6 +195,13 @@
                                   </span>
                             </div><!-- /input-group -->
                         </div><!-- /.col-sm-3-->
+                        <div class="col-sm-3 col-md-2 pull-right">
+                            <input type="text" class="form-control" id="to" placeholder="&{'to'}">
+                        </div><!-- /.col-sm-3-->
+                        <div class="col-sm-3 col-md-2 pull-right">
+                            <input type="text" class="form-control" id="from" placeholder="&{'from'}">
+                        </div><!-- /.col-sm-3-->
+
                         <table class="table table-striped table-bordered table-hover" id="leads-datatable">
                             <thead>
                                 <tr></tr>

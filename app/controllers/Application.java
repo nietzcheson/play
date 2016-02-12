@@ -453,6 +453,14 @@ public class Application extends MasterController {
         if(draw!=null) {
             Integer pageLength = params.get("length", Integer.class);
             String searchValue = params.get("search[value]");
+            //Separar por comas: q + from + // TODO: 12/02/2016
+            String []values = searchValue.split(",");
+            if(values.length>1){
+                searchValue=values[0];
+                String from =values[1];
+                String to =values[2];
+                System.out.println("Search: "+searchValue+" from "+ from+ " to "+to);
+            }
 //            String searchable = params.get("searchable");
 //            String start = params.get("start");
             String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
