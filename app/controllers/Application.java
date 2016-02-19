@@ -453,17 +453,19 @@ public class Application extends MasterController {
         if(draw!=null) {
             Integer pageLength = params.get("length", Integer.class);
             String searchValue = params.get("search[value]");
-            //Separar por comas: q + from + // TODO: 12/02/2016
             String []values = searchValue.split(",");
+            String from = "";
+            String to = "";
             if(values.length>1){
                 searchValue=values[0];
-                String from =values[1];
-                String to =values[2];
-                System.out.println("Search: "+searchValue+" from "+ from+ " to "+to);
+                from =values[1];
+                to =values[2];
             }
 //            String searchable = params.get("searchable");
 //            String start = params.get("start");
             String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
+            query += (!from.equals(null) && !from.isEmpty()) ? "&fromDate=" + from : "";
+            query += (!to.equals(null) && !to.isEmpty()) ? "&toDate=" + to : "";
             String page = String.valueOf(params.get("start", Integer.class) / pageLength + 1);
             String orderColumn = params.get("order[0][column]");
             String orderBy = "";
@@ -483,8 +485,8 @@ public class Application extends MasterController {
                 }else if (orderColumn.equals("3")) {
                     Logger.info("ordercolumn vale: >>>" + "0");
                     orderBy = "&orderBy=campaing";
-                }else if(orderColumn.equals("5")){
-                    orderBy = "&orderBy=dateupdated";
+                }else if(orderColumn.equals("4")){
+                    orderBy = "&orderBy=fechaventa";
                 }
             } else {
                 Logger.info("ordercolumn es null");
@@ -526,14 +528,38 @@ public class Application extends MasterController {
     }
 
     /*  Click to dial */
-    public static void clictodial(){
-        String phone=params.get("phone");
-        String agenteEXT = "6160";
-        String agenteDEPTO = "";
-        try{
-            AsteriskServer.originateCall("Karla", "SIP/"+agenteEXT, "0459982234569", "texto_reservations" ,"9");
-        }catch (Exception e){
-            Logger.error("Error al marcar");
-        }
+    public static String clictodial(){
+        String phone = params.get("phone");
+        String name = params.get("name");
+        String agenteEXT = Scope.Session.current().get("extension");
+        String deptoid = Scope.Session.current().get("deptoid");
+        String context = params.get("context");
+        String idbooking = params.get("idbooking");
+        //Contexto
+        WS.HttpResponse res;
+        WS.WSRequest req = WS.url(Constants.API+"/areas/"+deptoid).authenticate(user, password);
+        res = req.get();
+        JsonObject response= new JsonObject();
+        if(res.getStatus() ==200) {
+            String contextByDepto=
+                    !res.getJson().getAsJsonObject().get("contexto").isJsonNull() ?
+                            res.getJson().getAsJsonObject().get("contexto").getAsString() : "from-internal";
+            try{
+                WS.WSRequest request = WS.url(Constants.API + "/audit").authenticate(user, password);
+                JsonObject audit= MasterController.audit(new Integer(idbooking), "Clientes", "Detalle Cliente", "Llamada", "Intento de llamada al "+ phone);
+                String params = audit.toString();
+                request.body = params;
+                request.mimeType = "application/json";
+                res = request.post();
+                AsteriskServer.originateCall(name, "SIP/"+agenteEXT, phone, contextByDepto ,context);
+                response.addProperty("success", "Success");
+            }catch (Exception e){
+                Logger.error("Error al marcar");
+                response.addProperty("error", "Error Asterisk");
+            }
+        }else
+            response.addProperty("error", "Error to get context");
+
+        return response.toString();
     }
 }

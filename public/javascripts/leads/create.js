@@ -161,6 +161,7 @@ $(document).ready(function (){
                 $("#lastname").val(Decode(result.lastName));
                 $("#certificate").closest(".form-group").remove();
                 $("#email").val(Decode(result.email));
+                $("#email2").val(Decode(result.email2));
                 d= new Date(result.birthdate);
                 da= d.getUTCMonth()+"/"+d.getUTCDate()+"/"+d.getUTCFullYear();
                 $("#birthdate").val(da);
@@ -368,6 +369,7 @@ $(document).ready(function (){
                     phone2: $("#phone2").val(),
                     type_phone2: $("#type-phone2").val(),
                     email: Encode($("#email").val()),
+                    email2: Encode($("#email2").val()),
                     countries: $("#countries").val(),
                     states: $("#states").val(),
                     city: Encode($("#city").val()),

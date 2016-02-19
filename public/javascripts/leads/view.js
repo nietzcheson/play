@@ -29,22 +29,32 @@ $(document).ready(function (){
     $(document).on("click", ".phone", function (event) {
         $('#clictodial').modal('show');
         var phone= $(this).attr("data-phone");
-        var lada="";
-        var cellphone= $(this).find("span").hasClass("flaticon-phone72") ? '045': lada;
+        var name= $(this).attr("data-name");
+        var context=$("#context").val();
+        var idbooking=$("#idbooking").val();
+        var lada= $(this).find("span").hasClass("flaticon-phone72") ? '045': $("#phoneCode").val();
         phone=lada+phone;
         //Obtener lada por país
+        var data={
+            phone: phone,
+            context: context,
+            idbooking: idbooking,
+            name: name
+        };
+        console.log(data);
         $.ajax({
             url:  '/clictodial',
             type:'POST',
-            data:{
-                phone: phone,
-                cellphone: cellphone
-            },
+            data: data,
             success:function(result){
-                $('#clictodial').modal('hide');
+                var result =  $.parseJSON(result);
+                if(result.success)
+                    $('#clictodial').modal('hide');
+                else
+                    showModalError($("#clictodial"), result.error);
             },
             error: function(result){
-                showError(result);
+                showModalError($("#clictodial"), "Error");
             }
         });
     });

@@ -24,6 +24,7 @@ entries=entradas
 search=Buscar
 showing=Mostrando
 to=a
+from=de
 of=de
 processing=Procesando...
 successfully_added=Agregada exitosamente

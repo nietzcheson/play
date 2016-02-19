@@ -26,6 +26,7 @@
             $( "#from" ).datepicker({
                 defaultDate: "+1w",
                 changeMonth: true,
+                dateFormat: "yy-mm-dd",
                 onClose: function( selectedDate ) {
                     $( "#to" ).datepicker( "option", "minDate", selectedDate );
                 }
@@ -33,6 +34,7 @@
             $( "#to" ).datepicker({
                 defaultDate: "+1w",
                 changeMonth: true,
+                dateFormat: "yy-mm-dd",
                 onClose: function( selectedDate ) {
                     $( "#from" ).datepicker( "option", "maxDate", selectedDate );
                 }
@@ -56,14 +58,14 @@
 	        {
 	            "targets":0,
 	            "render": function (td, cellData, rowData, row, col) {
-							console.log(rowData);
 	                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
 	                    }
 	    	},
 	        {
 	            "targets":4,
 	            "render": function (fechaventa) {
-	                        d= new Date(fechaventa);
+                            d= new Date(fechaventa);
+                            d.setDate(d.getDate() + 1);
 	                        da=days[d.getUTCDay()]+" "+months[d.getMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 	                        return da;
 	                    }
@@ -97,22 +99,19 @@
 				{ "data": "campaign","title":"&{'campaign'}"},
 				{ "data": "fechaventa","title":"&{'date_created'}"},
 			]
-			,"order": [[ 4, "desc" ]]
+			,"order": [[ 5, "desc" ]]
 	        });
 	
 	        $('#myInput').on( 'keyup', function (e) {
-	            //if(this.value.length >= 3 && e.keyCode == 13) {
-                var from=$.trim($("#from").val());
-                var to=$.trim($("#to").val());
-	            if(e.keyCode == 13) {
-                    var value_search=$.trim(this.value);
-                    value_search+=","+from+","+to;
+                if(e.keyCode==13){
+                    var from=$.trim($("#from").val());
+                    var to=$.trim($("#to").val());
+                    var value_search= $.trim(this.value);
+                    value_search+=from!="" ? ","+from: "";
+                    value_search+=to!="" ? ","+to: "";
                     dtable.fnFilter(value_search);
-	            }else if(this.value == "") {
-                    var value_search="";
-                    value_search+=","+from+","+to;
-                    dtable.fnFilter(value_search);
-	            }
+                }
+
 	            return;
 	        } );
 	
@@ -121,8 +120,8 @@
 	            var value_search=$.trim($("#myInput").val());
                 var from=$.trim($("#from").val());
                 var to=$.trim($("#to").val());
-                value_search+=","+from+","+to;
-                console.log(value_search)
+                value_search+=from!="" ? ","+from: "";
+                value_search+=to!="" ? ","+to: "";
 	            dtable.fnFilter(value_search);
 	        });
 
@@ -146,7 +145,7 @@
                         }
 						var certificateType = $(Offerbutton).closest("td").find(".ecert_link").length==0 ? 1: 2;
 						var Reservation_Group= $(Offerbutton).attr("data-reservationgroup");
-						certificateType= certificateType==1 ? "PHYSICAL": "DIGITAL";
+						certificateType= certificateType==1 ? "PHYSICAL" : "DIGITAL";
                         var plan= result.mealPlan.plan;
                         $("#OfferInfo .modal-body p").html("Nights: "+result.nights+", Plan: "+plan+", " +
                                 "Destinies: "+destinies+", Cost: "+result.price+" USD all inclusive, " +

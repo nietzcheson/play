@@ -974,6 +974,46 @@ $.fn.sumaEle = function () {
     return sum;
 }
 
+$.fn.alerts = function (user) {
+    //Obtener alertas
+    var url="/alerts/"+user;
+    var alerts=$(this);
+    $.ajax({
+        url:  '/TableList',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            result = JSON.parse(result);
+            var number = result ? result.length : 0;
+            $("#number").html(number);
+            var divider= $("<li/>",{'class': 'divider'});
+            $.each(result, function (index, value) {
+                var alertDate=$.format.date(value.date, "dd/MM/yyyy");
+                var span=$("<span/>",
+                    {'class': 'pull-right text-muted'})
+                    .append($("<em/>",
+                        {'text': alertDate}));
+                var strong = $("<strong/>", {'text': value.sourceUser});
+                var div=$("<div/>").append(strong, span);
+                var maxLength = 100;
+                var comment_text = value.comments.substring(1, maxLength);
+                comment_text=comment_text.substr(0,Math.min(comment_text.length, comment_text.lastIndexOf(" ") ));
+                var comment = $("<div/>", {'text': comment_text+"..."});
+                var a=$("<a/>", {'href': value.url}).append(div, comment);
+                var li=$("<li/>").append(a);
+                if(index!=0)
+                    $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
+                else
+                    $(alerts).prepend(li);
+                return index<3;
+            });
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
+}
+
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -1059,6 +1099,10 @@ $(document).ready(function() {
 
 
         });
+
+        //Get Alerts
+
+
     });
 
 

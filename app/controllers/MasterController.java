@@ -28,23 +28,33 @@ public class MasterController extends Controller {
     public static void setParameters(){
         String name= Scope.Session.current().get("user_name");
         String username= Scope.Session.current().get("username");
+        String extension = Scope.Session.current().get("extension");
+        String acceso = Scope.Session.current().get("acceso");
+        String grupo = Scope.Session.current().get("grupo");
+        Boolean userIntranet = Boolean.valueOf(Scope.Session.current().get("userIntranet"));
         String urlservicio= Constants.API;
         String urlecert= Constants.URL_ECERT;
         String version= Constants.version;
         String lan=Lang.get();
+        String intranet="http://10.194.17.173";
         renderArgs.put("user_name", name);
         renderArgs.put("username", username);
         renderArgs.put("urlservicio", urlservicio);
         renderArgs.put("urlecert", urlecert);
         renderArgs.put("lan", lan);
         renderArgs.put("version", version);
-        System.out.println("Idioma: "+lan);
+        renderArgs.put("extension", extension);
+        renderArgs.put("acceso", acceso);
+        renderArgs.put("grupo", grupo);
+        renderArgs.put("intranet", intranet);
+        renderArgs.put("userIntranet", userIntranet);
+
     }
 
     public static JsonObject audit(Integer bookingid, String  modulo, String ventana, String accion, String detalle){
 //        String ip = request.remoteAddress;
         String ip = "10.194.17.25";
-        System.out.println("IP: " + ip);
+//        System.out.println("IP: " + ip);
         JsonObject audit = new JsonObject();
         audit.addProperty("username", Scope.Session.current().get("username"));
         audit.addProperty("idBooking", bookingid);

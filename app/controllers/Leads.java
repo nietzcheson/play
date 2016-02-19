@@ -142,6 +142,7 @@ public class Leads extends MasterController {
         String zip = params.get("zipcode");
         String address = params.get("street");
         String email = params.get("email");
+        String email2 = params.get("email2");
         String phone = params.get("phone");
         String typephone = params.get("type_phone");
         String typephone1 = params.get("type_phone1");
@@ -171,6 +172,7 @@ public class Leads extends MasterController {
                 "  \"firstName\":\" " + firstname + "\",\n" +
                 "  \"lastName\": \"" + lastname + "\",\n" +
                 "  \"email\": \" "+ email + "\", \n"+
+                "  \"email2\": \" "+ email2 + "\", \n"+
                 phone_text+
                 "  \"state\": \""+ state + "\", \n"+
                 "  \"city\": \""+ city + "\", \n"+

@@ -47,10 +47,12 @@
             success:function(result){
                 var result = JSON.parse(result);
                 $.each(result, function (index, value) {
-                    $("#departamento").append($('<option>', {
-                        value: value.code,
-                        html : value.name
-                    }));
+                    $("#departamento").append(
+                            $('<option>', {
+                                value: value.code,
+                                html : value.name
+                            })
+                    );
                 });
             },
             error: function(result){
@@ -122,13 +124,22 @@
                     var title= result.title ? result.title.id : 1;
                     if(title==2)
                         $(".name").find("span").removeClass("flaticon-office-worker2").addClass("flaticon-woman139");
-
-                    $(".name").append(result.firstName+" "+result.lastName);
+                    var name = result.firstName+" "+ result.lastName;
+                    $(".name").append(name);
                     var content=$(".personal-information").find(".ibox-content");
                     if(result.country){
                         var state = (result.state == null) ? "" :  result.state.name+", ";
                         var city = (result.city == null) ? "" : Decode(result.city)+", ";
                         var country = (result.country == null) ? "" : result.country.name;
+                        $.ajax({
+                            url:  '/TableList',
+                            type:'POST',
+                            data:{'url': '/countries/'+result.country.code},
+                            success:function(result){
+                                var result = JSON.parse(result);
+                                $("#phoneCode").val(result.phoneCode);
+                            }
+                        });
                         country = $("<p/>", {'text': city+state+country});
                         content = content.append(country);
                     }
@@ -144,20 +155,20 @@
                     }
                     if (result.phone1) {
                         var phone1=replace_phone(result.phone1);
-                        a_href=$("<a/>", {'data-phone': result.phone1, 'title': 'Home Phone: '+phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': result.phone1, 'title': 'Home Phone: '+phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
                         $(".hidden-info").append(a_href);
                     }
                     if (result.phone2) {
                         var phone2=replace_phone(result.phone2);
-                        a_href=$("<a/>", {'data-phone': result.phone2, 'title': 'Work Phone: '+phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': result.phone2, 'title': 'Cell Phone: '+phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone72' }));
                         $(".hidden-info").append(a_href);
                     }
                     if (result.phone3) {
                         var phone3=replace_phone(result.phone3);
-                        a_href=$("<a/>", {'data-phone': result.phone3, 'title': 'Work Phone: '+phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone72' }));
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': result.phone3, 'title': 'Work Phone: '+phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
                         $(".hidden-info").append(a_href);
                     }else{
                         $(".flaticon-smartphone24").hide();
@@ -241,7 +252,7 @@
                             booking=$("<strong />",{'text': "&{'id_booking'}: "});
                             booking=$("<a/>", {'href': '/clients/'+idValue+'/payments/'+value.id+'/'+callcenter}).append(booking, value.id);
                             td1=$("<td />").append(booking);
-
+                            $("#idbooking").val(value.id);
                             date=$("<strong />",{'text': "&{'date'}: "});
                             date_text=new Date(value.saleDate);
 //                            alert(new Date(value.saleDate).getFullYear());
@@ -435,7 +446,7 @@
                     }
                 },
                 submitHandler: function(form) {
-                   data={
+                   data = {
                         mood: $(".moodcheck:checked").val(),
                         nota: $("#nota").val(),
                        requesicion: $("#requesicion").val(),
@@ -444,12 +455,11 @@
                        follow_up: $("#follow_up").is(":checked"),
                        user: $("#user").val(),
                        date: $("#fecha_nota").val()
-                   }
-                    console.log(data);
+                    }
                     $.ajax({
                         url:  '/createNote',
                         type:'post',
-                        data:data,
+                        data: data,
                         success:function(result){
                             var result = JSON.parse(result);
                             console.log(result);
@@ -515,6 +525,8 @@
     <div class="row"><div class="col-lg-12"></div></div>
 </div>
 <input id="id-value" type="hidden" value="${id}"/>
+<input id="phoneCode" type="hidden" value=""/>
+<input id="idbooking" type="hidden" value=""/>
 <div class="row">
     <div class="col-sm-7" >
         <div class="personal-information">
@@ -532,29 +544,19 @@
                 <p class="pull-left name">
                     <span class="flaticon-office-worker2"></span>
                 </p>
+                <div class="col-sm-2  pull-right">
+                    <select class="form-control input-sm" name="context" id="context">
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                    </select>
+                </div>
                 <p class="pull-right hidden-info">
-                    *{<a data-toggle="tooltip" data-placement="bottom" title="Address: 6832 Meadow Chase Lane , 38115" class="flaticon-book269"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-email131"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-phone72"></a>
-                    <a data-toggle="tooltip" data-placement="bottom"class="flaticon-phone21"></a>
-                    <a data-toggle="tooltip" data-placement="bottom" class="flaticon-smartphone24"></a>}*
+
                 </p>
                 <div class="clearfix"></div>
             </div>
         </div>
-
-        <!-- *{<ul id="myTabs" class="nav nav-tabs nav-justified" role="tablist">}*
-            *{<li role="presentation" class="active">}*
-                *{<a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">}*
-                    *{Sale Information}*
-                *{</a>}*
-            *{</li>}*
-            *{<li role="presentation">}*
-                *{<a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">}*
-                    *{Reservations}*
-                *{</a>}*
-            *{</li>}*
-        *{</ul>}* -->
         <div class="ibox-title">
             <h5>&{'sale_information'}</h5>
             <div class="ibox-tools pull-right">
