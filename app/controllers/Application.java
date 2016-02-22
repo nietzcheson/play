@@ -536,6 +536,7 @@ public class Application extends MasterController {
         String context = params.get("context");
         String idbooking = params.get("idbooking");
         //Contexto
+        System.out.println("Depto: "+deptoid);
         WS.HttpResponse res;
         WS.WSRequest req = WS.url(Constants.API+"/areas/"+deptoid).authenticate(user, password);
         res = req.get();

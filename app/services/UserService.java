@@ -56,8 +56,8 @@ public class UserService extends MasterController{
         String nombre = userJson.get("nombre").isJsonNull() ? "" :userJson.get("nombre").getAsString();
         String extension = userJson.get("extension").isJsonNull() ? "" :userJson.get("extension").getAsString();
         Boolean userIntranet = userJson.get("userIntranet").isJsonNull() ? false : userJson.get("userIntranet").getAsBoolean();
-        System.out.println(userIntranet);
         String acceso = userJson.get("acceso").isJsonNull() ? "" :userJson.get("acceso").getAsString();
+        String deptoid = userJson.get("deptoid").isJsonNull() ? "" :userJson.get("deptoid").getAsString();
         String grupo = userJson.get("grupo").isJsonNull() ? "" :userJson.get("grupo").getAsString();
         JsonArray permisos = userJson.get("permisos").isJsonNull() ? new JsonArray() :userJson.get("permisos").getAsJsonArray();
 
@@ -67,6 +67,8 @@ public class UserService extends MasterController{
         Scope.Session.current().put("extension",extension);
         Scope.Session.current().put("userIntranet",userIntranet);
         Scope.Session.current().put("acceso",acceso);
+        Scope.Session.current().put("deptoid",deptoid);
+        System.out.println("Depto Id: "+deptoid);
         Scope.Session.current().put("grupo",grupo);
     }
 }
