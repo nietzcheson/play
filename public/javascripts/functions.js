@@ -985,28 +985,76 @@ $.fn.alerts = function (user) {
         success:function(result){
             result = JSON.parse(result);
             var number = result ? result.length : 0;
-            $("#number").html(number);
+            $("#number-alerts").html(number);
             var divider= $("<li/>",{'class': 'divider'});
-            $.each(result, function (index, value) {
-                var alertDate=$.format.date(value.date, "dd/MM/yyyy");
-                var span=$("<span/>",
-                    {'class': 'pull-right text-muted'})
-                    .append($("<em/>",
-                        {'text': alertDate}));
-                var strong = $("<strong/>", {'text': value.sourceUser});
-                var div=$("<div/>").append(strong, span);
-                var maxLength = 100;
-                var comment_text = value.comments.substring(1, maxLength);
-                comment_text=comment_text.substr(0,Math.min(comment_text.length, comment_text.lastIndexOf(" ") ));
-                var comment = $("<div/>", {'text': comment_text+"..."});
-                var a=$("<a/>", {'href': value.url}).append(div, comment);
-                var li=$("<li/>").append(a);
-                if(index!=0)
-                    $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
-                else
-                    $(alerts).prepend(li);
-                return index<3;
-            });
+            if(number>0){
+                $.each(result, function (index, value) {
+                    var alertDate=$.format.date(value.date, "dd/MM/yyyy");
+                    var span=$("<span/>",
+                        {'class': 'pull-right text-muted'})
+                        .append($("<em/>",
+                            {'text': alertDate}));
+                    var strong = $("<strong/>", {'text': value.sourceUser});
+                    var div=$("<div/>").append(strong, span);
+                    var maxLength = 100;
+                    var comment_text = value.comments.substring(1, maxLength);
+                    comment_text=comment_text.substr(0,Math.min(comment_text.length, comment_text.lastIndexOf(" ") ));
+                    var comment = $("<div/>", {'text': comment_text+"..."});
+                    var a=$("<a/>", {'href': value.url}).append(div, comment);
+                    var li=$("<li/>").append(a);
+                    if(index!=0)
+                        $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
+                    else
+                        $(alerts).prepend(li);
+                    return index<3;
+                });
+            }else{
+                $(alerts).closest(".dropdown").remove();
+            }
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
+}
+$.fn.notifications = function (user) {
+    //Obtener Follow Ups
+    var url="/customernotes/"+user;
+    var alerts=$(this);
+    $.ajax({
+        url:  '/TableList',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            result = JSON.parse(result);
+            console.log(result);
+            var number = result ? result.length : 0;
+            $("#number-noti").html(number);
+            var divider= $("<li/>",{'class': 'divider'});
+            if(number>0){
+                $.each(result, function (index, value) {
+                    var alertDate=$.format.date(value.fecha, "dd/MM/yyyy");
+                    var span=$("<span/>",
+                        {'class': 'pull-right text-muted'})
+                        .append($("<em/>",
+                            {'text': alertDate}));
+                    var strong = $("<strong/>", {'text': value.iduser});
+                    var div=$("<div/>").append(strong, span);
+                    var maxLength = 300;
+                    var comment_text = value.nota.substring(0, maxLength);
+                    comment_text=comment_text.substr(0, Math.min(comment_text.length, comment_text.lastIndexOf(" ") ));
+                    var comment = $("<div/>", {'text': comment_text+"..."});
+                    var a=$("<a/>", {'href': value.url}).append(div, $("<br/>"), comment );
+                    var li=$("<li/>").append(a);
+                    if(index!=0)
+                        $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
+                    else
+                        $(alerts).prepend(li);
+                    return index<3;
+                });
+            }else{
+                $(alerts).closest(".dropdown").remove();
+            }
         },
         error: function(result){
             showError(result);

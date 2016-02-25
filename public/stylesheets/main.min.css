@@ -236,7 +236,7 @@ input.error, select.error {
     margin-right: 10px;
 }
 .media-body{
-    width: 90%;
+    width: 88%;
     float: right;
 }.label-default {
      background-color: #40739e;
@@ -252,3 +252,32 @@ input.error, select.error {
  }.table tr a{
       margin-right: 8px;
   }
+  /*    Color Status */
+.redStatus, .redStatus a,.yellowStatus, .yellowStatus a,.greenLowStatus, .greenLowStatus a,
+.greenStatus, .greenStatus a, .brownStatus, .brownStatus a, .blueStatus, .blueStatus a{
+    color: #fff;
+}
+.greenLowStatus{
+    background-color: #d6ed9e !important;
+}
+.brownStatus{
+    background-color: #d3b389 !important;
+}.warning td, .label-status .warning {
+     background-color: #faf2cc !important;
+ }.label-status .info, .info td{
+    background-color: #c4e3f3 !important;
+}.label-status .danger, .danger td {
+    background-color: #ebcccc !important;
+}.label-status .success, .success td {
+    background-color: #d0e9c6 !important;
+}.label-status .default {
+     background-color: #d3b389;
+}.label-status .primary {
+     background-color: #d6ed9e;
+}.label-status span{
+   border: 1px solid #ddd;
+   color: #444;
+   white-space: inherit;
+   font-weight: 100;
+}
+

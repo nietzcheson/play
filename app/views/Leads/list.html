@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
     #{/set}
-    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    *{<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>}*
+    <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
     <!-- <script src="/public/javascripts/leads/list.js"></script> -->
     <script>
 	    /**
@@ -39,6 +41,30 @@
                     $( "#from" ).datepicker( "option", "maxDate", selectedDate );
                 }
             });
+            function getClassName(status, row){
+                var className="";
+                switch(status) {
+                    case "CANCELADA":
+                        className="danger";
+                        break;
+                    case "POSIBLECANCELADA":
+                        className="warning";
+                        break;
+                    case "SOCIORESERVACANCELADA":
+                        className="greenLowStatus";
+                        break;
+                    case "SOCIO":
+                        className="success";
+                        break;
+                    case "RESERVACANCELADA":
+                        className="brownStatus";
+                        break;
+                    case "RESERVADO":
+                        className="info";
+                        break;
+                }
+                return className;
+            }
 
 	        var dtable=$('#leads-datatable').dataTable({
 	        "processing": true,
@@ -58,7 +84,8 @@
 	        {
 	            "targets":0,
 	            "render": function (td, cellData, rowData, row, col) {
-	                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
+                        var className = getClassName(rowData.status);
+                        return  '<a data-className="'+className+'"  href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
 	                    }
 	    	},
 	        {
@@ -80,7 +107,7 @@
                     var response='';
                     if(typeCertificate==2){
                         var certificateType=get_certificate_type(CampaingId);
-                        if(certificateType){}
+                        if(certificateType)
                             response+='<a data-toggle="tooltip" data-placement="bottom" title="Certificado" data-url="${urlecert}" data-type='+certificateType+' data-booking='+rowData.idbooking+' class="ecert_link"><span class="flaticon-purchase1"></span> </a>';
                     }
 					response+='<a data-reservationgroup="'+rowData.reservationgroup+'" data-campaign="'+rowData.campaign+'" data-offer="'+OfferId+'" class="OfferInfo" data-toggle="modal" data-target="#OfferInfo"><span class="glyphicon glyphicon-info-sign"></span></a>';
@@ -89,9 +116,14 @@
 					#{/secure.check}
                     return  response;
 				}
-			}
-
+			},
 			],
+            "fnDrawCallback": function( oSettings ) {
+                $(".dataTable tbody tr").each(function(index, val){
+                    var className=$(this).find("td:eq(0) a").attr("data-className");
+                    $(this).addClass(className);
+                });
+            },
 			"columns": [
 				{ "data": "name","title":"&{'name'}"},
 				{ "data": "idbooking","title":"&{'id_booking'}" },
@@ -200,6 +232,18 @@
                         <div class="col-sm-3 col-md-2 pull-right">
                             <input type="text" class="form-control" id="from" placeholder="&{'from'}">
                         </div><!-- /.col-sm-3-->
+                        *{ Colores de Status }*
+                            <div class="clearfix"></div><br />
+                            <div class="pull-right label-status">
+                                <span class="label info">Reservado </span>
+                                <span class="label warning">Posible Cancelación </span>
+                                <span class="label danger">Cancelado </span>
+                                <span class="label success">Socio </span>
+                                <span class="label default">Reserva Cancelada</span>
+                                <span class="label primary">Socio con Reserva Cancelada </span>
+                            </div>
+                            <div class="clearfix"></div><br />
+                        *{Termina Colores de Status}*
 
                         <table class="table table-striped table-bordered table-hover" id="leads-datatable">
                             <thead>
