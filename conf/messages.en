@@ -104,7 +104,7 @@ edit_destination= Edit Destination
 enabled=Enabled
 disabled=Disabled
 
-#Campa�as
+#Campañas
 new_campaign=New Campaign
 campaign=Campaign
 updated=Updated
@@ -122,6 +122,7 @@ physical=Physical
 digital=Digital
 unique=Unique
 generic=Generic
+code=Code
 
 #Ofertas
 last_updated=Last Update

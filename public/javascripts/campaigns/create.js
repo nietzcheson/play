@@ -35,7 +35,7 @@ function formValidate(){
 $(document).ready(function () {
     var idValue = $("#id-value").val();
     var createCampaignURL = "/createCampaign";
-    var msValue = $(".ms-parent button span").html();
+    //var msValue = $(".ms-parent button span").html();
     var mode=$("#mode").val();
 
     $( "#offer" ).autocomplete({
@@ -98,6 +98,7 @@ $(document).ready(function () {
                 segment: $("#segment").val(),
                 description: Encode($("#description").val()),
                 reservationGroup: $("#reservationGroup").val(),
+                slug: $("#campaignCode").val(),
                 //userToken: $("#userToken").val(),
                 typeFolio:$(".typeFolio:checked").val(),
                 typeCert:$(".typeCert:checked").val(),

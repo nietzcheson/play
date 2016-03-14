@@ -85,14 +85,15 @@ $(document).ready(function (){
     });
     var arr = [
         {val : "phone", text: 'HOME'},
-        {val : "phone2", text: 'WORK'},
-        {val : "phone3", text: 'CELLPHONE'}
+        {val : "phone2", text: 'CELLPHONE'},
+        {val : "phone3", text: 'WORK'}
     ];
     var div;
     var div2;
     var type_phones=[];
     var newarray=[];
     $("#add-phone").click(function(e){
+        //Agregar telefono
         var size=$( "#phones .col-sm-4").size()
         console.log(arr);
         if(size<3){

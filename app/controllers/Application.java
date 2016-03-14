@@ -490,7 +490,7 @@ public class Application extends MasterController {
                 }
             } else {
                 Logger.info("ordercolumn es null");
-                orderBy = "&orderBy=idcliente";
+                orderBy = "&orderBy=fechaventa";
 
             }
             Logger.info("order[0][column]: >>>" + params.get("order[0][column]"));

@@ -122,6 +122,7 @@ physical=Fisica
 digital=Digital
 unique=Unico
 generic=Generico
+code=Código
 
 #Ofertas
 last_updated=Última Actualización

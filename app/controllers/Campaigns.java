@@ -132,6 +132,8 @@ public class Campaigns extends MasterController {
         Logger.info("String callcenter: >>>" + callcenter);
         String description = params.get("description");
         Logger.info("String description: >>>" + description);
+        String slug = params.get("slug");
+        Logger.info("String slug: >>>" + slug);
 
         if(masterBroker != null && !masterBroker.equals("")) {
             cerCustomerParamNode = "  \"cerCustomerId\": " + masterBroker + ",\n";
@@ -152,6 +154,7 @@ public class Campaigns extends MasterController {
                 "  \"callcenter\":" + callcenter + ",\n" +
                 "  \"description\": \"" + description + "\",\n" +
                 "  \"reservationGroup\":" + reservationGroup + ",\n" +
+                "  \"slug\": \"" + slug + "\",\n" +
 //                "  \"userToken\": \"" + userToken + "\",\n" +
 //                "  \"brokerToken\": \"" + userToken + "\",\n" +
 //                "  \"userToken\": \"FM4J309N\",\n" +

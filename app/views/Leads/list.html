@@ -114,6 +114,10 @@
 					#{secure.check 'EliminarCliente'}
 						response+='<a class="glyphicon glyphicon-trash openwindow" href="/intranet/deletecert/'+ rowData.idcliente +'/'+ rowData.idbooking+'/'+ rowData.numcert+'" data-id="1"></a>';
 					#{/secure.check}
+                    console.log(rowData)
+                    //Si tiene es RTP y tiene archivo digital
+                    if(rowData.archivo)
+                        response+='<a class="glyphicon glyphicon-folder-open openwindow" href="/intranet/openfile/'+ rowData.idcliente +'/'+ rowData.idbooking+'" data-id="1"></a>';
                     return  response;
 				}
 			},
