@@ -17,7 +17,7 @@ public class Leads extends MasterController {
         render();
     }
 
-    public static void create(Integer id) {
+    public static void create(Integer id, String certificate) {
         boolean editMode;
         if( id != null) {
             editMode = true;
@@ -29,7 +29,7 @@ public class Leads extends MasterController {
 
         renderArgs.put("editMode", editMode);
         renderArgs.put("id", id);
-
+        renderArgs.put("certificate", certificate);
         render();
     }
     public static void sale(Integer clientid, Integer bookingid, Integer callcenter) {

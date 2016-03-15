@@ -279,5 +279,7 @@ input.error, select.error {
    color: #444;
    white-space: inherit;
    font-weight: 100;
+}.dataTable_wrapper .form-control-feedback{
+     margin-right: 40px;
 }
 

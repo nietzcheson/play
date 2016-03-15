@@ -170,10 +170,12 @@ public class Campaigns extends MasterController {
         request.body = param;
         request.mimeType="application/json";
         res=request.post();
-        jsonObject=res.getJson().getAsJsonObject();
-        jsonObject.addProperty("responsestatus", res.getStatus() );
-        renderText(jsonObject);
-//        renderText(res.getJson());
+        if(res.getStatus()==201 || res.getStatus()==200){
+            jsonObject=res.getJson().getAsJsonObject();
+            jsonObject.addProperty("responsestatus", res.getStatus() );
+            renderText(jsonObject);
+        }
+        renderText(res.getJson());
 
 
     }
