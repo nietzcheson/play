@@ -92,7 +92,7 @@
 	            "targets":4,
 	            "render": function (fechaventa) {
                             d= new Date(fechaventa);
-                            d.setDate(d.getDate() + 1);
+                            d.setDate(d.getDate() );
 	                        da=days[d.getUTCDay()]+" "+months[d.getMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 	                        return da;
 	                    }
