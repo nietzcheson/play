@@ -153,21 +153,31 @@
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-email131' }));
                         $(".hidden-info").append(a_href);
                     }
-                    if (result.phone1) {
-                        var phone1=replace_phone(result.phone1);
-                        a_href=$("<a/>", {'data-name': name, 'data-phone': result.phone1, 'title': 'Home Phone: '+phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                    var phone1_number= result.phone1 ? result.phone1.replace(/\D/g, ''): null;
+                    if (phone1_number) {
+                        var phone1=replace_phone(phone1_number);
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': phone1_number, 'title': 'Home Phone: '+phone1, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
                         $(".hidden-info").append(a_href);
                     }
-                    if (result.phone2) {
-                        var phone2=replace_phone(result.phone2);
-                        a_href=$("<a/>", {'data-name': name, 'data-phone': result.phone2, 'title': 'Cell Phone: '+phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                    var movil_number= result.movil ? result.movil.replace(/\D/g, ''): null;
+                    if (movil_number) {
+                        var movil=replace_phone(movil_number);
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': movil_number, 'title': 'Cell Phone: '+movil, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-phone72' }));
                         $(".hidden-info").append(a_href);
                     }
-                    if (result.phone3) {
-                        var phone3=replace_phone(result.phone3);
-                        a_href=$("<a/>", {'data-name': name, 'data-phone': result.phone3, 'title': 'Work Phone: '+phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                    var phone2_number= result.phone2 ? result.phone2.replace(/\D/g, ''): null;
+                    if (phone2_number) {
+                        var phone2=replace_phone(phone2_number);
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': phone2_number, 'title': 'Home Phone: '+phone2, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
+                        a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
+                        $(".hidden-info").append(a_href);
+                    }
+                    var phone3_number= result.phone3 ? result.phone3.replace(/\D/g, ''): null;
+                    if (phone3_number) {
+                        var phone3=replace_phone(phone3_number);
+                        a_href=$("<a/>", {'data-name': name, 'data-phone': phone3_number, 'title': 'Work Phone: '+phone3, 'data-toggle': 'tooltip', 'data-placement':'bottom', class: 'phone'});
                         a_href=a_href.append($("<span />", { 'class': 'flaticon-phone21' }));
                         $(".hidden-info").append(a_href);
                     }else{
@@ -200,10 +210,10 @@
                     callcenter=1000;
                     if(result.callCenter)
                         callcenter=result.callCenter.id;
-                    $(".add-sale").attr("href", "${id}/payments/"+callcenter+"/new")
+                    $(".add-sale").attr("href", "${id}/payments/"+callcenter+"/new");
+                    var sale=$("#sale");
                     if (result.saleSet) {
                         var offer, vendor, certificate, booking, ahref, cont="";
-                        var sale=$("#sale");
                         $.each(result.saleSet, function (index, value) {
                             var div=$("<div/>", {'class': 'item-sale'});
                             offer, vendor, certificate, booking="";
@@ -215,7 +225,6 @@
                                     div=div.append(p_campaign);
                                 }
                                 var lan="en";
-                                console.log(value.campaign.callCenter.id);
                                 if(value.campaign.callCenter.id==1541)
                                     lan="es"
                                 else if(value.campaign.callCenter.id==5962)
@@ -312,10 +321,12 @@
                             div=div.append(table);
                             sale.append(div);
                             $('[data-toggle="tooltip"]').tooltip()
-                            $("#home").find(".sk-chasing-dots").remove();
                         });
-                        sale.show();
+                    }else{
+                        sale.append($("<h5/>", {'text':'No existen ventas para este cliente'}));
                     }
+                    $("#home").find(".sk-chasing-dots").remove();
+                    sale.show();
                 },
                 error: function (err) {
                     showError("error" + err);
