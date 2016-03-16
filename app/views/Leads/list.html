@@ -184,12 +184,17 @@
                                 type_certificate="Digital";
                             }
                             $(div).find(".terms").html(terms);
-                            $(div).find(".offer").html("Nights: "+result.campaign.offer.nights+", Plan: " +
-                                    result.campaign.offer.mealPlan.plan+ ", Destinies: " +destinies+
+                            var mealPlan=result.campaign.offer.mealPlan ?"Plan: "+result.campaign.offer.mealPlan.plan: "";
+                            var transportation= "Transportation: "+result.campaign.offer.transportation ?
+                                    result.campaign.offer.transportation.name: "";
+                            var reservationGroup=result.campaign.reservationGroup ?
+                            ", Reservation Group: " + result.campaign.reservationGroup.name: "";
+                            var hook= result.campaign.offer.hook ?" ["+result.campaign.offer.hook.name+"], ": " ";
+                            $(div).find(".offer").html("Nights: "+result.campaign.offer.nights+", " +
+                                    mealPlan+ ", Destinies: " +destinies+
                                     ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
                                     " USD taxes, certificate type: "+type_certificate+", " +
-                                    "Transportation: "+result.campaign.offer.transportation.name+", Reservation Group: " +
-                                    result.campaign.reservationGroup.name+" ["+result.campaign.offer.hook.name+"], "+result.campaign.description+"");
+                                    transportation+reservationGroup+hook+result.campaign.description+"");
 
                             a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#terms", 'rel':"tooltip", 'data-placement':'bottom','title': 'Terminos', 'class': 'pull-right'});
                             a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
