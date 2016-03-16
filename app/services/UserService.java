@@ -1,5 +1,6 @@
 package services;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import controllers.MasterController;
@@ -45,15 +46,29 @@ public class UserService extends MasterController{
         if(res.getStatus() ==200) {
             Scope.Session.current().put("password",pass);
             setParamsSessionUser(jsonElement.getAsJsonObject());
-            System.out.println(jsonElement);
             return true;
         }
     return false;
     }
     public void setParamsSessionUser(JsonObject userJson){
         System.out.println(userJson);
-        Scope.Session.current().put("username",userJson.get("usuario").getAsString());
-        Scope.Session.current().put("user_name",userJson.get("nombre").getAsString());
-        Scope.Session.current().put("user_token",userJson.get("permisos").getAsJsonArray());
+        String username = userJson.get("usuario").isJsonNull() ? "" :userJson.get("usuario").getAsString();
+        String nombre = userJson.get("nombre").isJsonNull() ? "" :userJson.get("nombre").getAsString();
+        String extension = userJson.get("extension").isJsonNull() ? "" :userJson.get("extension").getAsString();
+        Boolean userIntranet = userJson.get("userIntranet").isJsonNull() ? false : userJson.get("userIntranet").getAsBoolean();
+        String acceso = userJson.get("acceso").isJsonNull() ? "" :userJson.get("acceso").getAsString();
+        String deptoid = userJson.get("deptoid").isJsonNull() ? "" :userJson.get("deptoid").getAsString();
+        String grupo = userJson.get("grupo").isJsonNull() ? "" :userJson.get("grupo").getAsString();
+        JsonArray permisos = userJson.get("permisos").isJsonNull() ? new JsonArray() :userJson.get("permisos").getAsJsonArray();
+
+        Scope.Session.current().put("username", username);
+        Scope.Session.current().put("user_name", nombre);
+        Scope.Session.current().put("user_token", permisos);
+        Scope.Session.current().put("extension",extension);
+        Scope.Session.current().put("userIntranet",userIntranet);
+        Scope.Session.current().put("acceso",acceso);
+        Scope.Session.current().put("deptoid",deptoid);
+        System.out.println("Depto Id: "+deptoid);
+        Scope.Session.current().put("grupo",grupo);
     }
 }

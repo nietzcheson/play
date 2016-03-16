@@ -62,6 +62,8 @@
                     $("#segment option[value=" + result.segment.id + "]").attr('selected', 'selected');
                 if(result.merchant)
                     $("#merchant option[value=" + result.merchant + "]").attr('selected', 'selected');
+                if(result.slug)
+                    $("#campaignCode").val(result.slug);
                 console.log("result.offer.id>>>" + result.offer.id);
                 $("#offer-price").val("$" + result.price);
                 $("#offer-discount").val("$" + result.activationFee);
@@ -227,6 +229,14 @@
                         <input id="idCertConfig" name="idCertConfig" val="" type="hidden"/>
                         <!-- Contenido de la "pestaña 1" -->
                         <div class="row">
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <label>&{'code'}*</label>
+                                    <input id="campaignCode" name="code" type="text" class="form-control"
+                                           maxlength="100"/>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <label>&{'name'}*</label>

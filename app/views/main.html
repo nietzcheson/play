@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -49,6 +49,15 @@
     <script src="/public/javascripts/vendor/sb-admin-2/js/sb-admin-2.js"></script>
     <script src="/public/javascripts/vendor/selectizejs/selectize.js"></script>
     <script src="/public/javascripts/functions.js"></script>
+    <script src="/public/javascripts/jquery-dateFormat.js"></script>
+    #{if deptoid != "" }
+    <script>
+        $(document).ready(function() {
+           $(".dropdown-alerts").alerts("${username}");
+           $(".dropdown-noti").notifications("${username}");
+        });
+    </script>
+    #{/if}
 #{get 'moreScripts' /}
 
 </head>
@@ -76,7 +85,10 @@
 
                 <!-- /.dropdown -->
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>&nbsp; ${user_name} <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-user"></i> &nbsp; ${user_name}  #{if userIntranet } - ${extension} #{/if}
+                        <b class="caret"></b>
+                    </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li>
                             <a href="@{Secure.logout()}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
@@ -84,6 +96,40 @@
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
+                #{if userIntranet }
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                            <span id="number-noti" class="label label-primary"></span>
+                            <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-noti">
+                            <li>
+                                <a class="text-center" href="${intranet}/M4CApp/Certificados/CERALERTAS.jsp?IDUSER=${username}">
+                                    <strong>Read All Follow  ups</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-messages -->
+                    </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <span id="number-alerts" class="label label-primary"></span>
+                        <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+
+                        <li>
+                            <a class="text-center" href="${intranet}/CustomerTrackingTools/notifications.html?user=${username}&level=${acceso}&group=${grupo}&status=OPEN">
+                                <strong>Read All Notifications</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                #{/if}
+                <!-- /.dropdown -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="/public/images/&{'lans'}.png" alt="">  <b class="caret"></b>

@@ -4,7 +4,7 @@ package util;
  * Created by Juan on 2/9/2015.
  */
 public final class Constants {
-//    public static final String API = "http://localhost:1010/v1";
+//    public static final String API = "http://localhost:9010/v1";
 //    public static final String API = "http://10.194.21.232:9010/v1";
     public static final String API = "http://acuarius.it.sunset.com.mx:1010/v1";
     public static final String URL_ECERT = "http://bpo.it.sunset.com.mx:8080";

@@ -15,8 +15,10 @@
 <script src="/public/javascripts/vendor/masked-input/jquery.maskedinput.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="/public/javascripts/libs/bootstrap-select/ajax-bootstrap-select.min.js"></script>
+#{if !id }
 <script>
     $(document).ready(function() {
+        //Si se va a crear un lead
         var options = {
             ajax: {
                 url: '/application/campaignsearch/',
@@ -133,8 +135,107 @@
                 }
             });
         });
+
+        function validate_certificate(id){
+            id = (id == "") ? "" : "/" + id;
+            var div=$("#certificate").closest(".form-group");
+            var certificates = "/application/certificates" + id;
+            $.ajax({
+                type: "GET",
+                url: certificates
+            }).done(function (msg) {
+                var result = JSON.parse(msg);
+                var terms="", destinies="", type_certificate="", lan="en";
+                console.log(result);
+                $(div).find(".form-control-feedback").remove();
+                $(div).removeClass("has-success has-feedback has-error");
+                $("#info-certificate").html("");
+                $("#valid-certificate").val(result.certificate);
+                if(!result.message){
+                    var span=$("<span/>",{
+                        'aria-hidden': 'true',
+                        'class': 'glyphicon glyphicon-ok form-control-feedback'
+                    });
+                    $(div).addClass("has-success has-feedback");
+                    tam= result.campaign.offer.translations.length;
+                    switch(result.campaign.callCenter.id) {
+                        case 201:
+                            lan="en"
+                            break;
+                        case 1541:
+                            lan="es"
+                            break;
+                        case 5962:
+                            lan="pt-br"
+                            break;
+                    }
+                    if(tam>1){
+                        $.each(result.campaign.offer.translations, function(index, value){
+                            if((value.language.code==lan || index==tam)&&value.websiteTerms )
+                                terms=value.websiteTerms;
+                        });
+                    }else{
+                        terms= result.campaign.offer.translations[0].websiteTerms;
+                    }
+                    if(result.campaign.offer.destinations){
+                        $.each(result.campaign.offer.destinations, function(index, value){
+                            if(destinies==""){
+                                destinies+=value.offerDestinationId.destination.name;
+                            }else{
+                                destinies+=", "+value.offerDestinationId.destination.name;
+                            }
+                        });
+                    }
+                    if(result.campaign.typeCertificate==1){
+                        type_certificate="Physical";
+                    }else {
+                        type_certificate="Digital";
+                    }
+                    console.log("Terms: "+terms)
+                    $(".certificate .terms").html(terms);
+                    $(".certificate .offer").html("Nights: "+result.campaign.offer.nights+", Plan: " +
+                            result.campaign.offer.mealPlan.plan+ ", Destinies: " +destinies+
+                            ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
+                            " USD taxes, certificate type: "+type_certificate+", " +
+                            "Transportation: "+result.campaign.offer.transportation.name+", Reservation Group: " +
+                            result.campaign.reservationGroup.name+" ["+result.campaign.offer.hook.name+"], "+result.campaign.description+"");
+                    a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#terms", 'rel':"tooltip", 'data-placement':'bottom','title': 'Terminos', 'class': 'pull-right'});
+                    a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
+                    $("#info-certificate").append(a_href);
+                    a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#offer-details",'rel':"tooltip", 'data-placement':'bottom','title': 'Oferta', 'class': 'pull-right'});
+                    a_href=a_href.append($("<span />", { 'class': 'glyphicon glyphicon-info-sign'}));
+                    $("#info-certificate").append(a_href);
+                    $(".terms, #offer").removeClass("oculto");
+                    $('[data-toggle="tooltip"]').tooltip();
+                }else{
+                    $(div).addClass("has-error has-feedback");
+                    var span=$("<span/>",{
+                        'aria-hidden': 'true',
+                        'class': 'glyphicon glyphicon-remove form-control-feedback'
+                    });
+                    $(".terms, #offer").hide();
+                }
+                $(div).append(span);
+            }).error(function (err) {
+
+            }); // end ajax
+        }
+        #{if certificate != "" }
+            $("#certificate").val("${certificate}");
+            validate_certificate("${certificate}");
+        #{/if}
+        $("#certificate").keyup(function(){
+            $("#valid-certificate").val("");
+            var tam=$(this).val().length;
+            if(tam>=4){
+                var id=$(this).val();
+                validate_certificate(id);
+            }
+
+        });
     });
 </script>
+#{/if}
 #{/set}
 <div class="col-lg-12 page-header">
     <div class="row">
@@ -272,6 +373,10 @@
                                 <label>&{'email'}*</label>
                                 <input type="email" class="form-control" id="email" name="email" data-required="true" data-length="2" maxlength="100"/>
                             </div>
+                            <div class="form-group" style="margin-top: 12px;">
+                                <label>&{'email'} 2</label>
+                                <input type="email" class="form-control" id="email2" name="email2" data-length="2" maxlength="100"/>
+                            </div>
                         </div>
 
                         <div class="col-sm-6">
@@ -284,8 +389,8 @@
                                     <div class="col-sm-4">
                                         <select class="form-control" id="type-phone" name="type-phone">
                                             <option value="phone">HOME</option>
-                                            <option value="phone2">WORK</option>
-                                            <option value="phone3">CELLPHONE</option>
+                                            <option value="phone2">CELLPHONE</option>
+                                            <option value="phone3">WORK</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-8">

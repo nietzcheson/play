@@ -27,6 +27,7 @@ GET /changeLanguage/{lan}/?                     Application.change_language
 GET   /clients/{clientid}/payments/{callcenter}/new/?           Leads.sale
 GET   /clients/{clientid}/payments/{bookingid}/{callcenter}?    Leads.sale
 *     /clients/create/?                                  Leads.create
+GET   /clients/create/{certificate}                      Leads.create
 *     /clients/{id}/?                                    Leads.view
 *     /application/leadslist/?                           Application.leadsList
 *     /application/leadslist/{id}/?                      Application.leadsList
@@ -53,6 +54,7 @@ GET   /application/paymentlist/{bookingid}/{paymentid}/? Application.paymentList
 GET   /intranet/{page}/{id}/?                            Leads.reservations
 GET   /intranet/{page}/{id}/{booking}?                   Leads.reservations
 GET   /intranet/{page}/{id}/{booking}/{callcenter}/?     Leads.reservations
+POST  /clictodial                                        Application.clictodial
 
 # Serial Numbers
 *     /serials/create/?                         Serials.create

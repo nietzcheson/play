@@ -3,9 +3,14 @@
     #{set 'moreStyles'}
     <link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
     <link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
     #{/set}
-    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    *{<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>}*
+    <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
     <!-- <script src="/public/javascripts/leads/list.js"></script> -->
     <script>
 	    /**
@@ -13,8 +18,54 @@
 	     */
 	    $(document).ready(function() {
 	        var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
-	        var months = ['January', 'February', 'March', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
+	        var months = ['January', 'February', 'March','April', 'May', 'June', 'July', 'August','September', 'October', 'November','December'];
 	        var context;
+			$( document ).on( "click", ".openwindow", function(e){
+				//$('.openwindow').click(function(e) {
+				e.preventDefault();
+				window.open($(this).attr("href"), "popupWindow", "menubar=1,resizable=1,width=1000,height=1000, toolbar=1");
+			});
+            $( "#from" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                dateFormat: "yy-mm-dd",
+                onClose: function( selectedDate ) {
+                    $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                }
+            });
+            $( "#to" ).datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                dateFormat: "yy-mm-dd",
+                onClose: function( selectedDate ) {
+                    $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+            function getClassName(status, row){
+                var className="";
+                switch(status) {
+                    case "CANCELADA":
+                        className="danger";
+                        break;
+                    case "POSIBLECANCELADA":
+                        className="warning";
+                        break;
+                    case "SOCIORESERVACANCELADA":
+                        className="greenLowStatus";
+                        break;
+                    case "SOCIO":
+                        className="success";
+                        break;
+                    case "RESERVACANCELADA":
+                        className="brownStatus";
+                        break;
+                    case "RESERVADO":
+                        className="info";
+                        break;
+                }
+                return className;
+            }
+
 	        var dtable=$('#leads-datatable').dataTable({
 	        "processing": true,
 	        "serverSide": true,
@@ -33,53 +84,220 @@
 	        {
 	            "targets":0,
 	            "render": function (td, cellData, rowData, row, col) {
-	                        return  '<a href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
+                        var className = getClassName(rowData.status);
+                        return  '<a data-className="'+className+'"  href="/clients/' + rowData.idcliente + '">' + rowData.name + '</a>';
 	                    }
 	    	},
 	        {
 	            "targets":4,
-	            "render": function (datecreated) {
-	                        d= new Date(datecreated);
-	                        da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
+	            "render": function (fechaventa) {
+                            d= new Date(fechaventa);
+                            d.setDate(d.getDate() + 1);
+	                        da=days[d.getUTCDay()]+" "+months[d.getMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
 	                        return da;
 	                    }
 			},
 			{
 				"targets":5,
-				"render": function (dateupdated) {
-					d= new Date(dateupdated);
-					da=days[d.getUTCDay()]+" "+months[d.getUTCMonth()]+" "+d.getUTCDate()+" "+d.getUTCFullYear();
-					return da;
+				"render": function (td, cellData, rowData, row, col) {
+					//Si existe el certificado es 2
+                    var typeCertificate=rowData.tipocert;
+					var CampaingId=rowData.idcampania;
+					var OfferId=rowData.offerid;
+                    var response='';
+                    if(typeCertificate==2){
+                        var certificateType=get_certificate_type(CampaingId);
+                        if(certificateType)
+                            response+='<a data-toggle="tooltip" data-placement="bottom" title="Certificado" data-url="${urlecert}" data-type='+certificateType+' data-booking='+rowData.idbooking+' class="ecert_link"><span class="flaticon-purchase1"></span> </a>';
+                    }
+					response+='<a data-reservationgroup="'+rowData.reservationgroup+'" data-campaign="'+rowData.campaign+'" data-offer="'+OfferId+'" class="OfferInfo" data-toggle="modal" data-target="#OfferInfo"><span class="glyphicon glyphicon-info-sign"></span></a>';
+					#{secure.check 'EliminarCliente'}
+						response+='<a class="glyphicon glyphicon-trash openwindow" href="/intranet/deletecert/'+ rowData.idcliente +'/'+ rowData.idbooking+'/'+ rowData.numcert+'" data-id="1"></a>';
+					#{/secure.check}
+                    //Si tiene es RTP y tiene archivo digital
+                    if(rowData.archivo)
+                        response+='<a class="glyphicon glyphicon-folder-open openwindow" href="/intranet/openfile/'+ rowData.idcliente +'/'+ rowData.idbooking+'" data-id="1"></a>';
+                    return  response;
 				}
-			}
-
+			},
 			],
+            "fnDrawCallback": function( oSettings ) {
+                $(".dataTable tbody tr").each(function(index, val){
+                    var className=$(this).find("td:eq(0) a").attr("data-className");
+                    $(this).addClass(className);
+                });
+                //Sin resultados y existe algo dato en la búsqueda
+                var search=$("#myInput").val();
+//                if($(".dataTable tbody tr").length==1 && search != ""){
+                if(search != ""){
+                    var certificates = "/application/certificates/" + search;
+                    $.ajax({
+                        type: "GET",
+                        url: certificates
+                    }).done(function (msg) {
+                        var result = JSON.parse(msg);
+                        console.log(result);
+                        var terms="", destinies="", type_certificate="", lan="en";
+                        var div=$("#myInput").closest(".input-group");
+                        $(div).find(".form-control-feedback").remove();
+                        $(div).removeClass("has-success has-feedback has-error");
+                        $("#info-certificate").html("");
+                        $("#valid-certificate").val(result.certificate);
+                        if(!result.message){
+                            var span=$("<span/>",{
+                                'aria-hidden': 'true',
+                                'class': 'glyphicon glyphicon-ok form-control-feedback'
+                            });
+                            $(div).addClass("has-success has-feedback");
+                            tam= result.campaign.offer.translations.length;
+                            switch(result.campaign.callCenter.id) {
+                                case 201:
+                                    lan="en"
+                                    break;
+                                case 1541:
+                                    lan="es"
+                                    break;
+                                case 5962:
+                                    lan="pt-br"
+                                    break;
+                            }
+                            if(tam>1){
+                                $.each(result.campaign.offer.translations, function(index, value){
+                                    if((value.language.code==lan || index==tam)&&value.websiteTerms )
+                                        terms=value.websiteTerms;
+                                });
+                            }else
+                                terms= result.campaign.offer.translations[0].websiteTerms;
+
+                            if(result.campaign.offer.destinations){
+                                $.each(result.campaign.offer.destinations, function(index, value){
+                                    if(destinies==""){
+                                        destinies+=value.offerDestinationId.destination.name;
+                                    }else{
+                                        destinies+=", "+value.offerDestinationId.destination.name;
+                                    }
+                                });
+                            }
+                            if(result.campaign.typeCertificate==1){
+                                type_certificate="Physical";
+                            }else {
+                                type_certificate="Digital";
+                            }
+                            $(div).find(".terms").html(terms);
+                            var mealPlan=result.campaign.offer.mealPlan ?"Plan: "+result.campaign.offer.mealPlan.plan: "";
+                            var transportation= "Transportation: "+result.campaign.offer.transportation ?
+                                    result.campaign.offer.transportation.name: "";
+                            var reservationGroup=result.campaign.reservationGroup ?
+                            ", Reservation Group: " + result.campaign.reservationGroup.name: "";
+                            var hook= result.campaign.offer.hook ?" ["+result.campaign.offer.hook.name+"], ": " ";
+                            $(div).find(".offer").html("Nights: "+result.campaign.offer.nights+", " +
+                                    mealPlan+ ", Destinies: " +destinies+
+                                    ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
+                                    " USD taxes, certificate type: "+type_certificate+", " +
+                                    transportation+reservationGroup+hook+result.campaign.description+"");
+
+                            a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#terms", 'rel':"tooltip", 'data-placement':'bottom','title': 'Terminos', 'class': 'pull-right'});
+                            a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
+                            $("#info-certificate").append(a_href);
+                            a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#offer-details",'rel':"tooltip", 'data-placement':'bottom','title': 'Oferta', 'class': 'pull-right'});
+                            a_href=a_href.append($("<span />", { 'class': 'glyphicon glyphicon-info-sign'}));
+                            $("#info-certificate").append(a_href);
+                            a_href=$("<a/>", {'class': 'pull-right', 'text': 'Create Lead', 'href': '/clients/create/'+search});
+                            $("#info-certificate").append(a_href);
+                            $(".terms, #offer").removeClass("oculto");
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }else{
+//                            $(div).addClass("has-error has-feedback");
+//                            var span=$("<span/>",{
+//                                'aria-hidden': 'true',
+//                                'class': 'glyphicon glyphicon-remove form-control-feedback'
+//                            });
+                            $(".terms, #offer").hide();
+                        }
+                        $(div).append(span);
+                    }).error(function (err) {
+
+                    }); // end ajax
+                }else{
+                    var div=$("#myInput").closest(".input-group");
+                    $(div).find(".form-control-feedback").remove();
+                    $(div).removeClass("has-success has-feedback has-error");
+                    $("#info-certificate").html("");
+                    $("#valid-certificate").val("");
+            }
+
+            },
 			"columns": [
 				{ "data": "name","title":"&{'name'}"},
 				{ "data": "idbooking","title":"&{'id_booking'}" },
 				{ "data": "numcert","title":"&{'certificate'}"},
 				{ "data": "campaign","title":"&{'campaign'}"},
-				{ "data": "datecreated","title":"&{'date_created'}"},
-				{ "data": "dateupdated","title":"&{'date_updated'}" }
+				{ "data": "fechaventa","title":"&{'date_created'}"},
 			]
-			,"order": [[ 5, "desc" ]]
+			,"order": [[ 4, "desc" ]]
 	        });
 	
 	        $('#myInput').on( 'keyup', function (e) {
-	            //if(this.value.length >= 3 && e.keyCode == 13) {
-	            if(e.keyCode == 13) {
-	                dtable.fnFilter($.trim(this.value));
-	            }else if(this.value == "") {
-	                dtable.fnFilter("");
-	            }
+                if(e.keyCode==13){
+                    search_client();
+                }
 	            return;
 	        } );
 	
 	        $("#search-client").click(function (e) {
 	            e.preventDefault();
-	            var value_search=$.trim($("#myInput").val());
-	            dtable.fnFilter(value_search);
+                search_client();
 	        });
+            function search_client(){
+                var value_search=$.trim($("#myInput").val());
+                var from=$.trim($("#from").val());
+                var to=$.trim($("#to").val());
+                value_search+=from!="" ? ","+from: "";
+                value_search+=to!="" ? ","+to: "";
+                dtable.fnFilter(value_search);
+            }
+            $( document ).on( "click", ".OfferInfo", function(e){
+				//Get info de oferta
+				var offerId=$(this).attr("data-offer");
+                $("#OfferInfo .modal-body p").html("");
+                var Offerbutton=$(this);
+                $.ajax({
+                    url:  '/TableList',
+                    type:'POST',
+                    data:{'url': '/offers/'+offerId},
+                    success:function(result){
+                        var result =  $.parseJSON(result);
+						var destinies="";
+                        if(result.destinations){
+                            for(var j = 0; j < result.destinations.length; j++) {
+								var coma= j == 0 ? " ": ", ";
+                                destinies+=coma+result.destinations[j].offerDestinationId.destination.name;
+                            }
+                        }
+						var certificateType = $(Offerbutton).closest("td").find(".ecert_link").length==0 ? 1: 2;
+						var Reservation_Group= $(Offerbutton).attr("data-reservationgroup");
+						certificateType= certificateType==1 ? "PHYSICAL" : "DIGITAL";
+                        var plan= result.mealPlan.plan;
+                        $("#OfferInfo .modal-body p").html("Nights: "+result.nights+", Plan: "+plan+", " +
+                                "Destinies: "+destinies+", Cost: "+result.price+" USD all inclusive, " +
+                                result.activationFee+" USD axt. fee and $"+result.taxes+" USD taxes" +
+								", certificate type: "+certificateType+", " +
+                                "Transportation: "+result.transportation.name+", Reservation Group: " +
+								Reservation_Group+"["+result.hook.name+"], "+Decode(result.description)+". ");
+					},
+                    error: function(err){
+                        alert("error" + err);
+                    }
+                });
+        	});
+            $(document).on('click', '#info-certificate a', function() {
+                var offer=$("p.offer").html();
+                $("#offer-details .modal-body").html(Decodehtml(offer));
+            });
+            $(document).on('click', '#info-campaign a:eq(0), #info-certificate a:eq(0)', function() {
+                var terms=$("p.terms").html();
+                $("#terms .modal-body").html(Decodehtml(terms));
+            });
 	    });
     </script>
     <div class="col-lg-12 page-header">
@@ -113,8 +331,38 @@
                                         <span class="glyphicon glyphicon-search"></span>
                                     </button>
                                   </span>
+                                <input type="hidden" class="form-control" id="valid-certificate" name="valid-certificate" />
+                                <p class="offer oculto"></p>
+                                <p class="terms oculto"></p>
                             </div><!-- /input-group -->
+                            <div id="info-certificate">
+                                <a data-toggle="modal" data-target="#terms" rel="tooltip" data-placement="bottom" title="Terminos" class="pull-right">
+                                    <span class="flaticon-purchase1"></span>
+                                </a>
+                                <a data-toggle="modal" data-target="#offer-details" rel="tooltip" data-placement="bottom" title="Oferta" class="pull-right">
+                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                </a>
+                            </div>
                         </div><!-- /.col-sm-3-->
+                        <div class="col-sm-3 col-md-2 pull-right">
+                            <input type="text" class="form-control" id="to" placeholder="&{'to'}">
+                        </div><!-- /.col-sm-3-->
+                        <div class="col-sm-3 col-md-2 pull-right">
+                            <input type="text" class="form-control" id="from" placeholder="&{'from'}">
+                        </div><!-- /.col-sm-3-->
+                        *{ Colores de Status }*
+                            <div class="clearfix"></div><br />
+                            <div class="pull-right label-status">
+                                <span class="label info">Reservado </span>
+                                <span class="label warning">Posible Cancelación </span>
+                                <span class="label danger">Cancelado </span>
+                                <span class="label success">Socio </span>
+                                <span class="label default">Reserva Cancelada</span>
+                                <span class="label primary">Socio con Reserva Cancelada </span>
+                            </div>
+                            <div class="clearfix"></div><br />
+                        *{Termina Colores de Status}*
+
                         <table class="table table-striped table-bordered table-hover" id="leads-datatable">
                             <thead>
                                 <tr></tr>
@@ -126,3 +374,49 @@
         </div>
     </div>
     <!-- /.col-lg-12 -->
+
+
+    <!-- Modal Oferta -->
+    <div class="modal fade " id="OfferInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content ">
+                <div class="modal-body text-center">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">&{'terms'}</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="offer-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Oferta </h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+                </div>
+            </div>
+        </div>
+    </div>

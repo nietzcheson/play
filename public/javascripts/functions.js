@@ -924,7 +924,6 @@ function get_certificate_type(CampaignId){
     $.ajax({
         success:function(result){
             var result =  $.parseJSON(result);
-            console.log(result);
             certificateType=result.certificate;
             //console.log(certificateType);
         },
@@ -932,7 +931,6 @@ function get_certificate_type(CampaignId){
         type: 'GET',
         async: false,
         error: function(err){
-            console.log("error");
             console.log(err);
         }
     });
@@ -957,6 +955,12 @@ function formTerms(){
     }
     return result;
 }
+function replace_phone(phone){
+    var ast=phone.length-3;
+    phone=phone.substring(ast);
+    phone="*".repeat(ast)+phone;
+    return phone;
+}
 
 $.fn.sumaEle = function () {
     sum=parseFloat(0);
@@ -968,6 +972,94 @@ $.fn.sumaEle = function () {
         }
     });
     return sum;
+}
+
+$.fn.alerts = function (user) {
+    //Obtener alertas
+    var url="/alerts/"+user;
+    var alerts=$(this);
+    $.ajax({
+        url:  '/TableList',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            result = JSON.parse(result);
+            var number = result ? result.length : 0;
+            $("#number-alerts").html(number);
+            var divider= $("<li/>",{'class': 'divider'});
+            if(number>0){
+                $.each(result, function (index, value) {
+                    var alertDate=$.format.date(value.date, "dd/MM/yyyy");
+                    var span=$("<span/>",
+                        {'class': 'pull-right text-muted'})
+                        .append($("<em/>",
+                            {'text': alertDate}));
+                    var strong = $("<strong/>", {'text': value.sourceUser});
+                    var div=$("<div/>").append(strong, span);
+                    var maxLength = 100;
+                    var comment_text = value.comments.substring(1, maxLength);
+                    comment_text=comment_text.substr(0,Math.min(comment_text.length, comment_text.lastIndexOf(" ") ));
+                    var comment = $("<div/>", {'text': comment_text+"..."});
+                    var a=$("<a/>", {'href': value.url}).append(div, comment);
+                    var li=$("<li/>").append(a);
+                    if(index!=0)
+                        $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
+                    else
+                        $(alerts).prepend(li);
+                    return index<3;
+                });
+            }else{
+                $(alerts).closest(".dropdown").remove();
+            }
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
+}
+$.fn.notifications = function (user) {
+    //Obtener Follow Ups
+    var url="/customernotes/"+user;
+    var alerts=$(this);
+    $.ajax({
+        url:  '/TableList',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            result = JSON.parse(result);
+            console.log(result);
+            var number = result ? result.length : 0;
+            $("#number-noti").html(number);
+            var divider= $("<li/>",{'class': 'divider'});
+            if(number>0){
+                $.each(result, function (index, value) {
+                    var alertDate=$.format.date(value.fecha, "dd/MM/yyyy");
+                    var span=$("<span/>",
+                        {'class': 'pull-right text-muted'})
+                        .append($("<em/>",
+                            {'text': alertDate}));
+                    var strong = $("<strong/>", {'text': value.iduser});
+                    var div=$("<div/>").append(strong, span);
+                    var maxLength = 300;
+                    var comment_text = value.nota.substring(0, maxLength);
+                    comment_text=comment_text.substr(0, Math.min(comment_text.length, comment_text.lastIndexOf(" ") ));
+                    var comment = $("<div/>", {'text': comment_text+"..."});
+                    var a=$("<a/>", {'href': value.url}).append(div, $("<br/>"), comment );
+                    var li=$("<li/>").append(a);
+                    if(index!=0)
+                        $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
+                    else
+                        $(alerts).prepend(li);
+                    return index<3;
+                });
+            }else{
+                $(alerts).closest(".dropdown").remove();
+            }
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
 }
 
 
@@ -986,7 +1078,20 @@ $.fn.clearForm = function() {
 };
 
 $(document).ready(function() {
-        $(".change_language").click(function (e) {
+
+    //Download Ecert
+    $( document ).on( "click", ".ecert_link", function(e){
+        var cert=$(this).attr("data-type");
+        var booking=$(this).attr("data-booking");
+        var url=$(this).attr("data-url");
+        if(cert !='null' && cert != '')	{
+            //window.open("http://bpo.m4sunset.com:8080/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
+            console.log(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
+            window.open(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
+        }
+    });
+
+    $(".change_language").click(function (e) {
             e.preventDefault();
             var lan=$(this).attr("data-lan");
             $.ajax({
@@ -1042,6 +1147,10 @@ $(document).ready(function() {
 
 
         });
+
+        //Get Alerts
+
+
     });
 
 

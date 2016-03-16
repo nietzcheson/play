@@ -17,7 +17,7 @@ public class Leads extends MasterController {
         render();
     }
 
-    public static void create(Integer id) {
+    public static void create(Integer id, String certificate) {
         boolean editMode;
         if( id != null) {
             editMode = true;
@@ -29,7 +29,7 @@ public class Leads extends MasterController {
 
         renderArgs.put("editMode", editMode);
         renderArgs.put("id", id);
-
+        renderArgs.put("certificate", certificate);
         render();
     }
     public static void sale(Integer clientid, Integer bookingid, Integer callcenter) {
@@ -94,19 +94,23 @@ public class Leads extends MasterController {
         String password= Scope.Session.current().get("password");
         String pageurl;
         if(page.equals("cancel")){
-            pageurl= urlintranet + "/Certificados/CERVENTARecord2.jsp?IDBOOKING="+booking+"&IDCLIENTE="+id;
+            pageurl= urlintranet + "/M4CApp/Certificados/CERVENTARecord2.jsp?IDBOOKING="+booking+"&IDCLIENTE="+id;
         }else if(page.equals("record")){
-            pageurl=urlintranet + "/M4CRecordings_2.jsp?id="+booking;
+            pageurl=urlintranet + "/M4CApp/M4CRecordings_2.jsp?id="+booking;
         }else if(page.equals("reserve")){
-            pageurl=urlintranet + "/M4CRESERVACIONRecord.jsp?IDCLIENTE="+id+"&IDRESERVACION=&IDBOOKING="+booking;
+            pageurl=urlintranet + "/M4CApp/M4CRESERVACIONRecord.jsp?IDCLIENTE="+id+"&IDRESERVACION=&IDBOOKING="+booking;
         }else if(page.equals("survey")){
-            pageurl=urlintranet + "/M4CSURVEYRecord.jsp?IDBOOKING="+booking+"&amp;IDCLIENTE="+id+"&amp;IDSURVEY=";
+            pageurl=urlintranet + "/M4CApp/M4CSURVEYRecord.jsp?IDBOOKING="+booking+"&amp;IDCLIENTE="+id+"&amp;IDSURVEY=";
         }else if(page.equals("customer")){
-            pageurl=urlintranet + "/CustomerServiceSurvey.jsp?IDCLIENTE="+id+"&IDBOOKING="+booking;
+            pageurl=urlintranet + "/M4CApp/CustomerServiceSurvey.jsp?IDCLIENTE="+id+"&IDBOOKING="+booking;
         }else if(page.equals("file")){
-            pageurl=urlfile + "/M4CArchivoDigital.jsp?idbook="+booking+"&idcc="+callcenter+"&idcliente="+id+"&area=C&iduser="+username;
+            pageurl=urlfile + "/M4CApp/M4CArchivoDigital.jsp?idbook="+booking+"&idcc="+callcenter+"&idcliente="+id+"&area=C&iduser="+username;
+        }else if(page.equals("deletecert")){
+            pageurl=urlintranet + "/M4CApp/Certificados/deleteCertificate.jsp?IDCLIENTE="+id+"&IDBOOKING="+booking+"&NUMCERT="+callcenter;
+        }else if(page.equals("openfile")){
+            pageurl=urlintranet + "/ImagenesApps/ReturnToParadise/"+booking+".jpg";
         }else{
-            pageurl=urlintranet + "/Certificados/CERCLIENTERecord.jsp?IDCLIENTE="+id;
+            pageurl=urlintranet + "/M4CApp/Certificados/CERCLIENTERecord.jsp?IDCLIENTE="+id;
         }
         renderArgs.put("username", username);
         renderArgs.put("password", password);
@@ -140,6 +144,7 @@ public class Leads extends MasterController {
         String zip = params.get("zipcode");
         String address = params.get("street");
         String email = params.get("email");
+        String email2 = params.get("email2");
         String phone = params.get("phone");
         String typephone = params.get("type_phone");
         String typephone1 = params.get("type_phone1");
@@ -169,6 +174,7 @@ public class Leads extends MasterController {
                 "  \"firstName\":\" " + firstname + "\",\n" +
                 "  \"lastName\": \"" + lastname + "\",\n" +
                 "  \"email\": \" "+ email + "\", \n"+
+                "  \"email2\": \" "+ email2 + "\", \n"+
                 phone_text+
                 "  \"state\": \""+ state + "\", \n"+
                 "  \"city\": \""+ city + "\", \n"+

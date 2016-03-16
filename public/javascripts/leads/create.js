@@ -85,14 +85,15 @@ $(document).ready(function (){
     });
     var arr = [
         {val : "phone", text: 'HOME'},
-        {val : "phone2", text: 'WORK'},
-        {val : "phone3", text: 'CELLPHONE'}
+        {val : "phone2", text: 'CELLPHONE'},
+        {val : "phone3", text: 'WORK'}
     ];
     var div;
     var div2;
     var type_phones=[];
     var newarray=[];
     $("#add-phone").click(function(e){
+        //Agregar telefono
         var size=$( "#phones .col-sm-4").size()
         console.log(arr);
         if(size<3){
@@ -161,6 +162,7 @@ $(document).ready(function (){
                 $("#lastname").val(Decode(result.lastName));
                 $("#certificate").closest(".form-group").remove();
                 $("#email").val(Decode(result.email));
+                $("#email2").val(Decode(result.email2));
                 d= new Date(result.birthdate);
                 da= d.getUTCMonth()+"/"+d.getUTCDate()+"/"+d.getUTCFullYear();
                 $("#birthdate").val(da);
@@ -232,95 +234,7 @@ $(document).ready(function (){
         var terms=$(this).closest(".info-certificate").find("p.terms").html();
         $("#terms .modal-body").html(Decodehtml(terms));
     });
-    $("#certificate").keyup(function(){
-        $("#valid-certificate").val("");
-        var tam=$(this).val().length;
-        if(tam>=4){
-            var id=$(this).val();
-            id = (id == "") ? "" : "/" + id;
-            var div=$(this).closest(".form-group");
-            var certificates = "/application/certificates" + id;
-            $.ajax({
-                type: "GET",
-                url: certificates
-            }).done(function (msg) {
-                    var result = JSON.parse(msg);
-                    var terms="", destinies="", type_certificate="", lan="en";
-                    console.log(result);
-                    $(div).find(".form-control-feedback").remove();
-                    $(div).removeClass("has-success has-feedback has-error");
-                    $("#info-certificate").html("");
-                    $("#valid-certificate").val(result.certificate);
-                    if(!result.message){
-                        var span=$("<span/>",{
-                            'aria-hidden': 'true',
-                            'class': 'glyphicon glyphicon-ok form-control-feedback'
-                        });
-                        $(div).addClass("has-success has-feedback");
-                        tam= result.campaign.offer.translations.length;
-                        switch(result.campaign.callCenter.id) {
-                            case 201:
-                                lan="en"
-                                break;
-                            case 1541:
-                                lan="es"
-                                break;
-                            case 5962:
-                                lan="pt-br"
-                                break;
-                        }
-                        if(tam>1){
-                            $.each(result.campaign.offer.translations, function(index, value){
-                                if((value.language.code==lan || index==tam)&&value.websiteTerms )
-                                    terms=value.websiteTerms;
-                            });
-                        }else{
-                            terms= result.campaign.offer.translations[0].websiteTerms;
-                        }
-                        if(result.campaign.offer.destinations){
-                            $.each(result.campaign.offer.destinations, function(index, value){
-                                if(destinies==""){
-                                    destinies+=value.offerDestinationId.destination.name;
-                                }else{
-                                    destinies+=", "+value.offerDestinationId.destination.name;
-                                }
-                            });
-                        }
-                        if(result.campaign.typeCertificate==1){
-                            type_certificate="Physical";
-                        }else {
-                            type_certificate="Digital";
-                        }
-                        console.log("Terms: "+terms)
-                        $(".certificate .terms").html(terms);
-                        $(".certificate .offer").html("Nights: "+result.campaign.offer.nights+", Plan: " +
-                            result.campaign.offer.mealPlan.plan+ ", Destinies: " +destinies+
-                            ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
-                            " USD taxes, certificate type: "+type_certificate+", " +
-                            "Transportation: "+result.campaign.offer.transportation.name+", Reservation Group: " +
-                            result.campaign.reservationGroup.name+" ["+result.campaign.offer.hook.name+"], "+result.campaign.description+"");
-                        a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#terms", 'rel':"tooltip", 'data-placement':'bottom','title': 'Terminos', 'class': 'pull-right'});
-                        a_href=a_href.append($("<span />", { 'class': 'flaticon-purchase1' }));
-                        $("#info-certificate").append(a_href);
-                        a_href=$("<a/>", {'data-toggle':"modal", 'data-target':"#offer-details",'rel':"tooltip", 'data-placement':'bottom','title': 'Oferta', 'class': 'pull-right'});
-                        a_href=a_href.append($("<span />", { 'class': 'glyphicon glyphicon-info-sign'}));
-                        $("#info-certificate").append(a_href);
-                        $(".terms, #offer").removeClass("oculto");
-                        $('[data-toggle="tooltip"]').tooltip();
-                    }else{
-                        $(div).addClass("has-error has-feedback");
-                        var span=$("<span/>",{
-                            'aria-hidden': 'true',
-                            'class': 'glyphicon glyphicon-remove form-control-feedback'
-                        });
-                        $(".terms, #offer").hide();
-                    }
-                    $(div).append(span);
-                }).error(function (err) {
 
-                }); // end ajax
-        }
-    });
     $('#lead-form').submit(function (evt){
         evt.preventDefault();
         var idValue = $("#id-value").val();
@@ -368,6 +282,7 @@ $(document).ready(function (){
                     phone2: $("#phone2").val(),
                     type_phone2: $("#type-phone2").val(),
                     email: Encode($("#email").val()),
+                    email2: Encode($("#email2").val()),
                     countries: $("#countries").val(),
                     states: $("#states").val(),
                     city: Encode($("#city").val()),

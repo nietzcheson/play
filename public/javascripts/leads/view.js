@@ -26,6 +26,38 @@ $(document).ready(function (){
         event.preventDefault();
         $("#personal-information-container").slideToggle("600");
     });
+    $(document).on("click", ".phone", function (event) {
+        $('#clictodial').modal('show');
+        var phone= $(this).attr("data-phone");
+        var name= $(this).attr("data-name");
+        var context=$("#context").val();
+        var idbooking=$("#idbooking").val();
+        var lada= $(this).find("span").hasClass("flaticon-phone72") ? '045': $("#phoneCode").val();
+        phone=lada+phone;
+        //Obtener lada por país
+        var data={
+            phone: phone,
+            context: context,
+            idbooking: idbooking,
+            name: name
+        };
+        console.log(data);
+        $.ajax({
+            url:  '/clictodial',
+            type:'POST',
+            data: data,
+            success:function(result){
+                var result =  $.parseJSON(result);
+                if(result.success)
+                    $('#clictodial').modal('hide');
+                else
+                    showModalError($("#clictodial"), result.error);
+            },
+            error: function(result){
+                showModalError($("#clictodial"), "Error");
+            }
+        });
+    });
     $( "#certificate-code" ).keyup(function() {
         var length = $(this).val().length;
         if(length >= 8) {
@@ -44,16 +76,7 @@ $(document).ready(function (){
             $("#campaign .modal-body").html(text);
         }
     });
-    $( document ).on( "click", ".ecert_link", function(e){
-        var cert=$(this).attr("data-type");
-        var booking=$(this).attr("data-booking");
-        var url=$(this).attr("data-url");
-        if(cert !='null' && cert != '')	{
-            //window.open("http://bpo.m4sunset.com:8080/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
-            console.log(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
-            window.open(url+"/M4CApp/reportes/requestReportes.jsp?REPORTE="+cert+"&BookingNumber="+booking);
-        }
-    });
+
     $( document ).on( "click", ".read-more", function(e){
         var height=$(this).closest("p").find("span").height();
         if(height==20){
