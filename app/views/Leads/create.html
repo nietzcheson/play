@@ -193,6 +193,7 @@
                     }
                     console.log("Terms: "+terms)
                     $(".certificate .terms").html(terms);
+                    $("#offer-details h4").html(result.campaign.name);
                     $(".certificate .offer").html("Nights: "+result.campaign.offer.nights+", Plan: " +
                             result.campaign.offer.mealPlan.plan+ ", Destinies: " +destinies+
                             ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
