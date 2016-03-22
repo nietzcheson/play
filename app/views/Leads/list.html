@@ -190,7 +190,8 @@
                             var reservationGroup=result.campaign.reservationGroup ?
                             ", Reservation Group: " + result.campaign.reservationGroup.name: "";
                             var hook= result.campaign.offer.hook ?" ["+result.campaign.offer.hook.name+"], ": " ";
-                            $(div).find(".offer").html("<h4>"+result.campaign.name+"</h4><br/><p>Nights: "+result.campaign.offer.nights+", " +
+                            $("#offer-details h4").html(result.campaign.name);
+                            $(div).find(".offer").html("<br/><p>Nights: "+result.campaign.offer.nights+", " +
                                     mealPlan+ ", Destinies: " +destinies+
                                     ", Cost: $"+result.campaign.offer.activationFee+" USD act. fee and $"+result.campaign.offer.taxes+
                                     " USD taxes, certificate type: "+type_certificate+", " +
