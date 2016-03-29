@@ -202,7 +202,7 @@ $(document).ready(function (){
                 }
                 load_feature(arrf);
                 var array_phone = ["phone","phone2", "phone3"];
-                $.each([result.phone1, result.phone2, result.phone3], function(index, value){
+                $.each([result.phone1, result.movil, result.phone3], function(index, value){
                     if(value != null  ){
                         ind=$("#phones select").length;
                         if($("#phones input").eq(ind-1).val()==""){

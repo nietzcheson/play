@@ -98,7 +98,7 @@ public class Leads extends MasterController {
         }else if(page.equals("record")){
             pageurl=urlintranet + "/M4CApp/M4CRecordings_2.jsp?id="+booking;
         }else if(page.equals("reserve")){
-            pageurl=urlintranet + "/M4CApp/M4CRESERVACIONRecord.jsp?IDCLIENTE="+id+"&IDRESERVACION=&IDBOOKING="+booking;
+            pageurl=urlintranet + "/M4CApp/M4CRESERVACIONRecord.jsp?IDCLIENTE="+id+"&IDRESERVACION="+callcenter+"&IDBOOKING="+booking;
         }else if(page.equals("survey")){
             pageurl=urlintranet + "/M4CApp/M4CSURVEYRecord.jsp?IDBOOKING="+booking+"&amp;IDCLIENTE="+id+"&amp;IDSURVEY=";
         }else if(page.equals("customer")){
