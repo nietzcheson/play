@@ -1061,6 +1061,41 @@ $.fn.notifications = function (user) {
         }
     });
 }
+$.fn.foliosByCampaign = function () {
+    //Obtener Follow Ups
+    var url="/certificates/getFoliosbyActiveCampaigns";
+    var alerts=$(this);
+    $.ajax({
+        url:  '/TableList',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            console.log(result);
+            result = JSON.parse(result);
+            var number = result ? result.length : 0;
+            $("#number-campaigns").html(number);
+            var divider= $("<li/>",{'class': 'divider'});
+            if(number>0){
+                $.each(result, function (index, value) {
+                    var span = $("<span/>", {'class': 'pull-right text-muted', 'text':value.counter+ ' Folios'});
+                    var strong = $("<strong/>", {'text': value.campania_NAME});
+                    var div = $("<div/>").append($("<p/>").append(strong, span));
+                    var a = $("<a/>", {'href': '/serials/'+value.campania_ID}).append(div);
+                    var li = $("<li/>").append(a);
+                    if(index!=0)
+                        $(alerts).prepend(li, $("<li/>", {'class': 'divider'}));
+                    else
+                        $(alerts).prepend(li);
+                });
+            }else{
+                $(alerts).closest(".dropdown").remove();
+            }
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
+}
 
 
 $.fn.clearForm = function() {

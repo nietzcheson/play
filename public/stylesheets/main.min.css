@@ -281,5 +281,7 @@ input.error, select.error {
    font-weight: 100;
 }.dataTable_wrapper .form-control-feedback{
      margin-right: 40px;
+}.progress {
+  background-color: #5cb85c;
 }
 

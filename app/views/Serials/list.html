@@ -12,6 +12,35 @@
     <script>
         $(document).ready(function() {
             #{if idCampaign!= null }
+            //Obtener folios restates
+                var url="/certificates/countFolios/${idCampaign}";
+                $.ajax({
+                    url:  '/TableList',
+                    type:'POST',
+                    data:{'url': url},
+                    success:function(result){
+                        result = JSON.parse(result);
+                        var unavailable_number= 0, total=0;
+                        $.each(result, function (index, value) {
+                            if(value.status=="UNAVAILABLE")
+                                unavailable_number=value.counter;
+                            total+=value.counter;
+                        });
+                        unavailable = unavailable_number*100/total;
+                        var br = $("<br/>");
+                        var strong=$("<strong/>", {'text': unavailable_number+" &{'of'} "+total})
+                        var span=$("<span/>", {'text': unavailable.toFixed(2)+'% Ocupados', 'class':'pull-right text-muted'});
+                        var p= $("<p/>").append(strong, span);
+                        var div=$("<div/>",{'class': 'progress-bar progress-bar-danger','role': 'progressbar', 'aria-valuenow': unavailable,
+                            'aria-valuemin': 0, 'aria-valuemax': 100, 'style': 'width: '+unavailable+'%'});
+                        span= $("<span/>", {'class': 'sr-only', 'text': unavailable+'% Complete (danger)'});
+                        div= $("<div/>", {'class': 'progress active'}).append(div.append(span));
+                        $(".page-header").find("h1").after($("<div/>").append(p, div));
+                    },
+                    error: function(result){
+                        showError(result);
+                    }
+                });
                 $("#saveFolios").submit(function(e){
                     e.preventDefault();
                     var div=$(this);
@@ -231,6 +260,7 @@
             <div class="col-lg-2">
                 <div class="row">
                     <br />
+                    #{if idCampaign!= null }
                     <div class="dropdown pull-right">
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <span class="glyphicon glyphicon-plus"></span>
@@ -239,7 +269,7 @@
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li>
                                 <a href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create">
-                                    &nbsp; &{'Create'}
+                                    &nbsp; &{'create'}
                                 </a>
                             </li>
                             <li>
@@ -249,11 +279,17 @@
                             </li>
                             <li>
                                 <a class="modal-folio" data-toggle="modal" data-target="#addFolios" data-action="REASIGNAR">
-                                    &nbsp; Reasignar
+                                    &nbsp; &{'reassign'}
                                 </a>
                             </li>
                         </ul>
                     </div>
+                    #{/if}
+                    #{else}
+                        <a class="btn btn-primary pull-right" href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create">
+                            &nbsp; &{'create'} Folios
+                        </a>
+                    #{/else}
                 </div>
             </div>
             #{/secure.check}
@@ -280,7 +316,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Agregar nuevos Folios</h4>
+                    <h4 class="modal-title" id="myModalLabel">&{'add'} Folios</h4>
                 </div>
                 <form method="post"  id="saveFolios">
                 <div class="modal-body">
@@ -289,8 +325,8 @@
                     <input type="hidden" name="action" class="form-control" id="action" value=""/>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Folios</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+                    <button type="submit" class="btn btn-primary">&{'save'} Folios</button>
                 </div>
                 </form>
             </div>

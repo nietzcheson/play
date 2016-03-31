@@ -173,9 +173,10 @@ public class Leads extends MasterController {
                 "  \"title\": \"" + title + "\",\n" +
                 "  \"firstName\":\" " + firstname + "\",\n" +
                 "  \"lastName\": \"" + lastname + "\",\n" +
-                "  \"email\": \" "+ email + "\", \n"+
-                "  \"email2\": \" "+ email2 + "\", \n"+
-                phone_text+
+                "  \"email\": \" "+ email + "\", \n";
+        if(!email2.isEmpty())
+            param+="  \"email2\": \" "+ email2 + "\", \n";
+        param+=phone_text+
                 "  \"state\": \""+ state + "\", \n"+
                 "  \"city\": \""+ city + "\", \n"+
                 "  \"countryCode\": \""+ country + "\", \n"+
