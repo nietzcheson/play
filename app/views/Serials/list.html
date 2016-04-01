@@ -272,16 +272,20 @@
                                     &nbsp; &{'create'}
                                 </a>
                             </li>
+                            #{secure.check 'InsertarFolios'}
                             <li>
                                 <a class="modal-folio" data-toggle="modal" data-target="#addFolios" data-action="INSERTAR">
                                     &nbsp; &{'add'}
                                 </a>
                             </li>
+                            #{/secure.check}
+                            #{secure.check 'ReasignarFolios'}
                             <li>
                                 <a class="modal-folio" data-toggle="modal" data-target="#addFolios" data-action="REASIGNAR">
                                     &nbsp; &{'reassign'}
                                 </a>
                             </li>
+                            #{/secure.check}
                         </ul>
                     </div>
                     #{/if}
