@@ -78,7 +78,7 @@
                             $(button).attr("disabled", false).val("Save");
                         }, error: function(result){
                             $(button).attr("disabled", false).val("Save");
-                            showError("Hubo un problema, intentalo más tarde");
+                            showModalError($("#addFolios"),"Hubo un problema, intentalo más tarde");
                         },beforeSend: function (xhr) {
                             xhr.setRequestHeader ("Authorization", "Basic " + btoa("sistemas:sys73xrv"));
                         },
