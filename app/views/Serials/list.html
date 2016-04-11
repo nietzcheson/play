@@ -12,6 +12,87 @@
     <script>
         $(document).ready(function() {
             #{if idCampaign!= null }
+            //Obtener folios restates
+                var url="/certificates/countFolios/${idCampaign}";
+                $.ajax({
+                    url:  '/TableList',
+                    type:'POST',
+                    data:{'url': url},
+                    success:function(result){
+                        result = JSON.parse(result);
+                        var unavailable_number= 0, total=0;
+                        $.each(result, function (index, value) {
+                            if(value.status=="UNAVAILABLE")
+                                unavailable_number=value.counter;
+                            total+=value.counter;
+                        });
+                        unavailable = unavailable_number*100/total;
+                        var br = $("<br/>");
+                        var strong=$("<strong/>", {'text': unavailable_number+" &{'of'} "+total})
+                        var span=$("<span/>", {'text': unavailable.toFixed(2)+'% Ocupados', 'class':'pull-right text-muted'});
+                        var p= $("<p/>").append(strong, span);
+                        var div=$("<div/>",{'class': 'progress-bar progress-bar-danger','role': 'progressbar', 'aria-valuenow': unavailable,
+                            'aria-valuemin': 0, 'aria-valuemax': 100, 'style': 'width: '+unavailable+'%'});
+                        span= $("<span/>", {'class': 'sr-only', 'text': unavailable+'% Complete (danger)'});
+                        div= $("<div/>", {'class': 'progress active'}).append(div.append(span));
+                        $(".page-header").find("h1").after($("<div/>").append(p, div));
+                    },
+                    error: function(result){
+                        showError(result);
+                    }
+                });
+                $("#saveFolios").submit(function(e){
+                    e.preventDefault();
+                    var div=$(this);
+                    var button=$(this).find(".btn").eq(1);
+                    $(button).attr("disabled", true).val("&{'creating'}....");
+                    var campaign=$("#campaign").val();
+                    var url='${urlservicio}/campaign/'+campaign+'/certificates/';
+                    console.log("Url: "+url)
+                    $.ajax( {
+                        url: url,
+                        type: 'POST',
+                        data: new FormData( this ),
+                        success: function(msg){
+                            var result = msg;
+                            console.log(result);
+                            var tr= $("<tr/>").append(
+                                    $("<th/>", {'text': 'Certificate'}),
+                                    $("<th/>", {'text': 'Result'})
+                            );
+                            var thead= $("<thead/>").append(tr);
+                            var tbody= $("<tbody/>");
+                            $.each(result, function (index,value) {
+                                var className = value.result=="INSERTADO" || value.result=="REASIGNADO" ? "success": "danger";
+                                tr= $("<tr/>", {'class': className}).append(
+                                        $("<td/>", {'text': value.certificate}),
+                                        $("<td/>", {'text': value.result})
+                                );
+                                tbody=tbody.append(tr);
+                            })
+                            var table=$("<table/>", {class: 'table table-bordered', 'style': 'margin-top: 20px;'})
+                                    .append(thead, tbody);
+                            $("#saveFolios .modal-body").append(table);
+                            var height= $("#addFolios").height();
+                            $(".modal-backdrop").css("height", height);
+                            $(button).attr("disabled", false).val("Save");
+                        }, error: function(result){
+                            $(button).attr("disabled", false).val("Save");
+                            showModalError($("#addFolios"),"Hubo un problema, intentalo más tarde");
+                        },beforeSend: function (xhr) {
+                            xhr.setRequestHeader ("Authorization", "Basic " + btoa("sistemas:sys73xrv"));
+                        },
+                        processData: false,
+                        contentType: false
+                    } );
+//            }
+                });
+
+                $(".modal-folio").click(function(e){
+                    var action= $(this).attr("data-action");
+                    $("#action").val(action);
+                    $("#addFolios table").remove();
+                });
             var typeFolio="";
             $.ajax({
                 url:  '/application/campaignslist/${idCampaign}',
@@ -147,8 +228,6 @@
             });
         #{/else}
         });
-
-
     </script>
 
     <!-- Modal -->
@@ -180,10 +259,41 @@
             #{secure.check 'CrearInventario'}
             <div class="col-lg-2">
                 <div class="row">
-                    <a href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create" class="btn btn-sm btn-primary pull-right top-separation">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        &nbsp;&{'add'} &{'serials_number'}
-                    </a>
+                    <br />
+                    #{if idCampaign!= null }
+                    <div class="dropdown pull-right">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create">
+                                    &nbsp; &{'create'}
+                                </a>
+                            </li>
+                            #{secure.check 'InsertarFolios'}
+                            <li>
+                                <a class="modal-folio" data-toggle="modal" data-target="#addFolios" data-action="INSERTAR">
+                                    &nbsp; &{'add'}
+                                </a>
+                            </li>
+                            #{/secure.check}
+                            #{secure.check 'ReasignarFolios'}
+                            <li>
+                                <a class="modal-folio" data-toggle="modal" data-target="#addFolios" data-action="REASIGNAR">
+                                    &nbsp; &{'reassign'}
+                                </a>
+                            </li>
+                            #{/secure.check}
+                        </ul>
+                    </div>
+                    #{/if}
+                    #{else}
+                        <a class="btn btn-primary pull-right" href="/serials/#{if idCampaign!= null }${idCampaign}/#{/if}create">
+                            &nbsp; &{'create'} Folios
+                        </a>
+                    #{/else}
                 </div>
             </div>
             #{/secure.check}
@@ -202,3 +312,27 @@
         </div>
     </div>
     <!-- /.col-lg-12 -->
+
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="addFolios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">&{'add'} Folios</h4>
+                </div>
+                <form method="post"  id="saveFolios">
+                <div class="modal-body">
+                    <input type="file" name="file" class="form-control" id="file"/>
+                    <input type="hidden" name="campaign" class="form-control" id="campaign" value="${idCampaign}"/>
+                    <input type="hidden" name="action" class="form-control" id="action" value=""/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+                    <button type="submit" class="btn btn-primary">&{'save'} Folios</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
