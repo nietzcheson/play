@@ -55,7 +55,9 @@
         $(document).ready(function() {
            $(".dropdown-alerts").alerts("${username}");
            $(".dropdown-noti").notifications("${username}");
+            #{secure.check 'ListaCampaniasFoliosFaltantes'}
            $(".dropdown-tasks").foliosByCampaign();
+            #{/secure.check}
         });
     </script>
     #{/if}
@@ -129,6 +131,7 @@
                     </ul>
                     <!-- /.dropdown-alerts -->
                 </li>
+                    #{secure.check 'ListaCampaniasFoliosFaltantes'}
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
                             <span id="number-campaigns" class="label label-primary"></span>
@@ -137,6 +140,7 @@
                         <ul class="dropdown-menu dropdown-tasks"></ul>
                         <!-- /.dropdown-tasks -->
                     </li>
+                    #{/secure.check}
                 #{/if}
                 <!-- /.dropdown -->
                 <li class="dropdown">
