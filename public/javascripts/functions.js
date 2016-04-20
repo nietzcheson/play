@@ -33,8 +33,79 @@ function load_catalog(url, id, select){
             showError(result);
         }
     });
+}/**
+ * @desc Cargar un listado de hoteles dentro de un select box
+ * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
+ */
+function load_sunset_hotels(url, id, select){
+    id.html("");
+    $.ajax({
+        url:  '/bulkBank',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            var result = JSON.parse(result);
+            id.append($('<option>', {
+                value: "",
+                html : ""
+            }));
+            $.each(result, function (index, value) {
+                if( value.id==select){
+                    id.append($('<option>', {
+                        value: value.id,
+                        html : value.name,
+                        selected: 'selected',
+                        'data-club': value.clubId
+                    }));
+                }else {
+                    id.append($('<option>', {
+                        value: value.id,
+                        html: value.name,
+                        'data-club': value.clubId
+                    }));
+                }
+            });
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
 }
 
+
+function load_catalog_bulbank(url, id, select){
+    id.html("");
+    $.ajax({
+        url:  '/bulkBank',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            var result = JSON.parse(result);
+            id.append($('<option>', {
+                value: "",
+                html : ""
+            }));
+            $.each(result, function (index, value) {
+                var name=value.name? value.name: value.program;
+                if( value.id==select){
+                    id.append($('<option>', {
+                        value: value.id,
+                        html : name,
+                        selected: 'selected'
+                    }));
+                }else {
+                    id.append($('<option>', {
+                        value: value.id,
+                        html: name
+                    }));
+                }
+            });
+        },
+        error: function(result){
+            showError(result);
+        }
+    });
+}
 /**
  * @desc Cargar el listado de servicios
  * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
@@ -325,11 +396,12 @@ function loadImages(url, page, select ) {
  * @desc Cargar el listado de planes alimenticios en radio select box
  * @param
  */
-function load_mealplan(selected){
+function load_mealplan(selected, url){
+    var url=url?url: '/mealplans';
     $.ajax({
         url:  '/TableList',
         type:'POST',
-        data:{'url': '/mealplans'},
+        data:{'url': url},
         error: function (err) {
             console.log(err);
         },

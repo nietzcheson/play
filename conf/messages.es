@@ -161,7 +161,7 @@ new_broker=Crear nuevo broker
 #Clientes
 new_client=Nuevo Cliente
 client=Cliente
-id_booking=Id de Reservación
+id_booking=Idbooking
 date_created=Fecha de Creación
 date_updated=Fecha de Edición
 date_birth=Fecha de nacimiento
