@@ -18,7 +18,8 @@ GET     /logout                                 Secure.logout
 
 #Funciones Generales Jquery
 POST   /TableList/?                             Application.TableList   #Listado Jquery para Tablas y Selects
-POST   /bulkBank/?                             Application.TableListBulkBank   #Listado Jquery para Tablas y Selects
+POST   /bulkBank/?                              Application.TableListBulkBank   #Listado Jquery para Tablas y Selects
+
 GET    /application/UsersGroupList/?            Application.UsersGroupList
 GET /changeLanguage/{lan}/?                     Application.change_language
 
@@ -109,8 +110,8 @@ POST  /createHotel                                      Hotels.createHotel
 POST  /createHotel/{id}/?                               Hotels.createHotel
 
 #BulkBank
-GET /bulkbank/?                                 Bulkbank.list
-*  /application/bulkbanklist/?                  Application.bulkbankList
+GET /templateBulkbank/?                                 TemplateBulkbank.list
+*  /application/templateBulkbanklist/?                  Application.templateBulkbankList
 
 # Campañas
 GET   /campaigns/?                              Campaigns.list(boolean successfullyCreated : true)

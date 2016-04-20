@@ -3,11 +3,11 @@ package controllers;
 import play.Logger;
 
 /**
- * Created by desarrollo1 on 18/04/2016.
+ * Created by desarrollo1 on 20/04/2016.
  */
-public class Bulkbank extends MasterController {
+public class TemplateBulkbank extends MasterController {
 
-    /*public static void list() {
+    public static void list() {
         Logger.info("Entrando a BulkBank.list()");
         Boolean successfullyCreated = false;
         Boolean successfullyUpdated = false;
@@ -38,5 +38,5 @@ public class Bulkbank extends MasterController {
         renderArgs.put("editMode", editMode);
         renderArgs.put("template", template);
         render();
-    }*/
+    }
 }

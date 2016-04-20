@@ -531,7 +531,7 @@ public class Application extends MasterController {
         }
     }
 
-    public static void bulkbankList() {
+    public static void templateBulkbankList() {
         String draw = params.get("draw");
         String queryString = "";
         JsonObject jsonObject = new JsonObject();
