@@ -110,8 +110,17 @@ POST  /createHotel                                      Hotels.createHotel
 POST  /createHotel/{id}/?                               Hotels.createHotel
 
 #BulkBank
-GET /templateBulkbank/?                                 TemplateBulkbank.list
+* /templateBulkbank/?                                   TemplateBulkbank.list
+GET /templateBulkbank/{id}/?                            TemplateBulkbank.create
+GET /templateBulkbank/create/?                          TemplateBulkbank.create
+POST /createTemplate/?                                  TemplateBulkbank.createTemplate
+POST /templateBulkbank/{id}?                            TemplateBulkbank.createTemplate
 *  /application/templateBulkbanklist/?                  Application.templateBulkbankList
+GET /bulkbank/?                                         Bulkbank.list
+GET /bulkbank/{templateId}/{year}/{day}/?               Bulkbank.create
+GET /bulkbank/create/?                                  Bulkbank.create
+POST /createBulkbank/?                                  Bulkbank.createBulkBank
+*  /application/bulkbanklist/?                          Application.bulkbankList
 
 # Campañas
 GET   /campaigns/?                              Campaigns.list(boolean successfullyCreated : true)

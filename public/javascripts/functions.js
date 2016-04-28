@@ -50,24 +50,25 @@ function load_sunset_hotels(url, id, select){
                 html : ""
             }));
             $.each(result, function (index, value) {
-                if( value.id==select){
+                if( value.clubId==select){
                     id.append($('<option>', {
-                        value: value.id,
+                        value: value.clubId,
                         html : value.name,
                         selected: 'selected',
-                        'data-club': value.clubId
+                        'data-hotel': value.id
                     }));
+                    $(".hotel-name").append(value.name);
                 }else {
                     id.append($('<option>', {
-                        value: value.id,
+                        value: value.clubId,
                         html: value.name,
-                        'data-club': value.clubId
+                        'data-hotel': value.id
                     }));
                 }
             });
         },
         error: function(result){
-            showError(result);
+            showError("Hubo un error al cargar los hoteles");
         }
     });
 }
@@ -102,7 +103,7 @@ function load_catalog_bulbank(url, id, select){
             });
         },
         error: function(result){
-            showError(result);
+            showError("Hubo un error al comunicarse con la API");
         }
     });
 }
@@ -118,7 +119,6 @@ function load_subservices(url, id, select){
         data:{'url': url},
         success:function(result){
             var result = JSON.parse(result);
-            console.log(result);
             id.append($('<option>', {
                 value: "",
                 html : ""
@@ -411,7 +411,6 @@ function load_mealplan(selected, url){
             var mealPlanHTML = '';
             if (data.length > 0) {
                 $.each(data, function(i, mealPlan) {
-                    console.log(selected);
                     if(mealPlan.id==selected){
                         mealPlanHTML += '<option selected=selected value="' + mealPlan.id + '">' + Decode(mealPlan.plan) + '</option>'
                     }else{
@@ -1033,6 +1032,102 @@ function replace_phone(phone){
     phone="*".repeat(ast)+phone;
     return phone;
 }
+function daysByweek(w){
+    var n1 = new Date(w);
+    var n2 = new Date(w + 604800000)
+    var months=["Jan", "Feb", "March", "April", "May", "June", "July", "August", "Sep", "Oct", "Nov", "Dec"]
+    n1=n1.getDate()+"/"+months[n1.getUTCMonth()]+"/"+n1.getFullYear();
+    n2=n2.getDate()+"/"+months[n2.getUTCMonth()]+"/"+n2.getFullYear();
+    return (n1+" - "+n2)
+}
+
+function getFirstDay(year, day, week){
+    plusdays = [0,6,5,4,3,2,1];
+    firstDay = new Date(year, 0, 1).getDay();
+    var d = new Date("Jan 01, "+year+" 01:00:00");
+    var w = d.getTime() -(3600000*24*(firstDay+plusdays[day-1])) + 604800000 * (week);
+    return w;
+}
+
+$.fn.load_weeks = function (year, day) {
+    var tr=$("<tr/>");
+    var today= new Date();
+    for(i=1; i<=53; i++){
+        var module= i % 9;
+        if(module == 0 || i == 9)
+            $(this).find("tbody").append(tr);
+        var day1=getFirstDay(year, day, i);
+        class_name="";
+        if(today > new Date(day1)){
+            input=$("<input/>", {'type': 'number', 'class': 'form-control', value: 0, min: 0, name: 'quantity', disabled: "disabled"});
+        }else{
+            input=$("<input/>", {'type': 'number', 'class': 'form-control', value: 0, min: 0, name: 'quantity'})
+            class_name="active-week";
+        }
+        var n2 = new Date(day1 + 604800000);
+        if(new Date(day1).getFullYear()==year || n2.getFullYear()==year){
+            var td=$("<td/>").append(
+                i > 9 ? i :"0"+i,
+                input,
+                $("<input/>", {'type': 'hidden', 'class': 'form-control', value: 0, name: 'ids'}),
+                $("<input/>", {'type': 'hidden', 'class': 'form-control', value: i, name: 'weekDayId'}),
+                $("<i/>", {'class': 'glyphicon glyphicon-info-sign '+class_name, 'data-toggle':"tooltip",
+                    'data-placement':"top", 'title': daysByweek(day1) })
+            );
+            tr=tr.append(td);
+        }
+        if(module == 0)
+            var tr=$("<tr/>");
+    }
+    $(this).find("tbody").append(tr);
+}
+
+$.fn.load_years = function (year) {
+    var today=new Date();
+    year= year ? year : today.getFullYear();
+    for (i=year-3; i<= year+15; i++){
+        $(this).append($("<option/>", {'value': i, html: i}));
+    }
+    $(this).val(year);
+}
+
+$.fn.load_days = function (day) {
+    var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+    for(i=1; i<=7; i++){
+        $(this).append($("<option/>", {'value': i, html: days[i]}));
+    }
+    $(this).val(day);
+}
+
+$.fn.load_templates = function (url, template) {
+    var template_select=$(this);
+    $(this).html("");
+    $.ajax({
+        url:  '/bulkBank',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+            var result = JSON.parse(result);
+            $.each(result, function (index, value) {
+                if( value.id==template){
+                    template_select.append($('<option/>', {
+                        value: value.id,
+                        html : value.name,
+                        selected: 'selected'
+                    }));
+                }else {
+                    template_select.append($('<option/>', {
+                        value: value.id,
+                        html: value.name
+                    }));
+                }
+            });
+        },
+        error: function(result){
+            showError("Hubo un error al comunicarse con la API");
+        }
+    });
+}
 
 $.fn.sumaEle = function () {
     sum=parseFloat(0);
@@ -1099,7 +1194,6 @@ $.fn.notifications = function (user) {
         data:{'url': url},
         success:function(result){
             result = JSON.parse(result);
-            console.log(result);
             var number = result ? result.length : 0;
             $("#number-noti").html(number);
             var divider= $("<li/>",{'class': 'divider'});
@@ -1142,7 +1236,6 @@ $.fn.foliosByCampaign = function () {
         type:'POST',
         data:{'url': url},
         success:function(result){
-            console.log(result);
             result = JSON.parse(result);
             var number = result ? result.length : 0;
             $("#number-campaigns").html(number);

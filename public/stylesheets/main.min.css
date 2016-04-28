@@ -454,6 +454,13 @@ input.error, select.error {
     background: #223c51 !important;
 }.tooltip.bottom .tooltip-arrow{
      border-bottom-color: #223c51 !important;
- }
+}.bulkbank-table input{
+      width: 65px;
+      margin: 0px 4px;
+      text-align: center;
+      display: inline-block;
+}.active-week{
+    color: #223c51;
+}
 
 

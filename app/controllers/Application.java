@@ -9,7 +9,7 @@ import java.util.*;
 import play.mvc.Scope;
 import services.AsteriskServer;
 import util.Constants;
-import util.StringTools;
+import controllers.Security;
 
 public class Application extends MasterController {
 
@@ -24,10 +24,29 @@ public class Application extends MasterController {
         }
         return true;
     }
-
     public static void index() {
         //Checar permisos
-        redirect("/clients");
+        if(Security.check("ListarCliente"))
+            redirect("/clients");
+        else if(Security.check("ListarMasterBroker"))
+            redirect("/master-brokers");
+        else if(Security.check("ListarOferta"))
+            redirect("/offers");
+        else if(Security.check("ListarCampania"))
+            redirect("/campaigns");
+        else if(Security.check("ListarDestino"))
+            redirect("/destinations");
+        else if(Security.check("ListarHotel"))
+            redirect("/hotels");
+        else if(Security.check("SubirImagenesEcert"))
+            redirect("/ecerts");
+        else if(Security.check("ListarInventario"))
+            redirect("/serials");
+        else if(Security.check("SubirClientes"))
+            redirect("/upload-leads");
+        else if(Security.check("ListarBulkBank"))
+            redirect("/templateBulkbank");
+        else login();
     }
 
     public static void login() {
@@ -574,6 +593,70 @@ public class Application extends MasterController {
                             orderBy;
 
             queryString = "/templateBulkBank" + queryString;
+
+            Logger.info("queryString: >>>" + Constants.API_Bulkbank + queryString);
+            WS.WSRequest req = WS.url(Constants.API_Bulkbank + queryString).authenticate(user, password);
+            WS.HttpResponse res = req.get();
+            jsonResponse = res.getJson().getAsJsonObject();
+
+            jsonObject.addProperty("draw", draw);
+            if (jsonResponse.get("totalElements") != null) {
+
+                jsonObject.addProperty("recordsTotal", jsonResponse.get("totalElements").getAsLong());
+                jsonObject.addProperty("recordsFiltered", jsonResponse.get("totalElements").getAsLong());
+            } else {
+                jsonObject.addProperty("recordsTotal", 0);
+                jsonObject.addProperty("recordsFiltered", 0);
+            }
+            jsonObject.add("data", jsonResponse.get("elements"));
+
+            renderText(jsonObject);
+        }
+    }
+
+    public static void bulkbankList() {
+        String draw = params.get("draw");
+        String queryString = "";
+        JsonObject jsonObject = new JsonObject();
+        JsonObject jsonResponse;
+        if(draw != null) {
+            Integer pageLength = params.get("length", Integer.class);
+            String searchValue = params.get("search[value]");
+            String query = (!searchValue.equals(null) && !searchValue.isEmpty()) ? "&q=" + searchValue : "";
+            String page = String.valueOf(params.get("start", Integer.class) / pageLength + 1);
+
+            String orderColumn = params.get("order[0][column]");
+            String orderBy = "";
+            String order = (params.get("order[0][dir]") != null) ? "&order=" + params.get("order[0][dir]") : "";
+            Logger.info("orderColumn: >>>" + orderColumn);
+            Logger.info("order: >>>" + order);
+            if (orderColumn != null) {
+                if (orderColumn.equals("0")) {
+                    orderBy = "&orderBy=id";
+                } else if (orderColumn.equals("1")) {
+                    orderBy = "&orderBy=name";
+                } else if (orderColumn.equals("2")) {
+                    orderBy = "&orderBy=hotel";
+                } else if (orderColumn.equals("3")) {
+                    orderBy = "&orderBy=unitId";
+                } else if (orderColumn.equals("4")) {
+                    orderBy = "&orderBy=splitId";
+                } else if (orderColumn.equals("5")) {
+                    orderBy = "&orderBy=observations";
+                }
+            } else {
+                Logger.info("ordercolumn es null");
+            }
+            Logger.info("order[0][column]: >>>" + params.get("order[0][column]"));
+            queryString =
+                    "?" +
+                            "pageLength=" + pageLength +
+                            "&page=" + page +
+                            query +
+                            order +
+                            orderBy;
+
+            queryString = "/bulkBank" + queryString;
 
             Logger.info("queryString: >>>" + Constants.API_Bulkbank + queryString);
             WS.WSRequest req = WS.url(Constants.API_Bulkbank + queryString).authenticate(user, password);

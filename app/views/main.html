@@ -54,31 +54,6 @@
     <script src="/public/javascripts/vendor/selectizejs/selectize.js"></script>
     <script src="/public/javascripts/functions.js"></script>
     <script src="/public/javascripts/jquery-dateFormat.js"></script>
-    #{if deptoid != "" }
-    <script>
-        $(document).ready(function() {
-           $(".dropdown-alerts").alerts("${username}");
-           $(".dropdown-noti").notifications("${username}");
-            #{secure.check 'ListaCampaniasFoliosFaltantes'}
-           $(".dropdown-tasks").foliosByCampaign();
-            #{/secure.check}
-            $('[data-toggle="tooltip"]').tooltip()
-            $(".material-design-hamburger__icon").click(function (event) {
-              $(".sidebar").toggleClass("menu--on");
-                var child;
-                child = this.childNodes[1].classList;
-                if (child.contains('material-design-hamburger__icon--to-arrow')) {
-                    child.remove('material-design-hamburger__icon--to-arrow');
-                    child.add('material-design-hamburger__icon--from-arrow');
-                } else {
-                    child.remove('material-design-hamburger__icon--from-arrow');
-                    child.add('material-design-hamburger__icon--to-arrow');
-                }
-            });
-        });
-        
-    </script>
-    #{/if}
 #{get 'moreScripts' /}
 
 </head>
@@ -255,9 +230,15 @@
                             </a>
                         </li>
                         #{/secure.check}
-                        #{secure.check 'SubirClientes'}
+                        #{secure.check 'ListarBulkBank'}
                             <li>
-                                <a href="/templateBulkbank" data-toggle="tooltip" data-placement="right" title="BulkBank">
+                                <a href="/templateBulkbank" data-toggle="tooltip" data-placement="right" title="Templates BulkBank">
+                                    <i class="glyphicon glyphicon-th-list"></i>
+                                    <span class="menu-label">Templates BulkBank</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/bulkbank" data-toggle="tooltip" data-placement="right" title="BulkBank">
                                     <i class="glyphicon glyphicon-ban-circle"></i>
                                     <span class="menu-label">BulkBank</span>
                                 </a>
@@ -280,7 +261,31 @@
 
     </div>
 <!-- /#wrapper -->
+    #{if deptoid != "" }
+    <script>
+        $(document).ready(function() {
+            $(".dropdown-alerts").alerts("${username}");
+            $(".dropdown-noti").notifications("${username}");
+            #{secure.check 'ListaCampaniasFoliosFaltantes'}
+                $(".dropdown-tasks").foliosByCampaign();
+            #{/secure.check}
+            $('[data-toggle="tooltip"]').tooltip()
+            $(".material-design-hamburger__icon").click(function (event) {
+                $(".sidebar").toggleClass("menu--on");
+                var child;
+                child = this.childNodes[1].classList;
+                if (child.contains('material-design-hamburger__icon--to-arrow')) {
+                    child.remove('material-design-hamburger__icon--to-arrow');
+                    child.add('material-design-hamburger__icon--from-arrow');
+                } else {
+                    child.remove('material-design-hamburger__icon--from-arrow');
+                    child.add('material-design-hamburger__icon--to-arrow');
+                }
+            });
+        });
 
+    </script>
+    #{/if}
 
 
 </body>
