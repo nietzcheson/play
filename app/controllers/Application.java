@@ -632,17 +632,15 @@ public class Application extends MasterController {
             Logger.info("order: >>>" + order);
             if (orderColumn != null) {
                 if (orderColumn.equals("0")) {
-                    orderBy = "&orderBy=id";
+                    orderBy = "&orderBy=templateName";
                 } else if (orderColumn.equals("1")) {
-                    orderBy = "&orderBy=name";
+                    orderBy = "&orderBy=hotelName";
                 } else if (orderColumn.equals("2")) {
-                    orderBy = "&orderBy=hotel";
-                } else if (orderColumn.equals("3")) {
                     orderBy = "&orderBy=unitId";
+                } else if (orderColumn.equals("3")) {
+                    orderBy = "&orderBy=weekday";
                 } else if (orderColumn.equals("4")) {
-                    orderBy = "&orderBy=splitId";
-                } else if (orderColumn.equals("5")) {
-                    orderBy = "&orderBy=observations";
+                    orderBy = "&orderBy=year";
                 }
             } else {
                 Logger.info("ordercolumn es null");
