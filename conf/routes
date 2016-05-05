@@ -116,10 +116,13 @@ GET /templateBulkbank/create/?                          TemplateBulkbank.create
 POST /createTemplate/?                                  TemplateBulkbank.createTemplate
 POST /templateBulkbank/{id}?                            TemplateBulkbank.createTemplate
 *  /application/templateBulkbanklist/?                  Application.templateBulkbankList
+*  /application/templateBulkbanklistOTAS/?              Application.templateBulkbankList
 GET /bulkbank/?                                         Bulkbank.list
 GET /bulkbank/{templateId}/{year}/{day}/?               Bulkbank.create
 GET /bulkbank/create/?                                  Bulkbank.create
 POST /createBulkbank/?                                  Bulkbank.createBulkBank
+POST /createBulkbankOtas/?                              Bulkbank.createBulkBankOtas
+POST /BulkbankOtas/{id}/?                              Bulkbank.createBulkBankOtas
 *  /application/bulkbanklist/?                          Application.bulkbankList
 
 # Campañas

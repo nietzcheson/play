@@ -1,5 +1,6 @@
 package controllers;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import play.Logger;
 import play.i18n.Lang;
 import play.libs.WS;
@@ -550,7 +551,9 @@ public class Application extends MasterController {
         }
     }
 
-    public static void templateBulkbankList() {
+    public static void templateBulkbankList(Integer isOTA) {
+        if(isOTA==null)
+            isOTA=0;
         String draw = params.get("draw");
         String queryString = "";
         JsonObject jsonObject = new JsonObject();
@@ -591,7 +594,8 @@ public class Application extends MasterController {
                             query +
                             order +
                             orderBy;
-
+            if(isOTA==1)
+                queryString=queryString+"&callcenter=1";
             queryString = "/templateBulkBank" + queryString;
 
             Logger.info("queryString: >>>" + Constants.API_Bulkbank + queryString);
@@ -601,7 +605,6 @@ public class Application extends MasterController {
 
             jsonObject.addProperty("draw", draw);
             if (jsonResponse.get("totalElements") != null) {
-
                 jsonObject.addProperty("recordsTotal", jsonResponse.get("totalElements").getAsLong());
                 jsonObject.addProperty("recordsFiltered", jsonResponse.get("totalElements").getAsLong());
             } else {
@@ -614,7 +617,9 @@ public class Application extends MasterController {
         }
     }
 
-    public static void bulkbankList() {
+    public static void bulkbankList(Integer isOTA) {
+        if(isOTA==null)
+            isOTA=0;
         String draw = params.get("draw");
         String queryString = "";
         JsonObject jsonObject = new JsonObject();
@@ -655,7 +660,8 @@ public class Application extends MasterController {
                             orderBy;
 
             queryString = "/bulkBank" + queryString;
-
+            if(isOTA==1)
+                queryString=queryString+"&isOTA=1";
             Logger.info("queryString: >>>" + Constants.API_Bulkbank + queryString);
             WS.WSRequest req = WS.url(Constants.API_Bulkbank + queryString).authenticate(user, password);
             WS.HttpResponse res = req.get();
@@ -663,7 +669,6 @@ public class Application extends MasterController {
 
             jsonObject.addProperty("draw", draw);
             if (jsonResponse.get("totalElements") != null) {
-
                 jsonObject.addProperty("recordsTotal", jsonResponse.get("totalElements").getAsLong());
                 jsonObject.addProperty("recordsFiltered", jsonResponse.get("totalElements").getAsLong());
             } else {

@@ -14,8 +14,9 @@ import java.text.ParseException;
 @With(Secure.class)
 public class TemplateBulkbank extends MasterController {
 
-    public static void list() {
-        Logger.info("Entrando a BulkBank.list()");
+    public static void list(Integer isOTA) {
+        if(isOTA==null)
+            isOTA=0;
         Boolean successfullyCreated = false;
         Boolean successfullyUpdated = false;
         String mode = params.get("mode");
@@ -29,6 +30,7 @@ public class TemplateBulkbank extends MasterController {
             }
         }
         renderArgs.put("id", id);
+        renderArgs.put("isOta", isOTA);
         renderArgs.put("templateName", templateName);
         renderArgs.put("successfullyCreated", successfullyCreated);
         renderArgs.put("successfullyUpdated", successfullyUpdated);
@@ -36,7 +38,9 @@ public class TemplateBulkbank extends MasterController {
         render();
     }
 
-    public static void create(Long id) {
+    public static void create(Long id, Integer isOTA) {
+        if(isOTA==null)
+            isOTA=0;
         boolean editMode;
         if( id != null)
             editMode = true;
@@ -44,9 +48,12 @@ public class TemplateBulkbank extends MasterController {
             editMode = false;
         renderArgs.put("editMode", editMode);
         renderArgs.put("template", id);
+        renderArgs.put("isOta", isOTA);
         render();
     }
-    public static void createTemplate(Long id) throws ParseException {
+    public static void createTemplate(Long id, Integer isOTA) throws ParseException {
+        if(isOTA==null)
+            isOTA=0;
         JsonObject jsonObject= new JsonObject();
         String addId;
         if(id != null)
@@ -92,6 +99,7 @@ public class TemplateBulkbank extends MasterController {
         }catch(Exception excepcion){
             renderText(excepcion);
         }
+        renderArgs.put("isOta", isOTA);
 
     }
 }

@@ -1108,6 +1108,10 @@ $.fn.load_templates = function (url, template) {
         data:{'url': url},
         success:function(result){
             var result = JSON.parse(result);
+            template_select.append($('<option/>', {
+                value:"",
+                html : ""
+            }));
             $.each(result, function (index, value) {
                 if( value.id==template){
                     template_select.append($('<option/>', {
@@ -1122,6 +1126,7 @@ $.fn.load_templates = function (url, template) {
                     }));
                 }
             });
+
         },
         error: function(result){
             showError("Hubo un error al comunicarse con la API");
@@ -1139,6 +1144,89 @@ $.fn.sumaEle = function () {
         }
     });
     return sum;
+}
+
+$.fn.load_template = function (id, year, day) {
+    var div=$(this);
+    div.html("");
+    $.ajax({
+        url: '/bulkBank',
+        type: 'POST',
+        data: {'url': '/templateBulkBank/'+id},
+        success: function (result) {
+            var result =  $.parseJSON(result);
+            div.display_template(result, year, day);
+            div.find(".sk-chasing-dots").hide();
+            load_sunset_hotels("/hotel", $("#hotel"), result.clubId);
+            //$("#template").load_templates("/templateBulkBank/list?clubId="+result.clubId, id);
+        }
+    });
+}
+$.fn.load_bulkbank = function (id, year, day) {
+    var div=$(this);
+    div.find(".sk-chasing-dots").show();
+    $.ajax({
+        url: '/bulkBank',
+        type: 'POST',
+        data: {'url': '/bulkBank/'+id},
+        success: function (result) {
+            div.html("");
+            var result =  $.parseJSON(result);
+            div.display_template(result.templateBulkBank, year, day);
+            div.find(".sk-chasing-dots").hide();
+            load_sunset_hotels("/hotel", $("#hotel"), result.templateBulkBank.clubId);
+            $("#quantity").val(result.quantity);
+            $("#bulkBankId").val(result.id);
+            console.log(result.checkIn);
+            var checkin= new Date(result.checkIn);
+            checkin = checkin.getFullYear()+ '-'
+                + ('0' + (checkin.getMonth()+1)).slice(-2) + '-'
+                + ('0' + checkin.getDate()).slice(-2);
+            $("#checkin").val(checkin);
+            var checkout= new Date(result.checkOut);
+            checkout = checkout.getFullYear()+ '-'
+                + ('0' + (checkout.getMonth()+1)).slice(-2) + '-'
+                + ('0' + checkout.getDate()).slice(-2);
+            $("#checkout").val(checkout);
+            $("#template").load_templates("/templateBulkBank/list?clubId="+result.templateBulkBank.clubId, id);
+        }
+    });
+}
+$.fn.display_template = function (result, year, day) {
+    var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+    var year_day="";
+    if(year && day){
+        year_day=$("<div/>", {class: 'col-sm-6'}).append($("<div/>",{class: 'row'})
+            .append($("<p/>", {class: 'col-sm-6', text: year})
+                .prepend($("<strong/>", {html: "Year: "}) ),
+                $("<p/>", {class: 'col-sm-6', text: days[day]})
+                    .prepend($("<strong/>", {html: "Day: "}))
+            )
+        );
+    }
+    $(this).append($("<p/>", {class: 'col-sm-6', text: result.name})
+        .prepend($("<strong/>", {html: "Template: "}) ), year_day);
+    var split_name=result.split? result.split.name: "";
+
+    var unit=result.unit ? result.unit.name : "";
+    var unit_split=$("<div/>", {class: 'col-sm-6'}).append($("<div/>",{class: 'row'})
+        .append($("<p/>", {class: 'col-sm-6', text: unit})
+            .prepend($("<strong/>", {html: "Unit: "}) ),
+            $("<p/>", {class: 'col-sm-6', text: split_name})
+                .prepend($("<strong/>", {html: "Split: "}))
+        )
+    );
+
+    $(this).append($("<p/>", {class: 'col-sm-6 hotel-name', text: ''})
+        .prepend($("<strong/>", {html: "Hotel: "}) ), unit_split);
+
+    $(this).append(
+        $("<p/>", {class: 'col-sm-3', text: result.plan.plan}).prepend($("<strong/>", {html: "Plan: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: result.adults}).prepend($("<strong/>", {html: "Adults: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: result.children}).prepend($("<strong/>", {html: "Children: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: result.rate}).prepend($("<strong/>", {html: "Rate: "}) ),
+        $("<p/>", {class: 'col-sm-12', text: result.observations}).prepend($("<strong/>", {html: "Observations: "}) )
+    );
 }
 
 $.fn.alerts = function (user) {

@@ -244,6 +244,20 @@
                                 </a>
                             </li>
                         #{/secure.check}
+                        #{secure.check 'ListarBulkBankOTAS'}
+                            <li>
+                                <a href="/templateBulkbank?isOTA=1" data-toggle="tooltip" data-placement="right" title="Templates BulkBank OTAS">
+                                    <i class="glyphicon glyphicon-th-list"></i>
+                                    <span class="menu-label">Templates BulkBank OTAS</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/bulkbank?isOTA=1" data-toggle="tooltip" data-placement="right" title="BulkBank OTAS">
+                                    <i class="glyphicon glyphicon-ban-circle"></i>
+                                    <span class="menu-label">BulkBank OTAS</span>
+                                </a>
+                            </li>
+                        #{/secure.check}
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

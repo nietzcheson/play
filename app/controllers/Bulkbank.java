@@ -8,13 +8,20 @@ import play.libs.WS;
 import play.mvc.With;
 import util.Constants;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by desarrollo1 on 18/04/2016.
  */
 @With(Secure.class)
 public class Bulkbank extends MasterController {
 
-    public static void list() {
+    public static void list(Integer isOTA) {
+        if(isOTA==null)
+            isOTA=0;
         Boolean successfullyCreated = false;
         Boolean successfullyUpdated = false;
         String mode = params.get("mode");
@@ -27,6 +34,7 @@ public class Bulkbank extends MasterController {
                 successfullyCreated = true;
         }
         renderArgs.put("id", id);
+        renderArgs.put("isOTA", isOTA);
         renderArgs.put("hotelName", hotelName);
         renderArgs.put("successfullyCreated", successfullyCreated);
         renderArgs.put("successfullyUpdated", successfullyUpdated);
@@ -88,5 +96,48 @@ public class Bulkbank extends MasterController {
         } catch (Exception excepcion) {
             renderText("error");
         }
+    }
+
+
+    public static void createBulkBankOtas(Long id){
+        JsonObject bulkbank=new JsonObject();
+        String quantity = params.get("quantity");
+        bulkbank.addProperty("quantity", quantity);
+        String checkin = params.get("checkin");
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+////        String chekin_date="";
+//        try{
+//            checkin = format.format(format.parse(checkin));
+//            System.out.println("Check in date: "+checkin);
+//        }catch (Exception e){
+//            System.out.println("Exception: "+ e);
+//        }
+////        Date checkinDate = format.parse(checkin,);
+        bulkbank.addProperty("checkIn", checkin);
+        String checkout = params.get("checkout");
+        bulkbank.addProperty("checkOut", checkout);
+        String id_text="";
+        if(id==null){
+            String templateId= params.get("templateId");
+            bulkbank.addProperty("templateId", templateId);
+        }else
+            id_text="/"+id;
+        WS.HttpResponse res;
+        try {
+            String params = bulkbank.toString();
+            System.out.println(params);
+            WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank"+id_text).authenticate(user, password);
+            request.body = params;
+            request.mimeType = "application/json";
+            res = request.post();
+            System.out.println(res);
+            bulkbank = res.getJson().getAsJsonObject();
+            bulkbank.addProperty("responsestatus", res.getStatus());
+            renderText(bulkbank);
+        } catch (Exception excepcion) {
+            renderText("error");
+        }
+
+
     }
 }
