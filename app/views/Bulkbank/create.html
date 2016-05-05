@@ -1,0 +1,224 @@
+#{extends 'main.html' /}
+#{set title:'Template Bulkbank' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+#{/set}
+
+#{set 'moreScripts'}
+<script src="/public/javascripts/form.validation.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#year").load_years(${year});
+        var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+        #{if templateId }
+            $(".bulkbank-table").load_weeks(${year}, ${day});
+            $("#day").load_days(${day});
+            $("#bulkbank-search").hide();
+            $(".sk-chasing-dots").show();
+            //Cargar detalles template
+            $(".detail-template").load_template('${templateId}', '${year}' ,'${day}')
+
+
+            //Cargar Bulkbanks
+            $.ajax({
+                url:  '/bulkBank',
+                type:'POST',
+                data: {'url': '/bulkBank/list?templateId=${templateId}&day=${day}&year=${year}'},
+                success:function(result){
+                    var result =  $.parseJSON(result);
+                    $.each(result, function (index, value) {
+                         $(".bulkbank-table").find("td").eq(value.weekDayId-1).find("input[type=number]").val(value.quantity);
+                         $(".bulkbank-table").find("td").eq(value.weekDayId-1).find("input[name=ids]").val(value.id);
+                    });
+                    $("#bulkbank-search").find(".sk-chasing-dots").hide();
+                    $("#bulkbank-search").show();
+
+                },
+                error: function(err){
+                    showError("error" + err);
+                }
+            });
+            //Cargar datos de template
+
+        #{/if}
+        #{else}
+            load_sunset_hotels("/hotel", $("#hotel"), 1);
+            $("#template").load_templates("/templateBulkBank/list?clubId="+1, "${templateId}");
+            $("#bulkbank-search").find(".sk-chasing-dots").hide();
+            $("#bulkbank-search").show();
+            $(".sk-chasing-dots").hide();
+            $(".bulkbank-table").load_weeks(new Date().getFullYear(),1);
+            $("#day").load_days(1);
+
+            $("#template").change(function(){
+                var templateId= $(this).val();
+                var day=$("#day").val();
+                var year=$("#year").val();
+                $(".detail-template").load_template(templateId, year ,day);
+            });
+        #{/else}
+
+        $( "#hotel" ).change(function() {
+            var hotel=$(this).val();
+            $("#template").load_templates("/templateBulkBank/list?clubId="+hotel, "");
+        });
+
+        $("#bulkbank-save").submit(function (e) {
+            e.preventDefault();
+            var templatedId=$(this).find("#templateId").val();
+            debugger;
+            if(templatedId==""){
+                var year=$("#bulkbank-search").find("#year").val();
+                var template=$("#bulkbank-search").find("#template").val();
+                var day=$("#bulkbank-search").find("#day").val();
+                if(day=="" || year==""  || template=="" || day==null || year==null || template==null){
+                    showError("Day, Year and Template are required");
+                }else{
+                    $(this).find("#templateId").val(template);
+                    $(this).find("#year").val(year);
+                    $(this).find("#weekDay").val(day);
+                }
+            }
+
+            templatedId=$(this).find("#templateId").val();
+            if(templatedId!=""){
+                var data=$(this).serialize();
+                var $submitButton = $("#bulkbank-save").find('#submit');
+                $submitButton.attr("disabled", true).val("creating....");
+                $.ajax({
+                    url: '/createBulkbank',
+                    type: 'POST',
+                    data: data,
+                    success: function(result){
+                        result = JSON.parse(result);
+                        var flag=0;
+                        var ul =$("<ul/>");
+                        var div_alert=$("<div/>", {class: "alert alert-success", role:"alert"})
+                        $.each(result.weekDTOList, function (index, value) {
+                            if(value.status){
+                                flag=1;
+                                if(value.status=="created")
+                                    var li =$("<li/>", {text: value.quantity+" bloqueos creados en la semana "+value.weekDayId+" "});
+                                else
+                                    var li =$("<li/>", {text: value.quantity+" bloqueos actualizados en la semana "+value.weekDayId+" "});
+                                ul=ul.append(li);
+                            }
+                        });
+                        div_alert=div_alert.append(ul);
+                        $("#bulkbank-save").find(".alert").remove();
+                        if(flag==1)
+                            $(".bulkbank-table").before(div_alert);
+                        $submitButton.attr("disabled", false).val("Save");
+
+                    }, error: function(result){
+                        showError("Hubo un error en la aplicación");
+                        $submitButton.attr("disabled", false).val("Save");
+                    }
+                });
+            }
+        });
+
+        $("#bulkbank-search").submit(function(e){
+            e.preventDefault();
+            var $submitButton = $("#bulkbank-search").find('#submit');
+            $submitButton.attr("disabled", true).val("searching....");
+            var bulkbank_search=$("#bulkbank-search");
+            var template=$(bulkbank_search).find("#template").val();
+            var year=$(bulkbank_search).find("#year").val();
+            var day=$(bulkbank_search).find("#day").val();
+            if(day=="" || year==""  || template=="" || day==null || year==null || template==null)
+                showError("Day, Year and Template are required");
+            else
+                window.location.href = "/bulkbank/"+template+"/"+year+"/"+day;
+
+            $submitButton.attr("disabled", false).val("Search");
+        });
+    });
+</script>
+#{/set}
+<input id="id-value" type="hidden" value="${brokerId}"/>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <h1>Bulk Bank</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="personal-information">
+            <div class="ibox-title">
+                <h5>&{'search'}</h5>
+            </div>
+            <div class="clearfix"></div>
+            <div class="ibox-content">
+                <form role="form" action="" method="post" id="bulkbank-search">
+                    <div class="sk-chasing-dots">
+                        <div class="sk-child sk-dot1"></div>
+                        <div class="sk-child sk-dot2"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Hotel</label>
+                            <select  class="form-control" name="hotel" id="hotel"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Template</label>
+                            <select  class="form-control" name="template" id="template"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Year</label>
+                            <select  class="form-control" name="year" id="year"></select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Day</label>
+                            <select  class="form-control" name="day" id="day"></select>
+                        </div>
+                        <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'search'}">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clearfix"></div><br /><br />
+        <div class="personal-information">
+            <div class="ibox-title">
+                <h5>Bulkbank</h5>
+            </div>
+            <div class="clearfix"></div>
+            <div class="ibox-content">
+                <div class="row detail-template">
+                    <div class="sk-chasing-dots">
+                        <div class="sk-child sk-dot1"></div>
+                        <div class="sk-child sk-dot2"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div><br/><br/>
+                <form role="form" action="" method="post" id="bulkbank-save">
+                    <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
+                    <input type="hidden" name="year" id="year" value="${year}" />
+                    <input type="hidden" name="weekDay" id="weekDay" value="${day}" />
+                    <table class="table table-bordered bulkbank-table">
+                        <tbody>
+
+
+
+                        </tbody>
+                    </table>
+                    <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'save'}">
+                </form>
+            </div>
+            <div class="clearfix"></div><br /><br />
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>

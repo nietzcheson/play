@@ -1,0 +1,180 @@
+#{extends 'main.html' /}
+#{set title:'Templates Bulkbank' /}
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
+<link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+#{/set}
+#{set 'moreScripts'}
+<script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+#{/set}
+<script>
+    $(document).ready(function() {
+        var dtable=$('#bulkbank-datatable').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "oLanguage": {
+                "sSearch": "&{'searching'}",
+                "oPaginate": {
+                    "sNext": "&{'next'}",
+                    "sPrevious": "&{'previous'}"
+                },
+                "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
+                "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                "sProcessing": "&{'processing'}"
+            },
+            #{if isOta == 1 }
+                "ajax":'/application/templateBulkbanklistOTAS?isOTA=1',
+            #{/if}
+            #{else}
+                "ajax":'/application/templateBulkbanklist',
+            #{/else}
+            "columnDefs": [
+                {
+                    "targets":0,
+                    "render": function (td, cellData, rowData, row, col) {
+                        #{if isOta==1 }
+                            return  '<a href="/templateBulkbank/'+rowData.id+'?isOTA=1" >'+rowData.id+'</a>'
+                        #{/if}
+                        #{else }
+                            return  '<a href="/templateBulkbank/'+rowData.id+'" >'+rowData.id+'</a>'
+                        #{/else}
+                    }
+                },{
+                    "targets":3,
+                    "render": function (td, cellData, rowData, row, col) {
+                        if(rowData.unitId)
+                            return  rowData.unitId+' - '+rowData.unitName
+                        else
+                            return ''
+                    }
+                },{
+                    "targets":4,
+                    "render": function (td, cellData, rowData, row, col) {
+                        if(rowData.splitId)
+                            return  rowData.splitId+' - '+rowData.splitName
+                        else
+                            return ''
+                    }
+                }
+            ],
+            "columns": [
+                { "data": "id","title":"&{'id'}"},
+                { "data": "name","title":"&{'name'}" },
+                { "data": "hotel","title":"&{'Hotel'}"},
+                { "data": "unitId","title":"&{'Unit'}"},
+                { "data": "splitId","title":"&{'Split'}"},
+                { "data": "observations","title":"&{'Observations'}"},
+                #{if isOta==1 }
+                { "data": "callcenterName","title":"&{'Call Center'}"},
+                #{/if}
+            ]
+            ,"order": [[ 0, "desc" ]]
+        });
+    });
+</script>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        #{if successfullyCreated}
+            <div class="alert alert-success alert-dismissible " role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>&{'well_done'}!</strong> &{'successfully_created'} the campaign <strong><a href="/templateBulkbank/${id}">${templateName}</a></strong>
+            </div>
+        #{/if}
+        #{if successfullyUpdated}
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            &{'successfully_updated'} the template <strong><a href="/templateBulkbank/${id}">${templateName}</a></strong>
+            </div>
+        #{/if}
+        <div class="col-lg-10">
+            <div class="row">
+                <h1>Templates BulkBank</h1>
+            </div>
+        </div>
+   *{/ #{secure.check 'CrearCliente'}}*
+        #{if isOta==1 }
+        <div class="col-lg-2">
+            <div class="row">
+                <a href="/templateBulkbank/create?isOTA=1" class="btn btn-sm btn-primary pull-right top-separation">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    &nbsp;&{'new'}
+                </a>
+            </div>
+        </div>
+        #{/if}
+        #{else}
+        <div class="col-lg-2">
+            <div class="row">
+                <a href="/templateBulkbank/create" class="btn btn-sm btn-primary pull-right top-separation">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    &nbsp;&{'new'}
+                </a>
+            </div>
+        </div>
+        #{/else}
+    *{#{/secure.check}}*
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered table-hover" id="bulkbank-datatable">
+                <thead>
+                <tr></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <!-- /.panel -->
+    </div>
+</div>
+<!-- /.col-lg-12 -->
+
+
+<!-- Modal Oferta -->
+<div class="modal fade " id="OfferInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content ">
+            <div class="modal-body text-center">
+                <p></p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">&{'terms'}</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="offer-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Oferta </h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">&{'close'}</button>
+            </div>
+        </div>
+    </div>
+</div>
