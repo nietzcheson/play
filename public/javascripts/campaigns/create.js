@@ -89,7 +89,7 @@ $(document).ready(function () {
             var data = {
                 id: idValue,
                 name: Encode($('#campaign-name').val()),
-                code: $('#campaign-code').val(),
+                code: $('#campaignCode').val(),
                 expiration: $("#campaign-expiration").val(),
                 merchant: $("#merchant").val(),
                 callcenter: $("#callcenter").val(),
