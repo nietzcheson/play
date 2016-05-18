@@ -249,10 +249,18 @@
     *{#{secure.check 'CrearBulkbank'}}*
         <div class="col-lg-2">
             <div class="row">
-                <a data-toggle="modal" data-target="#createBulkBank" class="btn btn-sm btn-primary pull-right top-separation">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    &nbsp;&{'new'}
-                </a>
+                #{if isOTA==1}
+                    <a data-toggle="modal" data-target="#createBulkBank" class="btn btn-sm btn-primary pull-right top-separation">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        &nbsp;&{'new'}
+                    </a>
+                #{/if}
+                #{else}
+                    <a href="/bulkbank/create" class="btn btn-sm btn-primary pull-right top-separation">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        &nbsp;&{'new'}
+                    </a>
+                #{/else}
             </div>
         </div>
     *{#{/secure.check}}*

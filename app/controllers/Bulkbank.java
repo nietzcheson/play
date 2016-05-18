@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import play.Logger;
 import play.libs.WS;
+import play.mvc.Scope;
 import play.mvc.With;
 import util.Constants;
 
@@ -38,7 +39,7 @@ public class Bulkbank extends MasterController {
         renderArgs.put("hotelName", hotelName);
         renderArgs.put("successfullyCreated", successfullyCreated);
         renderArgs.put("successfullyUpdated", successfullyUpdated);
-
+        renderTemplate("/Bulkbank/list-react.html");
         render();
     }
 
@@ -81,6 +82,7 @@ public class Bulkbank extends MasterController {
                 weeks.add(week);
             }
         }
+        bulkbank.addProperty("username", Scope.Session.current().get("username"));
         bulkbank.add("weekDTOList", weeks);
         WS.HttpResponse res;
         try {
@@ -104,18 +106,10 @@ public class Bulkbank extends MasterController {
         String quantity = params.get("quantity");
         bulkbank.addProperty("quantity", quantity);
         String checkin = params.get("checkin");
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-////        String chekin_date="";
-//        try{
-//            checkin = format.format(format.parse(checkin));
-//            System.out.println("Check in date: "+checkin);
-//        }catch (Exception e){
-//            System.out.println("Exception: "+ e);
-//        }
-////        Date checkinDate = format.parse(checkin,);
         bulkbank.addProperty("checkIn", checkin);
         String checkout = params.get("checkout");
         bulkbank.addProperty("checkOut", checkout);
+        bulkbank.addProperty("username", Scope.Session.current().get("username"));
         String id_text="";
         if(id==null){
             String templateId= params.get("templateId");

@@ -1051,6 +1051,7 @@ function getFirstDay(year, day, week){
 
 $.fn.load_weeks = function (year, day) {
     var tr=$("<tr/>");
+    $(this).find("tbody").html("");
     var today= new Date();
     for(i=1; i<=53; i++){
         var module= i % 9;
@@ -1158,7 +1159,7 @@ $.fn.load_template = function (id, year, day) {
             div.display_template(result, year, day);
             div.find(".sk-chasing-dots").hide();
             load_sunset_hotels("/hotel", $("#hotel"), result.clubId);
-            //$("#template").load_templates("/templateBulkBank/list?clubId="+result.clubId, id);
+            $("#template").load_templates("/templateBulkBank/list?clubId="+result.clubId, id);
         }
     });
 }
@@ -1219,9 +1220,9 @@ $.fn.display_template = function (result, year, day) {
 
     $(this).append($("<p/>", {class: 'col-sm-6 hotel-name', text: ''})
         .prepend($("<strong/>", {html: "Hotel: "}) ), unit_split);
-
+    var plan= result.plan ? result.plan.plan : "";
     $(this).append(
-        $("<p/>", {class: 'col-sm-3', text: result.plan.plan}).prepend($("<strong/>", {html: "Plan: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: plan}).prepend($("<strong/>", {html: "Plan: "}) ),
         $("<p/>", {class: 'col-sm-3', text: result.adults}).prepend($("<strong/>", {html: "Adults: "}) ),
         $("<p/>", {class: 'col-sm-3', text: result.children}).prepend($("<strong/>", {html: "Children: "}) ),
         $("<p/>", {class: 'col-sm-3', text: result.rate}).prepend($("<strong/>", {html: "Rate: "}) ),

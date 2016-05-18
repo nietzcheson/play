@@ -43,6 +43,7 @@
 
         #{/if}
         #{else}
+
             load_sunset_hotels("/hotel", $("#hotel"), 1);
             $("#template").load_templates("/templateBulkBank/list?clubId="+1, "${templateId}");
             $("#bulkbank-search").find(".sk-chasing-dots").hide();
@@ -51,11 +52,14 @@
             $(".bulkbank-table").load_weeks(new Date().getFullYear(),1);
             $("#day").load_days(1);
 
-            $("#template").change(function(){
+            $("#template, #year, #day").change(function(){
                 var templateId= $(this).val();
                 var day=$("#day").val();
                 var year=$("#year").val();
-                $(".detail-template").load_template(templateId, year ,day);
+                if($(this).attr("id")=="template")
+                    $(".detail-template").load_template(templateId, year ,day);
+                else
+                    $(".bulkbank-table").load_weeks(year,day);
             });
         #{/else}
 
