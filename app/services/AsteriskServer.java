@@ -98,7 +98,7 @@ public class AsteriskServer extends DefaultAsteriskServer {
     }
 
     public static void originateCall(AsteriskServer server, String callerId,
-                                     String src, String dst, String context, String provider) throws Exception {
+                                     String src, String dst, String context,  String account, String provider) throws Exception {
 
         dst = provider + dst;
         System.out.println(src + " calling... " + dst);
@@ -113,6 +113,7 @@ public class AsteriskServer extends DefaultAsteriskServer {
         originateAction.setContext(context);
         originateAction.setExten(dst);
         originateAction.setPriority(1);
+        originateAction.setAccount(account);
         // originateAction.setTimeout(30000);
 
         server.initialize();
@@ -133,8 +134,12 @@ public class AsteriskServer extends DefaultAsteriskServer {
 
     }
 
+    public static void originateCall(String callerId, String src, String dst, String context, String account, String provider) throws Exception {
+        originateCall(getDefault(), account, callerId, src, dst, context, provider);
+    }
+
     public static void originateCall(String callerId, String src, String dst, String context, String provider) throws Exception {
-        originateCall(getDefault(), callerId, src, dst, context, provider);
+        originateCall(getDefault(),"",  callerId, src, dst, context, provider);
     }
 
     /***************** LISTENERS ***************************/
