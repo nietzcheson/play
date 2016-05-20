@@ -1,5 +1,6 @@
 package controllers;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.xpath.internal.functions.FuncId;
 import play.Logger;
 import play.i18n.Lang;
 import play.libs.WS;
@@ -9,6 +10,7 @@ import java.util.*;
 import play.mvc.Scope;
 import services.AsteriskServer;
 import util.Constants;
+import util.Functions;
 import util.StringTools;
 
 public class Application extends MasterController {
@@ -536,31 +538,21 @@ public class Application extends MasterController {
         String context = params.get("context");
         String idbooking = params.get("idbooking");
         //Contexto
-        System.out.println("Depto: "+deptoid);
-        WS.HttpResponse res;
-        WS.WSRequest req = WS.url(Constants.API+"/areas/"+deptoid).authenticate(user, password);
-        res = req.get();
         JsonObject response= new JsonObject();
-        if(res.getStatus() ==200) {
-            String contextByDepto=
-                    !res.getJson().getAsJsonObject().get("contexto").isJsonNull() ?
-                            res.getJson().getAsJsonObject().get("contexto").getAsString() : "from-internal";
-            try{
-                WS.WSRequest request = WS.url(Constants.API + "/audit").authenticate(user, password);
-                JsonObject audit= MasterController.audit(new Integer(idbooking), "Clientes", "Detalle Cliente", "Llamada", "Intento de llamada al "+ phone);
-                String params = audit.toString();
-                request.body = params;
-                request.mimeType = "application/json";
-                res = request.post();
-                AsteriskServer.originateCall(name, "SIP/"+agenteEXT, phone, contextByDepto ,context);
-                response.addProperty("success", "Success");
-            }catch (Exception e){
-                Logger.error("Error al marcar");
-                response.addProperty("error", "Error Asterisk");
-            }
-        }else
-            response.addProperty("error", "Error to get context");
-
+        try{
+            WS.WSRequest request = WS.url(Constants.API + "/audit").authenticate(user, password);
+            JsonObject audit= MasterController.audit(new Integer(idbooking), "Clientes", "Detalle Cliente", "Llamada", "Intento de llamada al "+ phone);
+            String params = audit.toString();
+            request.body = params;
+            request.mimeType = "application/json";
+            WS.HttpResponse res = request.post();
+            Map<String, String> context_account = Functions.getContext(Integer.parseInt(deptoid));
+            AsteriskServer.originateCall(name, "SIP/"+agenteEXT, phone, context_account.get("context"), context_account.get("account") ,context);
+            response.addProperty("success", "Success");
+        }catch (Exception e){
+            Logger.error("Error al marcar");
+            response.addProperty("error", "Error Asterisk");
+        }
         return response.toString();
     }
 }

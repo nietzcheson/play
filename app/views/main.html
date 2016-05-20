@@ -50,17 +50,6 @@
     <script src="/public/javascripts/vendor/selectizejs/selectize.js"></script>
     <script src="/public/javascripts/functions.js"></script>
     <script src="/public/javascripts/jquery-dateFormat.js"></script>
-    #{if deptoid != "" }
-    <script>
-        $(document).ready(function() {
-           $(".dropdown-alerts").alerts("${username}");
-           $(".dropdown-noti").notifications("${username}");
-            #{secure.check 'ListaCampaniasFoliosFaltantes'}
-           $(".dropdown-tasks").foliosByCampaign();
-            #{/secure.check}
-        });
-    </script>
-    #{/if}
 #{get 'moreScripts' /}
 
 </head>
@@ -250,7 +239,17 @@
 
     </div>
 <!-- /#wrapper -->
-
+    #{if deptoid != "" }
+    <script>
+        $(document).ready(function() {
+            $(".dropdown-alerts").alerts("${username}");
+            $(".dropdown-noti").notifications("${username}");
+            #{secure.check 'ListaCampaniasFoliosFaltantes'}
+                $(".dropdown-tasks").foliosByCampaign();
+            #{/secure.check}
+        });
+    </script>
+    #{/if}
 
 
 </body>

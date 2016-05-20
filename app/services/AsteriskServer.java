@@ -135,11 +135,11 @@ public class AsteriskServer extends DefaultAsteriskServer {
     }
 
     public static void originateCall(String callerId, String src, String dst, String context, String account, String provider) throws Exception {
-        originateCall(getDefault(), account, callerId, src, dst, context, provider);
+        originateCall(getDefault(),  callerId, src, dst, context, account, provider);
     }
 
     public static void originateCall(String callerId, String src, String dst, String context, String provider) throws Exception {
-        originateCall(getDefault(),"",  callerId, src, dst, context, provider);
+        originateCall(getDefault(),  callerId, src, dst, context,"", provider);
     }
 
     /***************** LISTENERS ***************************/
