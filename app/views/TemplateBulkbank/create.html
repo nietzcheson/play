@@ -94,7 +94,11 @@
                             $("#templateName").val(result.name);
                             $("#redirect").submit();
                         }else{
-                            showError("Hubo un error en la aplicación");
+                            if(result.property){
+                                showError(result.message);
+                            }else{
+                                showError("Hubo un error en la aplicación");
+                            }
                         }
                         $submitButton.attr("disabled", false).val("Save");
 

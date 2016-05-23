@@ -11,6 +11,23 @@
     $(document).ready(function() {
         $("#year").load_years(${year});
         var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+        function load_bulkbank(value){
+            var td=$(".bulkbank-table").find("td").eq(value.weekDayId-1);
+            $(td).find("input[type=number]").val(value.quantity);
+            if(value.quantity==0)
+                $(td).find("input[name=ids]").val(0);
+            else
+                $(td).find("input[name=ids]").val(value.id);
+            var title=$(td).find(".glyphicon").attr("data-original-title");
+            var confirmationNumber= value.confirmationNumber2 ?
+                    (value.confirmationNumber+ "-" + value.confirmationNumber2) : value.confirmationNumber;
+            title=title.split('<br/>')[0];
+            if(value.quantity==0)
+                $(td).find(".glyphicon").attr("data-original-title", title);
+            else{
+                $(td).find(".glyphicon").attr("data-original-title", title+ " <br/> "+ confirmationNumber);
+            }
+        }
         #{if templateId }
             $(".bulkbank-table").load_weeks(${year}, ${day});
             $("#day").load_days(${day});
@@ -26,10 +43,11 @@
                 type:'POST',
                 data: {'url': '/bulkBank/list?templateId=${templateId}&day=${day}&year=${year}'},
                 success:function(result){
+                    console.log('/bulkBank/list?templateId=${templateId}&day=${day}&year=${year}');
                     var result =  $.parseJSON(result);
                     $.each(result, function (index, value) {
-                         $(".bulkbank-table").find("td").eq(value.weekDayId-1).find("input[type=number]").val(value.quantity);
-                         $(".bulkbank-table").find("td").eq(value.weekDayId-1).find("input[name=ids]").val(value.id);
+                        //Cargar dato de bulkbank
+                        load_bulkbank(value);
                     });
                     $("#bulkbank-search").find(".sk-chasing-dots").hide();
                     $("#bulkbank-search").show();
@@ -71,7 +89,6 @@
         $("#bulkbank-save").submit(function (e) {
             e.preventDefault();
             var templatedId=$(this).find("#templateId").val();
-            debugger;
             if(templatedId==""){
                 var year=$("#bulkbank-search").find("#year").val();
                 var template=$("#bulkbank-search").find("#template").val();
@@ -96,16 +113,19 @@
                     data: data,
                     success: function(result){
                         result = JSON.parse(result);
+                        console.log(result);
                         var flag=0;
                         var ul =$("<ul/>");
                         var div_alert=$("<div/>", {class: "alert alert-success", role:"alert"})
                         $.each(result.weekDTOList, function (index, value) {
                             if(value.status){
                                 flag=1;
-                                if(value.status=="created")
-                                    var li =$("<li/>", {text: value.quantity+" bloqueos creados en la semana "+value.weekDayId+" "});
+                                if(value.status=="created" || value.status=="updated"  || value.status=="canceled"){
+                                    load_bulkbank(value);
+                                    var li =$("<li/>", {text:" Bloqueos en la semana "+value.weekDayId+": "+ value.quantity});
+                                }
                                 else
-                                    var li =$("<li/>", {text: value.quantity+" bloqueos actualizados en la semana "+value.weekDayId+" "});
+                                    var li =$("<li/>", {text: "Error en los bloqueos en la semana "+value.weekDayId});
                                 ul=ul.append(li);
                             }
                         });
@@ -213,8 +233,6 @@
                     <input type="hidden" name="weekDay" id="weekDay" value="${day}" />
                     <table class="table table-bordered bulkbank-table">
                         <tbody>
-
-
 
                         </tbody>
                     </table>

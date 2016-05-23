@@ -1081,6 +1081,7 @@ $.fn.load_weeks = function (year, day) {
             var tr=$("<tr/>");
     }
     $(this).find("tbody").append(tr);
+    $('[data-toggle="tooltip"]').tooltip({html:true});
 }
 
 $.fn.load_years = function (year) {

@@ -39,7 +39,7 @@ public class Bulkbank extends MasterController {
         renderArgs.put("hotelName", hotelName);
         renderArgs.put("successfullyCreated", successfullyCreated);
         renderArgs.put("successfullyUpdated", successfullyUpdated);
-        renderTemplate("/Bulkbank/list-react.html");
+//        renderTemplate("/Bulkbank/list-react.html");
         render();
     }
 
@@ -77,7 +77,7 @@ public class Bulkbank extends MasterController {
                 week.addProperty("weekDayId", weekDayId[i+diff]);
                 week.addProperty("quantity", quantity[i]);
                 if(Integer.parseInt(ids[i+diff]) != 0)
-                    week.addProperty("bulkbankId", ids[i+diff]);
+                    week.addProperty("id", ids[i+diff]);
 
                 weeks.add(week);
             }

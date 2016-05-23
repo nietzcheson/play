@@ -285,7 +285,7 @@
             #{secure.check 'ListaCampaniasFoliosFaltantes'}
                 $(".dropdown-tasks").foliosByCampaign();
             #{/secure.check}
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip({html:true});
             $(".material-design-hamburger__icon").click(function (event) {
                 $(".sidebar").toggleClass("menu--on");
                 var child;
