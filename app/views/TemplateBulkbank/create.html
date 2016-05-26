@@ -29,10 +29,13 @@
                     var split= result.split? result.split.id : '';
                     load_catalog_bulbank("/hotelUnits?hotelId="+result.clubId, $("#unit"), unit);
                     load_catalog_bulbank("/hotelUnits?hotelId="+result.clubId, $("#split"), split);
-                    #{if isOta==1}
                     var callCenter= result.callCenter ? result.callCenter.id : null;
-                    load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), callCenter);
+                    #{if isOta==1}
+                        load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), callCenter);
                     #{/if}
+                    #{else}
+                        load_catalog("/callCenter/list", $("#callCenter"), callCenter);
+                    #{/else}
                     var plan= result.plan ? result.plan.id :'';
                     load_mealplan(plan, '/mealplans/all');
                     $(".sk-chasing-dots").hide();
@@ -50,8 +53,11 @@
             load_sunset_hotels("/hotel", $("#hotel"), 1);
             load_catalog_bulbank("/hotelUnits?hotelId=1", $("#unit, #split"), "");
             #{if isOta==1}
-            load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), 1);
+                load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), 1);
             #{/if}
+            #{else}
+                load_catalog("/callCenter/list", $("#callCenter"), 1);
+            #{/else}
             load_mealplan("", '/mealplans/all');
             $(".sk-chasing-dots").hide();
         #{/else}
@@ -190,7 +196,6 @@
                                 <label>Children</label>
                                 <input id="children" class="form-control" type="number" maxlength="2" min="0" max="99" required />
                             </div>
-                            #{if isOta==1}
                             <div class="clearfix"></div>
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -198,7 +203,6 @@
                                     <select  class="form-control" name="callCenter" id="callCenter" required></select>
                                 </div>
                             </div>
-                            #{/if}
                             <div class="clearfix"></div><br />
                             <div class="form-group">
                                 <label class="col-sm-12">Observations</label>
