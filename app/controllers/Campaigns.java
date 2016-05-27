@@ -151,7 +151,7 @@ public class Campaigns extends MasterController {
                 "  \"offerId\": " + offerId + ",\n" +
                 "  \"country\": \"" + country + "\",\n" +
                 "  \"segment\":" + segment + ",\n" +
-				 "  \"code\":" + code + ",\n" +
+				 "  \"code\": \"" + code + "\",\n" +
                 "  \"callcenter\":" + callcenter + ",\n" +
                 "  \"description\": \"" + description + "\",\n" +
                 "  \"reservationGroup\":" + reservationGroup + ",\n" +
