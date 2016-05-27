@@ -142,7 +142,7 @@ public class Campaigns extends MasterController {
         Logger.info("params.get('name'): >>>" + params.get("name"));
 
         //String offerNumber = (id == null) ? "" : "/" + id;
-        code="dhsjshskjd";
+        //code="dhsjshskjd";
         String param="{\n" +
                 idParamNode +
                 "  \"name\": \"" + name + "\",\n" +
