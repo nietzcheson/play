@@ -138,11 +138,9 @@ $(document).ready(function () {
                 }else{
 				$.each(result,function(k,v){
 					console.log(v);
+					showError("An error occured:"+v.message);
 				});
-                    if(result.message)
-                        showError(result.message);
-                    else
-                        showError("An error occured. Please try again");
+                   
                 }
             }).error(function (err) {
                 console.log("Error: " + err);
