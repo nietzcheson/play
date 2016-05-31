@@ -136,6 +136,9 @@ $(document).ready(function () {
                         }
                     }
                 }else{
+				$.each(result,function(k,v){
+					console.log(v);
+				});
                     if(result.message)
                         showError(result.message);
                     else
