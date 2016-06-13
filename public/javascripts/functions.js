@@ -10,6 +10,7 @@ function load_catalog(url, id, select){
         data:{'url': url},
         success:function(result){
             var result = JSON.parse(result);
+            console.log(result);
             id.append($('<option>', {
                 value: "",
                 html : ""
@@ -1068,7 +1069,7 @@ $.fn.load_weeks = function (year, day) {
         var n2 = new Date(day1 + 604800000);
         if(new Date(day1).getFullYear()==year || n2.getFullYear()==year){
             var td=$("<td/>").append(
-                i > 9 ? i :"0"+i,
+                $("<span/>", {'text': i > 9 ? i :"0"+i}),
                 input,
                 $("<input/>", {'type': 'hidden', 'class': 'form-control', value: 0, name: 'ids'}),
                 $("<input/>", {'type': 'hidden', 'class': 'form-control', value: i, name: 'weekDayId'}),
@@ -1316,6 +1317,24 @@ $.fn.notifications = function (user) {
             showError(result);
         }
     });
+}
+
+function load_bulkbank(value){
+    var td=$(".bulkbank-table").find("td").eq(value.weekDayId-1);
+    $(td).find("input[type=number]").val(value.quantity);
+    var title=$(td).find(".glyphicon").attr("data-original-title");
+    var confirmationNumber= value.confirmationNumber2 ?
+        (value.confirmationNumber+ "-" + value.confirmationNumber2) : value.confirmationNumber;
+    title=title.split('<br/>')[0];
+    if(value.quantity==0){
+        $(td).find("input[name=ids]").val(0);
+        $(td).find(".glyphicon").attr("data-original-title", title);
+    } else{
+        var text=$(td).find("span").text();
+        $(td).find("span").replaceWith($("<a/>", {text: text, 'data-toggle': 'modal', 'data-target': '#breakdown', class: 'addBreakdown'}));
+        $(td).find("input[name=ids]").val(value.id);
+        $(td).find(".glyphicon").attr("data-original-title", title+ " <br/> "+ confirmationNumber);
+    }
 }
 $.fn.foliosByCampaign = function () {
     //Obtener Follow Ups

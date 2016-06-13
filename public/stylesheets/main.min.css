@@ -466,6 +466,8 @@ input.error, select.error {
       display: inline-block;
 }.active-week{
     color: #223c51;
-}
+}.bulkbank-table tr a {
+      margin-right: 0px;
+ }
 
 

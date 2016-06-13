@@ -2,7 +2,7 @@
 #{set title:'Template Bulkbank' /}
 
 #{set 'moreStyles'}
-<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css" />
 #{/set}
 
 #{set 'moreScripts'}
@@ -11,23 +11,7 @@
     $(document).ready(function() {
         $("#year").load_years(${year});
         var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-        function load_bulkbank(value){
-            var td=$(".bulkbank-table").find("td").eq(value.weekDayId-1);
-            $(td).find("input[type=number]").val(value.quantity);
-            if(value.quantity==0)
-                $(td).find("input[name=ids]").val(0);
-            else
-                $(td).find("input[name=ids]").val(value.id);
-            var title=$(td).find(".glyphicon").attr("data-original-title");
-            var confirmationNumber= value.confirmationNumber2 ?
-                    (value.confirmationNumber+ "-" + value.confirmationNumber2) : value.confirmationNumber;
-            title=title.split('<br/>')[0];
-            if(value.quantity==0)
-                $(td).find(".glyphicon").attr("data-original-title", title);
-            else{
-                $(td).find(".glyphicon").attr("data-original-title", title+ " <br/> "+ confirmationNumber);
-            }
-        }
+
         #{if templateId }
             $(".bulkbank-table").load_weeks(${year}, ${day});
             $("#day").load_days(${day});
@@ -36,8 +20,8 @@
             //Cargar detalles template
             $(".detail-template").load_template('${templateId}', '${year}' ,'${day}')
 
-
             //Cargar Bulkbanks
+        function bulkbank(){
             $.ajax({
                 url:  '/bulkBank',
                 type:'POST',
@@ -51,12 +35,15 @@
                     });
                     $("#bulkbank-search").find(".sk-chasing-dots").hide();
                     $("#bulkbank-search").show();
-
                 },
                 error: function(err){
                     showError("error" + err);
                 }
             });
+        }
+        bulkbank();
+
+
             //Cargar datos de template
 
         #{/if}
@@ -104,8 +91,9 @@
 
             templatedId=$(this).find("#templateId").val();
             if(templatedId!=""){
-                var data=$(this).serialize();
-                var $submitButton = $("#bulkbank-save").find('#submit');
+                var data = $(this).serialize();
+                var $submitButton = $("#bulkbank-save").find('#submit'
+                );
                 $submitButton.attr("disabled", true).val("creating....");
                 $.ajax({
                     url: '/createBulkbank',
@@ -116,15 +104,14 @@
                         console.log(result);
                         var flag=0;
                         var ul =$("<ul/>");
-                        var div_alert=$("<div/>", {class: "alert alert-success", role:"alert"})
+                        var div_alert=$("<div/>", {class: "alert alert-success", role:"alert"});
                         $.each(result.weekDTOList, function (index, value) {
                             if(value.status){
                                 flag=1;
                                 if(value.status=="created" || value.status=="updated"  || value.status=="canceled"){
                                     load_bulkbank(value);
                                     var li =$("<li/>", {text:" Bloqueos en la semana "+value.weekDayId+": "+ value.quantity});
-                                }
-                                else
+                                }else
                                     var li =$("<li/>", {text: "Error en los bloqueos en la semana "+value.weekDayId});
                                 ul=ul.append(li);
                             }
@@ -142,7 +129,6 @@
                 });
             }
         });
-
         $("#bulkbank-search").submit(function(e){
             e.preventDefault();
             var $submitButton = $("#bulkbank-search").find('#submit');
@@ -158,6 +144,70 @@
 
             $submitButton.attr("disabled", false).val("Search");
         });
+
+        //addBreakdown
+        $(document).on('click', '.addBreakdown', function() {
+            // add Break down
+            var td=$(this).closest("td");
+            $("#clientNames").html("");
+            var id=$(td).find("input[name=ids]").val();
+            $("#bulkBankId").val(id);
+            var quantity=$(td).find("input[name=quantity]").val();
+            for(var i=0; i < quantity; i++){
+
+                var names= $("<div/>", {class: 'col-sm-10'}).append(
+                                    $("<div/>", {class: 'col-sm-6'}).append(
+                                        $("<input/>",{type: 'text', class: 'form-control', name: 'firstname', placeholder: 'Firstname'})
+                                    ),
+                                    $("<div/>", {class: 'col-sm-6'}).append(
+                                            $("<input/>",{type: 'text', class: 'form-control', name: 'lastname', placeholder: 'Lastname'})
+                                    )
+                                );
+                var form=$("<div/>", {class: 'form-group'}).append(
+                        $("<label/>", {class: 'col-sm-1 control-label', text: 'Name'}),
+                        names);
+                $("#clientNames").append(form);
+            }
+        });
+
+        $("#breakdown-form").submit(function(e) {
+            e.preventDefault();
+            var data = $(this).serialize();
+            var button= $(this).find('input[type="submit"]');
+            button.attr("disabled", true).val("sending....");
+            //Crear breakdown
+            var form=$(this);
+            $.ajax({
+                url: '/createBreakdown',
+                type: 'POST',
+                data: data,
+                success: function(result) {
+                    result = JSON.parse(result);
+                    console.log(result);
+                    if(result.message){
+                        showModalError($("#breakdown"), result.property+" "+result.message);
+                    }else{
+                        $.each(result.names, function (index, value) {
+                            var col=form.find(".col-sm-10:eq("+index+")");
+                            debugger;
+                            if(value.status=="Successful"){
+                                col.append($("<div/>", {class: 'alert alert-success', 'role':'alert',
+                                    text: 'Successful: M4SG Reservation '+value.reservationIdM4SG
+                                    +' Hotel Reservation '+value.reservationIdHotel}))
+                            }else if(value.status=="Error: Updating on M4SG"){
+                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status+ "button"}))
+                            }else{
+                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status}))
+                            }
+                        });
+                        bulkbank();
+                    }
+
+                    button.attr("disabled", false).val("Enviar");
+                }
+            });
+        });
+
     });
 </script>
 #{/set}
@@ -243,4 +293,28 @@
         </div>
         <!-- /.panel -->
     </div>
+<div class="modal fade" id="breakdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Breakdown</h4>
+            </div>
+            <form action="" id="breakdown-form" class="form-horizontal">
+                <input type="hidden" name="bulkBankId" id="bulkBankId" />
+                <div class="modal-body">
+                    <div id="clientNames">
+
+                    </div>
+
+                    <div class="clearfix"></div><br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" text="Save changes" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </div>

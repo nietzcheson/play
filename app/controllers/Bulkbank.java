@@ -1,18 +1,13 @@
 package controllers;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import play.Logger;
 import play.libs.WS;
 import play.mvc.Scope;
 import play.mvc.With;
 import util.Constants;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by desarrollo1 on 18/04/2016.
@@ -131,7 +126,41 @@ public class Bulkbank extends MasterController {
         } catch (Exception excepcion) {
             renderText("error");
         }
-
-
     }
+
+    public static void createBreakdown(){
+        String firstnames[]=params.getAll("firstname");
+        String lastnames[]=params.getAll("lastname");
+        Gson gson = new Gson();
+        String id = params.get("bulkBankId");
+        JsonObject bulkbank = new JsonObject();
+        JsonArray names= new JsonArray();
+        JsonObject name;
+        for (int i=0; i<firstnames.length; i++){
+            if(!firstnames[i].equals("")){
+                name= new JsonObject();
+                name.addProperty("firstname", firstnames[i]);
+                name.addProperty("lastname", lastnames[i]);
+                names.add(name);
+            }
+        }
+        bulkbank.add("names", names);
+        bulkbank.addProperty("userName", Scope.Session.current().get("username"));
+        WS.HttpResponse res;
+        try {
+            String params =bulkbank.toString();
+            WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank/breakdown/"+id).authenticate(user, password);
+            request.body = params;
+            request.mimeType = "application/json";
+            res = request.post();
+            System.out.println("Response");
+            bulkbank = res.getJson().getAsJsonObject();
+            System.out.println(bulkbank);
+            bulkbank.addProperty("responsestatus", res.getStatus());
+            renderText(bulkbank);
+        } catch (Exception excepcion) {
+            renderText("error");
+        }
+    }
+
 }
