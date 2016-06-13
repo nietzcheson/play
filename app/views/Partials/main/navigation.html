@@ -1,0 +1,96 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="navbar-top">
+    <div class="navbar-header">
+        <button class="material-design-hamburger__icon">
+            <span class="material-design-hamburger__layer"></span>
+        </button>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">
+            <img src="/public/images/logo_header.png" alt=""/>
+            <span class="version">${version}</span>
+        </a>
+    </div>
+    <!-- /.navbar-header -->
+
+    <ul class="nav navbar-top-links navbar-right">
+        #{if userIntranet }
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                <span id="number-noti" class="label label-primary"></span>
+                <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-noti">
+                <li>
+                    <a class="text-center" href="${intranet}/M4CApp/Certificados/CERALERTAS.jsp?IDUSER=${username}">
+                        <strong>Read All Follow  ups</strong>
+                        <i class="fa fa-angle-right" ></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                <span id="number-alerts" class="label label-primary"></span>
+                <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts">
+
+                <li>
+                    <a class="text-center" href="${intranet}/CustomerTrackingTools/notifications.html?user=${username}&level=${acceso}&group=${grupo}&status=OPEN">
+                        <strong>Read All Notifications</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-alerts -->
+        </li>
+        #{secure.check 'ListaCampaniasFoliosFaltantes'}
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                <span id="number-campaigns" class="label label-primary"></span>
+                <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-tasks"></ul>
+            <!-- /.dropdown-tasks -->
+        </li>
+        #{/secure.check}
+        #{/if}
+
+        <!-- /.dropdown -->
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-user"></i> &nbsp; ${user_name}  #{if userIntranet } - ${extension} #{/if}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li>
+                    <a href="@{Secure.logout()}"><i class="fa fa-sign-out fa-fw"></i> Salir</a>
+                </li>
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="/public/images/&{'lans'}.png" alt="">  <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu dropdown-user" style="min-width: 20px;">
+                <li>
+                    <a data-lan="&{'lan'}" class="change_language">
+                        <img src="/public/images/&{'lan'}.png" alt=""> </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-user -->
+        </li>
+    </ul>
+    <!-- /.navbar-top-links -->
+
+
+    <!-- /.navbar-static-side -->
+</nav>
