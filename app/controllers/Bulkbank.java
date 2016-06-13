@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import play.libs.WS;
 import play.mvc.Scope;
@@ -128,15 +129,26 @@ public class Bulkbank extends MasterController {
     }
 
     public static void createBreakdown(){
-        String names[]=params.getAll("name");
+        String firstnames[]=params.getAll("firstname");
+        String lastnames[]=params.getAll("lastname");
         Gson gson = new Gson();
         String id = params.get("bulkBankId");
         JsonObject bulkbank = new JsonObject();
-//        bulkbank.addProperty("username", Scope.Session.current().get("username"));
+        JsonArray names= new JsonArray();
+        JsonObject name;
+        for (int i=0; i<firstnames.length; i++){
+            if(!firstnames[i].equals("")){
+                name= new JsonObject();
+                name.addProperty("firstname", firstnames[i]);
+                name.addProperty("lastname", lastnames[i]);
+                names.add(name);
+            }
+        }
+        bulkbank.add("names", names);
+        bulkbank.addProperty("userName", Scope.Session.current().get("username"));
         WS.HttpResponse res;
         try {
-            String params ="{ \"names\" : "+gson.toJson(names)+"}";
-            System.out.println("{ names : "+gson.toJson(names)+"}");
+            String params =bulkbank.toString();
             WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank/breakdown/"+id).authenticate(user, password);
             request.body = params;
             request.mimeType = "application/json";

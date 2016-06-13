@@ -21,6 +21,7 @@
             $(".detail-template").load_template('${templateId}', '${year}' ,'${day}')
 
             //Cargar Bulkbanks
+        function bulkbank(){
             $.ajax({
                 url:  '/bulkBank',
                 type:'POST',
@@ -39,6 +40,10 @@
                     showError("error" + err);
                 }
             });
+        }
+        bulkbank();
+
+
             //Cargar datos de template
 
         #{/if}
@@ -96,6 +101,7 @@
                     data: data,
                     success: function(result){
                         result = JSON.parse(result);
+                        console.log(result);
                         var flag=0;
                         var ul =$("<ul/>");
                         var div_alert=$("<div/>", {class: "alert alert-success", role:"alert"});
@@ -148,10 +154,18 @@
             $("#bulkBankId").val(id);
             var quantity=$(td).find("input[name=quantity]").val();
             for(var i=0; i < quantity; i++){
+
+                var names= $("<div/>", {class: 'col-sm-10'}).append(
+                                    $("<div/>", {class: 'col-sm-6'}).append(
+                                        $("<input/>",{type: 'text', class: 'form-control', name: 'firstname', placeholder: 'Firstname'})
+                                    ),
+                                    $("<div/>", {class: 'col-sm-6'}).append(
+                                            $("<input/>",{type: 'text', class: 'form-control', name: 'lastname', placeholder: 'Lastname'})
+                                    )
+                                );
                 var form=$("<div/>", {class: 'form-group'}).append(
-                        $("<label/>", {class: 'col-sm-2 control-label', text: 'Name'}),
-                        $("<div/>", {class: 'col-sm-10'}).append(
-                                $("<input/>",{type: 'text', class: 'form-control', name: 'name'}) ) );
+                        $("<label/>", {class: 'col-sm-1 control-label', text: 'Name'}),
+                        names);
                 $("#clientNames").append(form);
             }
         });
@@ -159,13 +173,37 @@
         $("#breakdown-form").submit(function(e) {
             e.preventDefault();
             var data = $(this).serialize();
+            var button= $(this).find('input[type="submit"]');
+            button.attr("disabled", true).val("sending....");
             //Crear breakdown
+            var form=$(this);
             $.ajax({
                 url: '/createBreakdown',
                 type: 'POST',
                 data: data,
                 success: function(result) {
+                    result = JSON.parse(result);
+                    console.log(result);
+                    if(result.message){
+                        showModalError($("#breakdown"), result.property+" "+result.message);
+                    }else{
+                        $.each(result.names, function (index, value) {
+                            var col=form.find(".col-sm-10:eq("+index+")");
+                            debugger;
+                            if(value.status=="Successful"){
+                                col.append($("<div/>", {class: 'alert alert-success', 'role':'alert',
+                                    text: 'Successful: M4SG Reservation '+value.reservationIdM4SG
+                                    +' Hotel Reservation '+value.reservationIdHotel}))
+                            }else if(value.status=="Error: Updating on M4SG"){
+                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status+ "button"}))
+                            }else{
+                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status}))
+                            }
+                        });
+                        bulkbank();
+                    }
 
+                    button.attr("disabled", false).val("Enviar");
                 }
             });
         });
