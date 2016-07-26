@@ -184,6 +184,21 @@
                 success: function(result) {
                     result = JSON.parse(result);
                     console.log(result);
+                    /*result = {
+                        quantity: 1,
+                        userName: "XSIERRA",
+                        weekDTOList: {
+                            firstname: "Carlos",
+                            lastname: "Aguilar",
+                            status: "updated",
+                            reservationIdM4SG: "5478278745",
+                            reservationIdHotel: "745535885"
+                        }
+                    };
+
+                    console.log(result);
+                    */
+
                     if(result.message){
                         showModalError($("#breakdown"), result.property+" "+result.message);
                     }else{

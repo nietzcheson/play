@@ -24,12 +24,7 @@
                 "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
                 "sProcessing": "&{'processing'}"
             },
-            #{if isOta == 1 }
-                "ajax":'/application/templateBulkbanklistOTAS?isOTA=1',
-            #{/if}
-            #{else}
-                "ajax":'/application/templateBulkbanklist',
-            #{/else}
+            "ajax":'/application/templateBulkbanklist',
             "columnDefs": [
                 {
                     "targets":0,

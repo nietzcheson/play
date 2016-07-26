@@ -14,23 +14,24 @@ import java.text.ParseException;
 @With(Secure.class)
 public class TemplateBulkbank extends MasterController {
 
-    public static void list(Integer isOTA) {
-        if(isOTA==null)
-            isOTA=0;
+    public static void list() {
+
         Boolean successfullyCreated = false;
         Boolean successfullyUpdated = false;
         String mode = params.get("mode");
         String id = params.get("id");
         String templateName = params.get("name");
+
         if(mode != null && !mode.isEmpty()) {
+
             if(mode.equals("edit")) {
                 successfullyUpdated = true;
             } else if(mode.equals("create")) {
                 successfullyCreated = true;
             }
         }
+
         renderArgs.put("id", id);
-        renderArgs.put("isOta", isOTA);
         renderArgs.put("templateName", templateName);
         renderArgs.put("successfullyCreated", successfullyCreated);
         renderArgs.put("successfullyUpdated", successfullyUpdated);
@@ -38,9 +39,8 @@ public class TemplateBulkbank extends MasterController {
         render();
     }
 
-    public static void create(Long id, Integer isOTA) {
-        if(isOTA==null)
-            isOTA=0;
+    public static void create(Long id) {
+
         boolean editMode;
         if( id != null)
             editMode = true;
@@ -48,7 +48,7 @@ public class TemplateBulkbank extends MasterController {
             editMode = false;
         renderArgs.put("editMode", editMode);
         renderArgs.put("template", id);
-        renderArgs.put("isOta", isOTA);
+        renderArgs.put("isOta", Security.check("ListarBulkBankOTAS"));
         render();
     }
     public static void createTemplate(Long id, Integer isOTA) throws ParseException {

@@ -10,7 +10,6 @@ function load_catalog(url, id, select){
         data:{'url': url},
         success:function(result){
             var result = JSON.parse(result);
-            console.log(result);
             id.append($('<option>', {
                 value: "",
                 html : ""
@@ -1089,7 +1088,7 @@ $.fn.load_years = function (year) {
     var today=new Date();
     year= year ? year : today.getFullYear();
     for (i=year-3; i<= year+15; i++){
-        $(this).append($("<option/>", {'value': i, html: i}));
+        $(this).append($("<option/>", {'value': i, 'html': i}));
     }
     $(this).val(year);
 }

@@ -30,12 +30,7 @@
                     load_catalog_bulbank("/hotelUnits?hotelId="+result.clubId, $("#unit"), unit);
                     load_catalog_bulbank("/hotelUnits?hotelId="+result.clubId, $("#split"), split);
                     var callCenter= result.callCenter ? result.callCenter.id : null;
-                    #{if isOta==1}
-                        load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), callCenter);
-                    #{/if}
-                    #{else}
-                        load_catalog("/callCenter/list", $("#callCenter"), callCenter);
-                    #{/else}
+                    load_catalog("/callCenter/list?isOTA=${ isOta }", $("#callCenter"), 1);
                     var plan= result.plan ? result.plan.id :'';
                     load_mealplan(plan, '/mealplans/all');
                     $(".sk-chasing-dots").hide();
@@ -52,12 +47,11 @@
         #{else}
             load_sunset_hotels("/hotel", $("#hotel"), 1);
             load_catalog_bulbank("/hotelUnits?hotelId=1", $("#unit, #split"), "");
-            #{if isOta==1}
-                load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), 1);
-            #{/if}
-            #{else}
-                load_catalog("/callCenter/list", $("#callCenter"), 1);
-            #{/else}
+
+            //load_catalog("/callCenter/list?segments=4,26", $("#callCenter"), 1);
+            //load_catalog("/callCenter/list", $("#callCenter"), 1);
+            load_catalog("/callCenter/list?isOTA=${ isOta }", $("#callCenter"), 1);
+
             load_mealplan("", '/mealplans/all');
             $(".sk-chasing-dots").hide();
         #{/else}
@@ -197,6 +191,7 @@
                                 <input id="children" class="form-control" type="number" maxlength="2" min="0" max="99" required />
                             </div>
                             <div class="clearfix"></div>
+                           *{#{if isOta==1}}*
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Call Center</label>
@@ -204,6 +199,7 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div><br />
+                            *{#{/if}}*
                             <div class="form-group">
                                 <label class="col-sm-12">Observations</label>
                                 <div class="clearfix"></div>
