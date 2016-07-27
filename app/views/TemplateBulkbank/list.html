@@ -29,12 +29,7 @@
                 {
                     "targets":0,
                     "render": function (td, cellData, rowData, row, col) {
-                        #{if isOta==1 }
-                            return  '<a href="/templateBulkbank/'+rowData.id+'?isOTA=1" >'+rowData.id+'</a>'
-                        #{/if}
-                        #{else }
                             return  '<a href="/templateBulkbank/'+rowData.id+'" >'+rowData.id+'</a>'
-                        #{/else}
                     }
                 },{
                     "targets":3,
@@ -61,7 +56,7 @@
                 { "data": "unitId","title":"&{'Unit'}"},
                 { "data": "splitId","title":"&{'Split'}"},
                 { "data": "observations","title":"&{'Observations'}"},
-                #{if isOta==1 }
+                #{if isOta== true }
                 { "data": "callcenterName","title":"&{'Call Center'}"},
                 #{/if}
             ]
@@ -89,17 +84,6 @@
             </div>
         </div>
    *{/ #{secure.check 'CrearCliente'}}*
-        #{if isOta==1 }
-        <div class="col-lg-2">
-            <div class="row">
-                <a href="/templateBulkbank/create?isOTA=1" class="btn btn-sm btn-primary pull-right top-separation">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    &nbsp;&{'new'}
-                </a>
-            </div>
-        </div>
-        #{/if}
-        #{else}
         <div class="col-lg-2">
             <div class="row">
                 <a href="/templateBulkbank/create" class="btn btn-sm btn-primary pull-right top-separation">
@@ -108,7 +92,6 @@
                 </a>
             </div>
         </div>
-        #{/else}
     *{#{/secure.check}}*
     </div>
 </div>
