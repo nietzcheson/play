@@ -22,6 +22,7 @@
                 },
                 "sLengthMenu": "&{'show'} _MENU_ &{'entries'}",
                 "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
+                "sInfo": "&{'show'} _START_ &{'to'} _END_ &{'entries'} &{'of'}  _TOTAL_",
                 "sProcessing": "&{'processing'}"
             },
             "ajax":'/application/templateBulkbanklist',
@@ -56,7 +57,7 @@
                 { "data": "unitId","title":"&{'Unit'}"},
                 { "data": "splitId","title":"&{'Split'}"},
                 { "data": "observations","title":"&{'Observations'}"},
-                #{if isOta== true }
+                #{if isOta == true }
                 { "data": "callcenterName","title":"&{'Call Center'}"},
                 #{/if}
             ]

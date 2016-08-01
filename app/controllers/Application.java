@@ -551,13 +551,13 @@ public class Application extends MasterController {
         }
     }
 
-    public static void templateBulkbankList(Integer isOTA) {
-        if(isOTA==null)
-            isOTA=0;
+    public static void templateBulkbankList() {
+
         String draw = params.get("draw");
-        String queryString = "";
+        String queryString;
         JsonObject jsonObject = new JsonObject();
         JsonObject jsonResponse;
+
         if(draw != null) {
             Integer pageLength = params.get("length", Integer.class);
             String searchValue = params.get("search[value]");
@@ -594,9 +594,14 @@ public class Application extends MasterController {
                             query +
                             order +
                             orderBy;
-            if(isOTA==1)
-                queryString=queryString+"&callcenter=1";
-            queryString = "/templateBulkBank" + queryString;
+
+            //boolean isOTA = Security.check("ListarBulkBankOTAS");
+
+            if(Security.check("ListarBulkBankOTAS") == true){
+                queryString = queryString + "&callcenter=1";
+            }
+
+            queryString = "/templateBulkBank" + queryString + "&isOTA=" + Security.check("ListarBulkBankOTAS");
 
             Logger.info("queryString: >>>" + Constants.API_Bulkbank + queryString);
             WS.WSRequest req = WS.url(Constants.API_Bulkbank + queryString).authenticate(user, password);

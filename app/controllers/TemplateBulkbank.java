@@ -32,10 +32,10 @@ public class TemplateBulkbank extends MasterController {
         }
 
         renderArgs.put("id", id);
+        renderArgs.put("isOta", Security.check("ListarBulkBankOTAS"));
         renderArgs.put("templateName", templateName);
         renderArgs.put("successfullyCreated", successfullyCreated);
         renderArgs.put("successfullyUpdated", successfullyUpdated);
-        renderArgs.put("isOta", Security.check("ListarBulkBankOTAS"));
 
         render();
     }
