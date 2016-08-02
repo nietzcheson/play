@@ -1143,6 +1143,10 @@ $.fn.load_days = function (day) {
 }
 
 $.fn.load_templates = function (url, template) {
+
+    var loadEffect = new LoadEffect(this);
+    loadEffect.start();
+
     var template_select=$(this);
     $(this).html("");
     $.ajax({
@@ -1150,10 +1154,13 @@ $.fn.load_templates = function (url, template) {
         type:'POST',
         data:{'url': url},
         success:function(result){
+
+            loadEffect.clean();
+
             var result = JSON.parse(result);
             template_select.append($('<option/>', {
                 value:"",
-                html : ""
+                html : "Seleccione"
             }));
             $.each(result, function (index, value) {
                 if( value.id==template){
@@ -1174,6 +1181,8 @@ $.fn.load_templates = function (url, template) {
         error: function(result){
             showError("Hubo un error al comunicarse con la API");
         }
+    }).done(function () {
+        loadEffect.finish();
     });
 }
 
