@@ -17,7 +17,7 @@ var LoadEffect = function(e)
 }
 
 function load_catalog(url, id, select){
-
+    
     var loadEffect = new LoadEffect(id);
     loadEffect.start();
 
