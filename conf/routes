@@ -111,8 +111,11 @@ POST  /createHotel/{id}/?                               Hotels.createHotel
 
 #BulkBank
 * /templateBulkbank/?                                   TemplateBulkbank.list
-GET /templateBulkbank/{id}/?                            TemplateBulkbank.create
-GET /templateBulkbank/create/?                          TemplateBulkbank.create
+#GET /templateBulkbank/{id}/?                           TemplateBulkbank.create
+GET /templateBulkbank/{<[0-9]+>id}                      TemplateBulkbank.edit
+GET /templateBulkbank/create                            TemplateBulkbank.create
+#GET /templateBulkbank/{id}                              TemplateBulkbank.edit
+#GET /templateBulkbank/create                            TemplateBulkbank.create
 POST /createTemplate/?                                  TemplateBulkbank.createTemplate
 POST /templateBulkbank/{id}?                            TemplateBulkbank.createTemplate
 *  /application/templateBulkbanklist/?                  Application.templateBulkbankList

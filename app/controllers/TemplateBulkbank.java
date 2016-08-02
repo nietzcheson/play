@@ -12,10 +12,11 @@ import java.text.ParseException;
  * Created by desarrollo1 on 20/04/2016.
  */
 @With(Secure.class)
-public class TemplateBulkbank extends MasterController {
+public class TemplateBulkbank extends MasterController
+{
 
-    public static void list() {
-
+    public static void list()
+    {
         Boolean successfullyCreated = false;
         Boolean successfullyUpdated = false;
         String mode = params.get("mode");
@@ -40,19 +41,23 @@ public class TemplateBulkbank extends MasterController {
         render();
     }
 
-    public static void create(Long id) {
+    public static void create(/*Long id*/)
+    {
 
         boolean editMode;
-        if( id != null)
+        /*if( id != null)
             editMode = true;
         else
-            editMode = false;
-        renderArgs.put("editMode", editMode);
-        renderArgs.put("template", id);
+            editMode = false;*/
+        //renderArgs.put("editMode", editMode);
+        //renderArgs.put("template", id);
         renderArgs.put("isOta", Security.check("ListarBulkBankOTAS"));
         render();
     }
-    public static void createTemplate(Long id, Integer isOTA) throws ParseException {
+
+    public static void createTemplate(Long id, Integer isOTA) throws ParseException
+    {
+
         if(isOTA==null)
             isOTA=0;
         JsonObject jsonObject= new JsonObject();
@@ -102,5 +107,11 @@ public class TemplateBulkbank extends MasterController {
         }
         renderArgs.put("isOta", isOTA);
 
+    }
+
+    public static void edit(Long id)
+    {
+        renderArgs.put("template", id);
+        render();
     }
 }

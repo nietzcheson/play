@@ -1,0 +1,84 @@
+#{extends 'main.html' /}
+#{set title:'Template Bulkbank' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
+#{/set}
+
+#{set 'moreScripts'}
+<script src="/public/js/TemplateBulkbank/templateBulkbank.js"></script>
+<script src="/public/javascripts/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/public/javascripts/form.validation.js"></script>
+<script>
+    $(document).ready(function() {
+
+            $("#template-form").hide();
+            $.ajax({
+                url:  '/bulkBank',
+                type:'POST',
+                data: {'url': '/templateBulkBank/${template}'},
+                success:function(result){
+                    var result =  $.parseJSON(result);
+                    $("#name").val(result.name);
+                    $(".page-header h1").html(result.name);
+                    $("#adults").val(result.adults);
+                    $("#children").val(result.children);
+                    $("#rate").val(result.rate);
+                    $("#observations").val(result.observations);
+
+                    load_sunset_hotels("/hotel", $("#hotel"), result.clubId);
+                    var unit= result.unit? result.unit.id : '';
+                    var split= result.split? result.split.id : '';
+                    load_catalog_bulbank("/hotelUnits?hotelId="+result.clubId, $("#unit"), unit);
+                    load_catalog_bulbank("/hotelUnits?hotelId="+result.clubId, $("#split"), split);
+                    var callCenter= result.callCenter ? result.callCenter.id : null;
+                    load_catalog("/callCenter/list?isOTA=${ isOta }", $("#callCenter"), 1);
+                    var plan= result.plan ? result.plan.id :'';
+                    load_mealplan(plan, '/mealplans/all');
+                    $(".sk-chasing-dots").hide();
+                    $("#template-form").show();
+
+                },
+                error: function(err){
+                    showError("error" + err);
+                }
+            });
+    });
+</script>
+#{/set}
+
+<form action="/templateBulkbank"  method='POST' id='redirect'>
+    <input name="id" type="hidden" id="id-value" value="${template}" />
+    <input id="templateName" name="name" type="hidden" value="" />
+    <input id="mode" type="hidden" name="mode" value="#{if editMode}edit#{/if}#{else}create#{/else}"/>
+</form>
+
+<input id="id-value" type="hidden" value="${brokerId}"/>
+<div class="col-lg-12 page-header">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading" id="brokers-panel-title">
+                <h1> Template BulkBank | &{'new'}</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="sk-chasing-dots">
+                        <div class="sk-child sk-dot1"></div>
+                        <div class="sk-child sk-dot2"></div>
+                    </div>
+                    #{include 'TemplateBulkbank/form.html' /}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

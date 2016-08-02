@@ -2,17 +2,37 @@
  * @desc Cargar un listado dentro de un select box
  * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
  */
+
+
+var LoadEffect = function(e)
+{
+    this.start = function() { attrElement(true) }
+
+    this.clean = function() { e.html("") }
+
+    this.finish = function() { attrElement(false) }
+
+    function attrElement(value) { return e.attr("disabled", value) }
+
+}
+
 function load_catalog(url, id, select){
-    id.html("");
+
+    var loadEffect = new LoadEffect(id);
+    loadEffect.start();
+
     $.ajax({
         url:  '/TableList',
         type:'POST',
         data:{'url': url},
         success:function(result){
+
+            loadEffect.clean();
+
             var result = JSON.parse(result);
             id.append($('<option>', {
                 value: "",
-                html : ""
+                html : "Seleccione"
             }));
             $.each(result, function (index, value) {
                 if( value.id==select){
@@ -32,22 +52,30 @@ function load_catalog(url, id, select){
         error: function(result){
             showError(result);
         }
+    }).done(function(){
+        loadEffect.finish();
     });
 }/**
  * @desc Cargar un listado de hoteles dentro de un select box
  * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
  */
 function load_sunset_hotels(url, id, select){
-    id.html("");
+
+    var loadEffect = new LoadEffect(id);
+    loadEffect.start();
+
     $.ajax({
         url:  '/bulkBank',
         type:'POST',
         data:{'url': url},
         success:function(result){
+
+            loadEffect.clean();
+
             var result = JSON.parse(result);
             id.append($('<option>', {
                 value: "",
-                html : ""
+                html : "Seleccione"
             }));
             $.each(result, function (index, value) {
                 if( value.clubId==select){
@@ -70,22 +98,32 @@ function load_sunset_hotels(url, id, select){
         error: function(result){
             showError("Hubo un error al cargar los hoteles");
         }
+    }).done(function(){
+        loadEffect.finish();
     });
 }
 
 
 function load_catalog_bulbank(url, id, select){
-    id.html("");
+
+    var loadEffect = new LoadEffect(id);
+    loadEffect.start();
+
     $.ajax({
         url:  '/bulkBank',
         type:'POST',
         data:{'url': url},
         success:function(result){
+
+            id.html('');
+
             var result = JSON.parse(result);
+            
             id.append($('<option>', {
                 value: "",
-                html : ""
+                html : "Seleccione"
             }));
+
             $.each(result, function (index, value) {
                 var name=value.name? value.name: value.program;
                 if( value.id==select){
@@ -105,6 +143,9 @@ function load_catalog_bulbank(url, id, select){
         error: function(result){
             showError("Hubo un error al comunicarse con la API");
         }
+    }).done(function(){
+
+        loadEffect.finish();
     });
 }
 /**
