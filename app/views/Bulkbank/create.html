@@ -74,13 +74,20 @@
         });
 
         $("#bulkbank-save").submit(function (e) {
+
             e.preventDefault();
-            var templatedId=$(this).find("#templateId").val();
-            if(templatedId==""){
-                var year=$("#bulkbank-search").find("#year").val();
-                var template=$("#bulkbank-search").find("#template").val();
-                var day=$("#bulkbank-search").find("#day").val();
-                if(day=="" || year==""  || template=="" || day==null || year==null || template==null){
+
+            var templatedId = $(this).find("#templateId").val();
+
+            if(templatedId == ""){
+
+                var bulkbankSearch = $("#bulkbank-search");
+
+                var year = bulkbankSearch.find("#year").val();
+                var template = bulkbankSearch.find("#template").val();
+                var day = bulkbankSearch.find("#day").val();
+
+                if(day == "" || year == ""  || template == "" || day == null || year == null || template == null){
                     showError("Day, Year and Template are required");
                 }else{
                     $(this).find("#templateId").val(template);
@@ -89,58 +96,78 @@
                 }
             }
 
-            templatedId=$(this).find("#templateId").val();
-            if(templatedId!=""){
+            templatedId = $(this).find("#templateId").val();
+
+            if(templatedId){
+
                 var data = $(this).serialize();
-                var $submitButton = $("#bulkbank-save").find('#submit'
-                );
-                $submitButton.attr("disabled", true).val("creating....");
+                var submitButton = $(this).find(":submit");
+                //submitButton.button("loading");
+
                 $.ajax({
                     url: '/createBulkbank',
                     type: 'POST',
                     data: data,
                     success: function(result){
+
                         result = JSON.parse(result);
+
                         console.log(result);
-                        var flag=0;
-                        var ul =$("<ul/>");
-                        var div_alert=$("<div/>", {class: "alert alert-success", role:"alert"});
+
+                        var flag = 0;
+                        var ul = $("<ul/>");
+                        var div_alert = $("<div/>", {class: "alert alert-success", role:"alert"});
+
                         $.each(result.weekDTOList, function (index, value) {
+
                             if(value.status){
-                                flag=1;
-                                if(value.status=="created" || value.status=="updated"  || value.status=="canceled"){
+                                flag = 1;
+
+                                if(value.status == "created" || value.status == "updated"  || value.status == "canceled"){
                                     load_bulkbank(value);
                                     var li =$("<li/>", {text:" Bloqueos en la semana "+value.weekDayId+": "+ value.quantity});
-                                }else
+                                }else{
                                     var li =$("<li/>", {text: "Error en los bloqueos en la semana "+value.weekDayId});
-                                ul=ul.append(li);
+                                }
+
+                                ul = ul.append(li);
                             }
                         });
-                        div_alert=div_alert.append(ul);
+
+                        div_alert = div_alert.append(ul);
+
                         $("#bulkbank-save").find(".alert").remove();
-                        if(flag==1)
+
+                        if(flag == 1){
                             $(".bulkbank-table").before(div_alert);
-                        $submitButton.attr("disabled", false).val("Save");
+                        }
+
+                        submitButton.button("reset");
 
                     }, error: function(result){
                         showError("Hubo un error en la aplicación");
-                        $submitButton.attr("disabled", false).val("Save");
+                        submitButton.button("reset");
                     }
                 });
             }
         });
+
         $("#bulkbank-search").submit(function(e){
+
             e.preventDefault();
+
             var $submitButton = $("#bulkbank-search").find('#submit');
             $submitButton.attr("disabled", true).val("searching....");
             var bulkbank_search=$("#bulkbank-search");
             var template=$(bulkbank_search).find("#template").val();
             var year=$(bulkbank_search).find("#year").val();
             var day=$(bulkbank_search).find("#day").val();
-            if(day=="" || year==""  || template=="" || day==null || year==null || template==null)
+
+            if(day == "" || year == ""  || template == "" || day == null || year == null || template == null){
                 showError("Day, Year and Template are required");
-            else
+            }else{
                 window.location.href = "/bulkbank/"+template+"/"+year+"/"+day;
+            }
 
             $submitButton.attr("disabled", false).val("Search");
         });
@@ -171,11 +198,15 @@
         });
 
         $("#breakdown-form").submit(function(e) {
+
             e.preventDefault();
+
             var data = $(this).serialize();
+
             var button= $(this).find('input[type="submit"]');
+
             button.attr("disabled", true).val("sending....");
-            //Crear breakdown
+
             var form=$(this);
             $.ajax({
                 url: '/createBreakdown',
@@ -301,7 +332,7 @@
 
                         </tbody>
                     </table>
-                    <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'save'}">
+                    <button type="submit" class="btn btn-primary pull-right" data-loading-text="Creating...">&{'save'}</button>
                 </form>
             </div>
             <div class="clearfix"></div><br /><br />

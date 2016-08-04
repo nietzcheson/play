@@ -51,26 +51,31 @@ public class Bulkbank extends MasterController {
         render();
     }
 
-    public static void createBulkBank(){
-        String quantity[]=params.getAll("quantity");
-        String ids[] =params.getAll("ids");
-        String weekDayId[] =params.getAll("weekDayId");
-        JsonObject bulkbank=new JsonObject();
-        String templateId= params.get("templateId");
+    public static void createBulkbank(){
+
+        String quantity[] = params.getAll("quantity");
+        String ids[] = params.getAll("ids");
+        String weekDayId[] = params.getAll("weekDayId");
+        JsonObject bulkbank = new JsonObject();
+        String templateId = params.get("templateId");
         bulkbank.addProperty("templateId", templateId);
-        String year= params.get("year");
+        String year = params.get("year");
         bulkbank.addProperty("year", year);
-        String weekDay= params.get("weekDay");
+        String weekDay = params.get("weekDay");
         bulkbank.addProperty("weekDay", weekDay);
 
-        Integer diff= ids.length - quantity.length;
-        JsonArray weeks= new JsonArray();
+        Integer diff = ids.length - quantity.length;
+        JsonArray weeks = new JsonArray();
         JsonObject week;
-        for(int i=0; i < quantity.length; i++){
-            if(Integer.parseInt(quantity[i]) > 0  || Integer.parseInt(ids[i+diff])!=0){
-                week= new JsonObject();
+
+        for(int i = 0; i < quantity.length; i++){
+
+            if(Integer.parseInt(quantity[i]) > 0  || Integer.parseInt(ids[i+diff])!= 0){
+
+                week = new JsonObject();
                 week.addProperty("weekDayId", weekDayId[i+diff]);
                 week.addProperty("quantity", quantity[i]);
+
                 if(Integer.parseInt(ids[i+diff]) != 0)
                     week.addProperty("id", ids[i+diff]);
 
@@ -80,7 +85,8 @@ public class Bulkbank extends MasterController {
         bulkbank.addProperty("username", Scope.Session.current().get("username"));
         bulkbank.add("weekDTOList", weeks);
         WS.HttpResponse res;
-        try {
+
+        try{
             String params = bulkbank.toString();
             WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank/edit").authenticate(user, password);
             request.body = params;
@@ -90,7 +96,8 @@ public class Bulkbank extends MasterController {
             bulkbank = res.getJson().getAsJsonObject();
             bulkbank.addProperty("responsestatus", res.getStatus());
             renderText(bulkbank);
-        } catch (Exception excepcion) {
+
+        }catch(Exception excepcion) {
             renderText("error");
         }
     }
@@ -129,35 +136,38 @@ public class Bulkbank extends MasterController {
     }
 
     public static void createBreakdown(){
-        String firstnames[]=params.getAll("firstname");
-        String lastnames[]=params.getAll("lastname");
-        Gson gson = new Gson();
+
+        String firstnames[] = params.getAll("firstname");
+        String lastnames[] = params.getAll("lastname");
         String id = params.get("bulkBankId");
         JsonObject bulkbank = new JsonObject();
-        JsonArray names= new JsonArray();
+        JsonArray names = new JsonArray();
         JsonObject name;
+
         for (int i=0; i<firstnames.length; i++){
             if(!firstnames[i].equals("")){
-                name= new JsonObject();
+                name = new JsonObject();
                 name.addProperty("firstname", firstnames[i]);
                 name.addProperty("lastname", lastnames[i]);
                 names.add(name);
             }
         }
+
         bulkbank.add("names", names);
         bulkbank.addProperty("userName", Scope.Session.current().get("username"));
         WS.HttpResponse res;
+
         try {
-            String params =bulkbank.toString();
+
+            String params = bulkbank.toString();
             WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank/breakdown/"+id).authenticate(user, password);
             request.body = params;
             request.mimeType = "application/json";
             res = request.post();
-            System.out.println("Response");
             bulkbank = res.getJson().getAsJsonObject();
-            System.out.println(bulkbank);
             bulkbank.addProperty("responsestatus", res.getStatus());
             renderText(bulkbank);
+
         } catch (Exception excepcion) {
             renderText("error");
         }

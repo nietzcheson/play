@@ -123,7 +123,7 @@ POST /templateBulkbank/{id}?                            TemplateBulkbank.createT
 GET /bulkbank/?                                         Bulkbank.list
 GET /bulkbank/{templateId}/{year}/{day}/?               Bulkbank.create
 GET /bulkbank/create/?                                  Bulkbank.create
-POST /createBulkbank/?                                  Bulkbank.createBulkBank
+POST /createBulkbank/?                                  Bulkbank.createBulkbank
 POST /createBreakdown/?                                 Bulkbank.createBreakdown
 POST /createBulkbankOtas/?                              Bulkbank.createBulkBankOtas
 POST /BulkbankOtas/{id}/?                              Bulkbank.createBulkBankOtas
