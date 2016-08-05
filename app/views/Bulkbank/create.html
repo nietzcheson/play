@@ -102,7 +102,7 @@
 
                 var data = $(this).serialize();
                 var submitButton = $(this).find(":submit");
-                //submitButton.button("loading");
+                submitButton.button("loading");
 
                 $.ajax({
                     url: '/createBulkbank',
@@ -203,9 +203,8 @@
 
             var data = $(this).serialize();
 
-            var button= $(this).find('input[type="submit"]');
-
-            button.attr("disabled", true).val("sending....");
+            var submitButton = $(this).find(":submit");
+            submitButton.button("loading");
 
             var form=$(this);
             $.ajax({
@@ -249,7 +248,7 @@
                         bulkbank();
                     }
 
-                    button.attr("disabled", false).val("Enviar");
+                    submitButton.button("reset");
                 }
             });
         });
@@ -357,7 +356,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" text="Save changes" />
+                    <button type="submit" class="btn btn-primary" data-loading-text="Loading...">&{'save'}</button>
                 </div>
             </form>
         </div>
