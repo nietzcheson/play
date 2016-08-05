@@ -1,0 +1,73 @@
+<form id="template-form" role="form" action="" method="post">
+    <div class="col-sm-6">
+        <input id="templateId" name="templateId" type="hidden" value="${template}"/>
+        <div class="form-group">
+            <label>&{'name'}</label>
+            <input id="name" type="text" name="name" class="form-control" required/>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Hotel</label>
+            <select  class="form-control" name="hotel" id="hotel" required></select>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Unit</label>
+            <select  class="form-control" name="unit" id="unit" required></select>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Split</label>
+            <select  class="form-control" name="split" id="split"></select>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Plan</label>
+            <select  class="form-control" name="meal-plan" id="meal-plan" required> </select>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <label>Rate</label>
+        <input id="rate" class="form-control" type="text" name="rate" maxlength="6" min="0" max="99" required />
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-sm-6">
+        <div class="col-sm-6">
+            <label>Adults</label>
+            <input id="adults" class="form-control" type="number" maxlength="2" min="0" max="99" required>
+        </div>
+        <div class="col-sm-6">
+            <label>Children</label>
+            <input id="children" class="form-control" type="number" maxlength="2" min="0" max="99" required />
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label>Call Center</label>
+            <select  class="form-control" name="callCenter" id="callCenter" required></select>
+        </div>
+    </div>
+    <div class="clearfix"></div><br />
+    <div class="form-group">
+        <label class="col-sm-12">Observations</label>
+        <div class="clearfix"></div>
+        <div class="col-sm-11">
+            <textarea class="form-control col-sm-10" maxlength="500" id="observations" rows="3" data-length="2"/></textarea>
+        </div>
+        <div id="cont" class="col-sm-1">500</div>
+    </div>
+    <div class="clearfix"></div><br />
+    <div class="col-sm-6">
+    #{secure.check 'CrearTemplateBulkBank'}
+        <input type="submit" id="submit" class="btn btn-primary" value="&{'save'}">&nbsp; &{'or'}
+    #{/secure.check}
+        <input type="submit" id="submit" class="btn btn-primary" value="&{'save'}">&nbsp; &{'or'}
+    #{a @TemplateBulkbank.list() }&{'cancel'}#{/a}
+    </div>
+</form>

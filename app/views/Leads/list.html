@@ -3,14 +3,15 @@
     #{set 'moreStyles'}
     <link rel="stylesheet" href="/public/stylesheets/pages/lists.css" />
     <link rel="stylesheet" href="/public/stylesheets/libs/datatables/dataTables.bootstrap.css" />
-    <link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css" />
+    *{<link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css" />}*
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
     #{/set}
     *{<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>}*
+    #{set 'moreScripts'}
+
     <script src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
+    #{/set}
     <!-- <script src="/public/javascripts/leads/list.js"></script> -->
     <script>
 	    /**
@@ -356,8 +357,8 @@
                             <div class="pull-right label-status">
                                 <span class="label info">Reservado </span>
                                 <span class="label warning">Posible Cancelación </span>
-                                <span class="label danger">Cancelado </span>
-                                <span class="label success">Socio </span>
+                                <span class="label success">Socio </span>                                <span class="label danger">Cancelado </span>
+
                                 <span class="label default">Reserva Cancelada</span>
                                 <span class="label primary">Socio con Reserva Cancelada </span>
                             </div>

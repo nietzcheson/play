@@ -18,6 +18,8 @@ GET     /logout                                 Secure.logout
 
 #Funciones Generales Jquery
 POST   /TableList/?                             Application.TableList   #Listado Jquery para Tablas y Selects
+POST   /bulkBank/?                              Application.TableListBulkBank   #Listado Jquery para Tablas y Selects
+
 GET    /application/UsersGroupList/?            Application.UsersGroupList
 GET /changeLanguage/{lan}/?                     Application.change_language
 
@@ -106,6 +108,26 @@ POST  /createDestination/{id}/?                 Destinations.createDestination
 POST   /application/deleteImghotel/{id}/{token}/?       Application.hotelDelete
 POST  /createHotel                                      Hotels.createHotel
 POST  /createHotel/{id}/?                               Hotels.createHotel
+
+#BulkBank
+* /templateBulkbank/?                                   TemplateBulkbank.list
+#GET /templateBulkbank/{id}/?                           TemplateBulkbank.create
+GET /templateBulkbank/{<[0-9]+>id}                      TemplateBulkbank.edit
+GET /templateBulkbank/create                            TemplateBulkbank.create
+#GET /templateBulkbank/{id}                              TemplateBulkbank.edit
+#GET /templateBulkbank/create                            TemplateBulkbank.create
+POST /createTemplate/?                                  TemplateBulkbank.createTemplate
+POST /templateBulkbank/{id}?                            TemplateBulkbank.createTemplate
+*  /application/templateBulkbanklist/?                  Application.templateBulkbankList
+*  /application/templateBulkbanklistOTAS/?              Application.templateBulkbankList
+GET /bulkbank/?                                         Bulkbank.list
+GET /bulkbank/{templateId}/{year}/{day}/?               Bulkbank.create
+GET /bulkbank/create/?                                  Bulkbank.create
+POST /createBulkbank/?                                  Bulkbank.createBulkbank
+POST /createBreakdown/?                                 Bulkbank.createBreakdown
+POST /createBulkbankOtas/?                              Bulkbank.createBulkBankOtas
+POST /BulkbankOtas/{id}/?                              Bulkbank.createBulkBankOtas
+*  /application/bulkbanklist/?                          Application.bulkbankList
 
 # Campañas
 GET   /campaigns/?                              Campaigns.list(boolean successfullyCreated : true)

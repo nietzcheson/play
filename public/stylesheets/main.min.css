@@ -1,10 +1,19 @@
+html, body{
+    width: 100%;
+    height: 100%;
+}
 body{
-    background: #223c51;
+    //background: #223c51;
+    background: #EFF0F4;
     color: #666666;
 }
 #page-wrapper{
     background: #eff0f4;
     border-left: 1px solid #eff0f4;
+}
+
+.page-header .row{
+    margin-top: 40px;
 }
 
 .navbar-brand{
@@ -21,14 +30,10 @@ body{
     /*color: #333;*/
 }
 
-#wrapper .navbar{
+#navbar-top{
     margin-bottom: 0;
     background: #87d6d9;
-}
-
-#wrapper > nav {
     border-color: #87d6d9;
-
 }
 
 .dropdown-toggle:hover, .dropdown-toggle:focus{
@@ -286,4 +291,183 @@ input.error, select.error {
 }.label-primary{
     background-color: #194a74;
 }
+
+ /* Efecto Menu */
+.sidebar {
+    z-index: 1000;
+    position: fixed;
+    width: 50px;
+    margin-top: 51px;
+    height: inherit;
+    background: #223c51;
+    display: block;
+    left: 0px;
+    transition: all 300ms;
+}
+#page-wrapper {
+    position: inherit;
+    margin: 0 0 0 50px;
+    padding: 0 30px;
+    border-left: 1px solid #e7e7e7;
+}
+.menu--on {
+    width: 250px;
+    left: 0;
+    box-shadow: 8px 8px 20px 0 rgba(0, 0, 0, 0.2);
+    transition: all 300ms;
+    text-indent: 0px;
+}.sidebar .menu-label{
+     display: none;
+     transition: opacity 500ms ease-out;
+     opacity: 0;
+ }.menu--on .menu-label{
+       opacity: 1;
+       display: inline;
+       transition: opacity 500ms ease-in;
+       transition-delay: 1000ms;
+ }
+
+
+.material-design-hamburger button {
+    display: block;
+    border: none;
+    background: none;
+    outline: 0;
+}
+
+.material-design-hamburger__icon {
+    padding: 22px 10px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    float: left;
+}
+
+.material-design-hamburger__layer {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background: #194a74;
+    position: relative;
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+}
+
+.material-design-hamburger__layer:before, .material-design-hamburger__layer:after {
+    display: block;
+    width: inherit;
+    height: 3px;
+    position: absolute;
+    background: inherit;
+    left: 0;
+    content: '';
+    animation-duration: 300ms;
+    animation-timing-function: ease-in-out;
+}
+
+.material-design-hamburger__layer:before {
+    bottom: 200%;
+}
+
+.material-design-hamburger__layer:after {
+    top: 200%;
+}
+
+.material-design-hamburger__icon--to-arrow {
+    animation-name: material-design-hamburger__icon--slide;
+    animation-fill-mode: forwards;
+}
+
+.material-design-hamburger__icon--to-arrow:before {
+    animation-name: material-design-hamburger__icon--slide-before;
+    animation-fill-mode: forwards;
+}
+
+.material-design-hamburger__icon--to-arrow:after {
+    animation-name: material-design-hamburger__icon--slide-after;
+    animation-fill-mode: forwards;
+}
+
+.material-design-hamburger__icon--from-arrow {
+    animation-name: material-design-hamburger__icon--slide-from;
+}
+
+.material-design-hamburger__icon--from-arrow:before {
+    animation-name: material-design-hamburger__icon--slide-before-from;
+}
+
+.material-design-hamburger__icon--from-arrow:after {
+    animation-name: material-design-hamburger__icon--slide-after-from;
+}
+
+@keyframes material-design-hamburger__icon--slide {
+    0% {
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes material-design-hamburger__icon--slide-before {
+    0% {
+    }
+    100% {
+        transform: rotate(45deg);
+        margin: 3% 37%;
+        width: 75%;
+    }
+}
+
+@keyframes material-design-hamburger__icon--slide-after {
+    0% {
+    }
+    100% {
+        transform: rotate(-45deg);
+        margin: 3% 37%;
+        width: 75%;
+    }
+}
+
+@keyframes material-design-hamburger__icon--slide-from {
+    0% {
+        transform: rotate(-180deg);
+    }
+    100% {
+    }
+}
+
+@keyframes material-design-hamburger__icon--slide-before-from {
+    0% {
+        transform: rotate(45deg);
+        margin: 3% 37%;
+        width: 75%;
+    }
+    100% {
+    }
+}
+
+@keyframes material-design-hamburger__icon--slide-after-from {
+    0% {
+        transform: rotate(-45deg);
+        margin: 3% 37%;
+        width: 75%;
+    }
+    100% {
+    }
+}
+.tooltip-inner{
+    background: #223c51 !important;
+}.tooltip.bottom .tooltip-arrow{
+     border-bottom-color: #223c51 !important;
+}.bulkbank-table input{
+      width: 65px;
+      margin: 0px 4px;
+      text-align: center;
+      display: inline-block;
+}.active-week{
+    color: #223c51;
+}.bulkbank-table tr a {
+      margin-right: 0px;
+ }
+
 

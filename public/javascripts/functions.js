@@ -2,17 +2,37 @@
  * @desc Cargar un listado dentro de un select box
  * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
  */
+
+
+var LoadEffect = function(e)
+{
+    this.start = function() { attrElement(true) }
+
+    this.clean = function() { e.html("") }
+
+    this.finish = function() { attrElement(false) }
+
+    function attrElement(value) { return e.attr("disabled", value) }
+
+}
+
 function load_catalog(url, id, select){
-    id.html("");
+    
+    var loadEffect = new LoadEffect(id);
+    loadEffect.start();
+
     $.ajax({
         url:  '/TableList',
         type:'POST',
         data:{'url': url},
         success:function(result){
+
+            loadEffect.clean();
+
             var result = JSON.parse(result);
             id.append($('<option>', {
                 value: "",
-                html : ""
+                html : "Seleccione"
             }));
             $.each(result, function (index, value) {
                 if( value.id==select){
@@ -32,9 +52,102 @@ function load_catalog(url, id, select){
         error: function(result){
             showError(result);
         }
+    }).done(function(){
+        loadEffect.finish();
+    });
+}/**
+ * @desc Cargar un listado de hoteles dentro de un select box
+ * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
+ */
+function load_sunset_hotels(url, id, select){
+
+    var loadEffect = new LoadEffect(id);
+    loadEffect.start();
+
+    $.ajax({
+        url:  '/bulkBank',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+
+            loadEffect.clean();
+
+            var result = JSON.parse(result);
+            id.append($('<option>', {
+                value: "",
+                html : "Seleccione"
+            }));
+            $.each(result, function (index, value) {
+                if( value.clubId==select){
+                    id.append($('<option>', {
+                        value: value.clubId,
+                        html : value.name,
+                        selected: 'selected',
+                        'data-hotel': value.id
+                    }));
+                    $(".hotel-name").append(value.name);
+                }else {
+                    id.append($('<option>', {
+                        value: value.clubId,
+                        html: value.name,
+                        'data-hotel': value.id
+                    }));
+                }
+            });
+        },
+        error: function(result){
+            showError("Hubo un error al cargar los hoteles");
+        }
+    }).done(function(){
+        loadEffect.finish();
     });
 }
 
+
+function load_catalog_bulbank(url, id, select){
+
+    var loadEffect = new LoadEffect(id);
+    loadEffect.start();
+
+    $.ajax({
+        url:  '/bulkBank',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+
+            id.html('');
+
+            var result = JSON.parse(result);
+            
+            id.append($('<option>', {
+                value: "",
+                html : "Seleccione"
+            }));
+
+            $.each(result, function (index, value) {
+                var name=value.name? value.name: value.program;
+                if( value.id==select){
+                    id.append($('<option>', {
+                        value: value.id,
+                        html : name,
+                        selected: 'selected'
+                    }));
+                }else {
+                    id.append($('<option>', {
+                        value: value.id,
+                        html: name
+                    }));
+                }
+            });
+        },
+        error: function(result){
+            showError("Hubo un error al comunicarse con la API");
+        }
+    }).done(function(){
+
+        loadEffect.finish();
+    });
+}
 /**
  * @desc Cargar el listado de servicios
  * @param url: Url del servicio, id: id del select, select: en caso de seleccionar alguno
@@ -47,7 +160,6 @@ function load_subservices(url, id, select){
         data:{'url': url},
         success:function(result){
             var result = JSON.parse(result);
-            console.log(result);
             id.append($('<option>', {
                 value: "",
                 html : ""
@@ -325,11 +437,12 @@ function loadImages(url, page, select ) {
  * @desc Cargar el listado de planes alimenticios en radio select box
  * @param
  */
-function load_mealplan(selected){
+function load_mealplan(selected, url){
+    var url=url?url: '/mealplans';
     $.ajax({
         url:  '/TableList',
         type:'POST',
-        data:{'url': '/mealplans'},
+        data:{'url': url},
         error: function (err) {
             console.log(err);
         },
@@ -339,7 +452,6 @@ function load_mealplan(selected){
             var mealPlanHTML = '';
             if (data.length > 0) {
                 $.each(data, function(i, mealPlan) {
-                    console.log(selected);
                     if(mealPlan.id==selected){
                         mealPlanHTML += '<option selected=selected value="' + mealPlan.id + '">' + Decode(mealPlan.plan) + '</option>'
                     }else{
@@ -961,6 +1073,118 @@ function replace_phone(phone){
     phone="*".repeat(ast)+phone;
     return phone;
 }
+function daysByweek(w){
+    var n1 = new Date(w);
+    var n2 = new Date(w + 604800000)
+    var months=["Jan", "Feb", "March", "April", "May", "June", "July", "August", "Sep", "Oct", "Nov", "Dec"]
+    n1=n1.getDate()+"/"+months[n1.getUTCMonth()]+"/"+n1.getFullYear();
+    n2=n2.getDate()+"/"+months[n2.getUTCMonth()]+"/"+n2.getFullYear();
+    return (n1+" - "+n2)
+}
+
+function getFirstDay(year, day, week){
+    plusdays = [0,6,5,4,3,2,1];
+    firstDay = new Date(year, 0, 1).getDay();
+    var d = new Date("Jan 01, "+year+" 01:00:00");
+    var w = d.getTime() -(3600000*24*(firstDay+plusdays[day-1])) + 604800000 * (week);
+    return w;
+}
+
+$.fn.load_weeks = function (year, day) {
+    var tr=$("<tr/>");
+    $(this).find("tbody").html("");
+    var today= new Date();
+    for(i=1; i<=53; i++){
+        var module= i % 9;
+        if(module == 0 || i == 9)
+            $(this).find("tbody").append(tr);
+        var day1=getFirstDay(year, day, i);
+        class_name="";
+        if(today > new Date(day1)){
+            input=$("<input/>", {'type': 'number', 'class': 'form-control', value: 0, min: 0, name: 'quantity', disabled: "disabled"});
+        }else{
+            input=$("<input/>", {'type': 'number', 'class': 'form-control', value: 0, min: 0, name: 'quantity'})
+            class_name="active-week";
+        }
+        var n2 = new Date(day1 + 604800000);
+        if(new Date(day1).getFullYear()==year || n2.getFullYear()==year){
+            var td=$("<td/>").append(
+                $("<span/>", {'text': i > 9 ? i :"0"+i}),
+                input,
+                $("<input/>", {'type': 'hidden', 'class': 'form-control', value: 0, name: 'ids'}),
+                $("<input/>", {'type': 'hidden', 'class': 'form-control', value: i, name: 'weekDayId'}),
+                $("<i/>", {'class': 'glyphicon glyphicon-info-sign '+class_name, 'data-toggle':"tooltip",
+                    'data-placement':"top", 'title': daysByweek(day1) })
+            );
+            tr=tr.append(td);
+        }
+        if(module == 0)
+            var tr=$("<tr/>");
+    }
+    $(this).find("tbody").append(tr);
+    $('[data-toggle="tooltip"]').tooltip({html:true});
+}
+
+$.fn.load_years = function (year) {
+    var today=new Date();
+    year= year ? year : today.getFullYear();
+    for (i=year-3; i<= year+15; i++){
+        $(this).append($("<option/>", {'value': i, 'html': i}));
+    }
+    $(this).val(year);
+}
+
+$.fn.load_days = function (day) {
+    var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+    for(i=1; i<=7; i++){
+        $(this).append($("<option/>", {'value': i, html: days[i]}));
+    }
+    $(this).val(day);
+}
+
+$.fn.load_templates = function (url, template) {
+
+    var loadEffect = new LoadEffect(this);
+    loadEffect.start();
+
+    var template_select=$(this);
+    $(this).html("");
+    $.ajax({
+        url:  '/bulkBank',
+        type:'POST',
+        data:{'url': url},
+        success:function(result){
+
+            loadEffect.clean();
+
+            var result = JSON.parse(result);
+            template_select.append($('<option/>', {
+                value:"",
+                html : "Seleccione"
+            }));
+            $.each(result, function (index, value) {
+                if( value.id==template){
+                    template_select.append($('<option/>', {
+                        value: value.id,
+                        html : value.name,
+                        selected: 'selected'
+                    }));
+                }else {
+                    template_select.append($('<option/>', {
+                        value: value.id,
+                        html: value.name
+                    }));
+                }
+            });
+
+        },
+        error: function(result){
+            showError("Hubo un error al comunicarse con la API");
+        }
+    }).done(function () {
+        loadEffect.finish();
+    });
+}
 
 $.fn.sumaEle = function () {
     sum=parseFloat(0);
@@ -972,6 +1196,89 @@ $.fn.sumaEle = function () {
         }
     });
     return sum;
+}
+
+$.fn.load_template = function (id, year, day) {
+    var div=$(this);
+    div.html("");
+    $.ajax({
+        url: '/bulkBank',
+        type: 'POST',
+        data: {'url': '/templateBulkBank/'+id},
+        success: function (result) {
+            var result =  $.parseJSON(result);
+            div.display_template(result, year, day);
+            div.find(".sk-chasing-dots").hide();
+            load_sunset_hotels("/hotel", $("#hotel"), result.clubId);
+            $("#template").load_templates("/templateBulkBank/list?clubId="+result.clubId, id);
+        }
+    });
+}
+$.fn.load_bulkbank = function (id, year, day) {
+    var div=$(this);
+    div.find(".sk-chasing-dots").show();
+    $.ajax({
+        url: '/bulkBank',
+        type: 'POST',
+        data: {'url': '/bulkBank/'+id},
+        success: function (result) {
+            div.html("");
+            var result =  $.parseJSON(result);
+            div.display_template(result.templateBulkBank, year, day);
+            div.find(".sk-chasing-dots").hide();
+            load_sunset_hotels("/hotel", $("#hotel"), result.templateBulkBank.clubId);
+            $("#quantity").val(result.quantity);
+            $("#bulkBankId").val(result.id);
+            console.log(result.checkIn);
+            var checkin= new Date(result.checkIn);
+            checkin = checkin.getFullYear()+ '-'
+                + ('0' + (checkin.getMonth()+1)).slice(-2) + '-'
+                + ('0' + checkin.getDate()).slice(-2);
+            $("#checkin").val(checkin);
+            var checkout= new Date(result.checkOut);
+            checkout = checkout.getFullYear()+ '-'
+                + ('0' + (checkout.getMonth()+1)).slice(-2) + '-'
+                + ('0' + checkout.getDate()).slice(-2);
+            $("#checkout").val(checkout);
+            $("#template").load_templates("/templateBulkBank/list?clubId="+result.templateBulkBank.clubId, id);
+        }
+    });
+}
+$.fn.display_template = function (result, year, day) {
+    var days=["","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+    var year_day="";
+    if(year && day){
+        year_day=$("<div/>", {class: 'col-sm-6'}).append($("<div/>",{class: 'row'})
+            .append($("<p/>", {class: 'col-sm-6', text: year})
+                .prepend($("<strong/>", {html: "Year: "}) ),
+                $("<p/>", {class: 'col-sm-6', text: days[day]})
+                    .prepend($("<strong/>", {html: "Day: "}))
+            )
+        );
+    }
+    $(this).append($("<p/>", {class: 'col-sm-6', text: result.name})
+        .prepend($("<strong/>", {html: "Template: "}) ), year_day);
+    var split_name=result.split? result.split.name: "";
+
+    var unit=result.unit ? result.unit.name : "";
+    var unit_split=$("<div/>", {class: 'col-sm-6'}).append($("<div/>",{class: 'row'})
+        .append($("<p/>", {class: 'col-sm-6', text: unit})
+            .prepend($("<strong/>", {html: "Unit: "}) ),
+            $("<p/>", {class: 'col-sm-6', text: split_name})
+                .prepend($("<strong/>", {html: "Split: "}))
+        )
+    );
+
+    $(this).append($("<p/>", {class: 'col-sm-6 hotel-name', text: ''})
+        .prepend($("<strong/>", {html: "Hotel: "}) ), unit_split);
+    var plan= result.plan ? result.plan.plan : "";
+    $(this).append(
+        $("<p/>", {class: 'col-sm-3', text: plan}).prepend($("<strong/>", {html: "Plan: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: result.adults}).prepend($("<strong/>", {html: "Adults: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: result.children}).prepend($("<strong/>", {html: "Children: "}) ),
+        $("<p/>", {class: 'col-sm-3', text: result.rate}).prepend($("<strong/>", {html: "Rate: "}) ),
+        $("<p/>", {class: 'col-sm-12', text: result.observations}).prepend($("<strong/>", {html: "Observations: "}) )
+    );
 }
 
 $.fn.alerts = function (user) {
@@ -1027,7 +1334,6 @@ $.fn.notifications = function (user) {
         data:{'url': url},
         success:function(result){
             result = JSON.parse(result);
-            console.log(result);
             var number = result ? result.length : 0;
             $("#number-noti").html(number);
             var divider= $("<li/>",{'class': 'divider'});
@@ -1061,6 +1367,24 @@ $.fn.notifications = function (user) {
         }
     });
 }
+
+function load_bulkbank(value){
+    var td=$(".bulkbank-table").find("td").eq(value.weekDayId-1);
+    $(td).find("input[type=number]").val(value.quantity);
+    var title=$(td).find(".glyphicon").attr("data-original-title");
+    var confirmationNumber= value.confirmationNumber2 ?
+        (value.confirmationNumber+ "-" + value.confirmationNumber2) : value.confirmationNumber;
+    title=title.split('<br/>')[0];
+    if(value.quantity==0){
+        $(td).find("input[name=ids]").val(0);
+        $(td).find(".glyphicon").attr("data-original-title", title);
+    } else{
+        var text=$(td).find("span").text();
+        $(td).find("span").replaceWith($("<a/>", {text: text, 'data-toggle': 'modal', 'data-target': '#breakdown', class: 'addBreakdown'}));
+        $(td).find("input[name=ids]").val(value.id);
+        $(td).find(".glyphicon").attr("data-original-title", title+ " <br/> "+ confirmationNumber);
+    }
+}
 $.fn.foliosByCampaign = function () {
     //Obtener Follow Ups
     var url="/certificates/getFoliosbyActiveCampaigns";
@@ -1070,7 +1394,6 @@ $.fn.foliosByCampaign = function () {
         type:'POST',
         data:{'url': url},
         success:function(result){
-            console.log(result);
             result = JSON.parse(result);
             var number = result ? result.length : 0;
             $("#number-campaigns").html(number);

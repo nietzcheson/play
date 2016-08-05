@@ -13,7 +13,8 @@ public class Security extends Secure.Security{
     }
 
     static boolean check(String resource) {
-        String userlevel= Scope.Session.current().get("user_token").replace("[", "").replace("]", "").replaceAll("\"", "");
+        String userlevel= Scope.Session.current().get("user_token") !=null ?
+                Scope.Session.current().get("user_token").replace("[", "").replace("]", "").replaceAll("\"", ""): "";
         String[] permisos= userlevel.split(",");
         return Arrays.asList(permisos).contains(resource);
     }

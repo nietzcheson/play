@@ -1,19 +1,20 @@
 #{extends 'main.html' /}
 #{set title:'New Client' /}
+
+*{<link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">}*
+#{set 'moreStyles'}
 <link rel="stylesheet" href="/public/stylesheets/vendor/selectizejs/selectize.default.css">
 <link rel="stylesheet" href="/public/stylesheets/pages/validated-forms.css">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
 <link rel="stylesheet" href="/public/stylesheets/libs/bootstrap-select/ajax-bootstrap-select.css"/>
-<link rel="stylesheet" href="/public/stylesheets/pages/leads.view.css">
-#{set 'moreStyles'}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 #{/set}
 #{set 'moreScripts'}
 <script src="/public/javascripts/form.validation.js"></script>
 <script src="/public/javascripts/leads/create.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="/public/javascripts/vendor/masked-input/jquery.maskedinput.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+*{<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>}*
 <script type="text/javascript" src="/public/javascripts/libs/bootstrap-select/ajax-bootstrap-select.min.js"></script>
 #{if !id }
 <script>
@@ -472,8 +473,7 @@
                              <input type="submit" class="btn btn-primary" value="&{'save'}" id="submit" />&nbsp;&nbsp;&nbsp;&{'or'}
                         #{/secure.check}
                     #{/else}
-                    <a href="/clients" class="btn">&{'cancel'}</a>
-                    <br /><br />
+                    <a href="@{Leads.list()}" class="btn">&{'cancel'}</a>
                 </form>
             </div>
         </div>
