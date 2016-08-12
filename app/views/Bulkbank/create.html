@@ -204,7 +204,7 @@
             var data = $(this).serialize();
 
             var submitButton = $(this).find(":submit");
-            submitButton.button("loading");
+            //submitButton.button("loading");
 
             var form=$(this);
             $.ajax({
@@ -214,6 +214,8 @@
                 success: function(result) {
                     result = JSON.parse(result);
                     console.log(result);
+
+
                     /*result = {
                         quantity: 1,
                         userName: "XSIERRA",
@@ -236,13 +238,13 @@
                             var col=form.find(".col-sm-10:eq("+index+")");
                             debugger;
                             if(value.status=="Successful"){
-                                col.append($("<div/>", {class: 'alert alert-success', 'role':'alert',
+                                col.html($("<div/>", {class: 'alert alert-success', 'role':'alert',
                                     text: 'Successful: M4SG Reservation '+value.reservationIdM4SG
                                     +' Hotel Reservation '+value.reservationIdHotel}))
                             }else if(value.status=="Error: Updating on M4SG"){
-                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status+ "button"}))
+                                col.html($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status+ "button"}))
                             }else{
-                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status}))
+                                col.html($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status}))
                             }
                         });
                         bulkbank();
