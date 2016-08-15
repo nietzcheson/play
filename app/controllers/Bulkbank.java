@@ -7,7 +7,11 @@ import com.google.gson.JsonObject;
 import play.libs.WS;
 import play.mvc.Scope;
 import play.mvc.With;
+import services.M4CBBReservacionesService;
+import services.ReservationDTO;
 import util.Constants;
+
+import java.util.List;
 
 /**
  * Created by desarrollo1 on 18/04/2016.
@@ -44,10 +48,16 @@ public class Bulkbank extends MasterController {
             editMode = true;
         else
             editMode = false;
+
+
+        List<ReservationDTO> reservations= new M4CBBReservacionesService().getFailures();
+        renderArgs.put("reservations", reservations);
         renderArgs.put("editMode", editMode);
         renderArgs.put("templateId", templateId);
         renderArgs.put("year", year);
         renderArgs.put("day", day);
+        //renderArgs.put("failures", m4CBBReservacionesService.getFailures());
+
         render();
     }
 

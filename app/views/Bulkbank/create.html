@@ -277,37 +277,44 @@
             </div>
             <div class="clearfix"></div>
             <div class="ibox-content">
-                <form role="form" action="" method="post" id="bulkbank-search">
-                    <div class="sk-chasing-dots">
-                        <div class="sk-child sk-dot1"></div>
-                        <div class="sk-child sk-dot2"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form" action="" method="post" id="bulkbank-search">
+                            <div class="sk-chasing-dots">
+                                <div class="sk-child sk-dot1"></div>
+                                <div class="sk-child sk-dot2"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Hotel</label>
+                                    <select  class="form-control" name="hotel" id="hotel"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Template</label>
+                                    <select  class="form-control" name="template" id="template"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Year</label>
+                                    <select  class="form-control" name="year" id="year"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Day</label>
+                                    <select  class="form-control" name="day" id="day"></select>
+                                </div>
+                                <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'search'}">
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Hotel</label>
-                            <select  class="form-control" name="hotel" id="hotel"></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Template</label>
-                            <select  class="form-control" name="template" id="template"></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Year</label>
-                            <select  class="form-control" name="year" id="year"></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Day</label>
-                            <select  class="form-control" name="day" id="day"></select>
-                        </div>
-                        <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'search'}">
-                    </div>
-                </form>
+                </div>
+
+
             </div>
         </div>
         <div class="clearfix"></div><br /><br />
@@ -324,22 +331,76 @@
                     </div>
                 </div>
                 <div class="clearfix"></div><br/><br/>
-                <form role="form" action="" method="post" id="bulkbank-save">
-                    <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
-                    <input type="hidden" name="year" id="year" value="${year}" />
-                    <input type="hidden" name="weekDay" id="weekDay" value="${day}" />
-                    <table class="table table-bordered bulkbank-table">
-                        <tbody>
 
-                        </tbody>
-                    </table>
-                    <button type="submit" class="btn btn-primary pull-right" data-loading-text="Creating...">&{'save'}</button>
-                </form>
+
+                <div class="panel panel-default">
+                    <div class="panel panel-heading">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#breakdowns" aria-controls="breakdowns" role="tab" data-toggle="tab">Breakdowns</a></li>
+                            <li role="presentation"><a href="#breakdowns-failed" aria-controls="profile" role="tab" data-toggle="tab">Failed</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel panel-body">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="breakdowns">
+
+                                <form role="form" action="" method="post" id="bulkbank-save">
+                                    <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
+                                    <input type="hidden" name="year" id="year" value="${year}" />
+                                    <input type="hidden" name="weekDay" id="weekDay" value="${day}" />
+                                    <table class="table table-bordered bulkbank-table">
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                    <button type="submit" class="btn btn-primary pull-right" data-loading-text="Creating...">&{'save'}</button>
+                                </form>
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="breakdowns-failed">
+                                <div class="col-lg-6">
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        #{list reservations }
+                                            <tr>
+                                                <td>${_.name}</td>
+                                                <td>
+                                                    <button class="btn btn-default">Re enviar</button>
+                                                </td>
+                                            </tr>
+                                        #{/list}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nav tabs -->
+
+
+                <!-- Tab panes -->
+
+
+            </div>
+
+
             </div>
             <div class="clearfix"></div><br /><br />
         </div>
         <!-- /.panel -->
     </div>
+</div>
+
 <div class="modal fade" id="breakdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -363,5 +424,4 @@
             </form>
         </div>
     </div>
-</div>
 </div>
