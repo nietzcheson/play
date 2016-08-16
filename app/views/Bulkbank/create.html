@@ -7,6 +7,7 @@
 
 #{set 'moreScripts'}
 <script src="/public/javascripts/form.validation.js"></script>
+<script src="/public/js/bulkbank/resend-bulkbank.js"></script>
 <script>
     $(document).ready(function() {
         $("#year").load_years(${year});
@@ -336,13 +337,13 @@
                 <div class="panel panel-default">
                     <div class="panel panel-heading">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#breakdowns" aria-controls="breakdowns" role="tab" data-toggle="tab">Breakdowns</a></li>
-                            <li role="presentation"><a href="#breakdowns-failed" aria-controls="profile" role="tab" data-toggle="tab">Failed</a></li>
+                            <li role="presentation"><a href="#breakdowns" aria-controls="breakdowns" role="tab" data-toggle="tab">Breakdowns</a></li>
+                            <li role="presentation" class="active"><a href="#breakdowns-failed" aria-controls="profile" role="tab" data-toggle="tab">Failed</a></li>
                         </ul>
                     </div>
                     <div class="panel panel-body">
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="breakdowns">
+                            <div role="tabpanel" class="tab-pane" id="breakdowns">
 
                                 <form role="form" action="" method="post" id="bulkbank-save">
                                     <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
@@ -357,21 +358,24 @@
                                 </form>
 
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="breakdowns-failed">
+                            <div role="tabpanel" class="tab-pane active" id="breakdowns-failed">
                                 <div class="col-lg-6">
+                                    <div id="failed-alert"></div>
                                     <table class="table table-condensed">
                                         <thead>
                                             <tr>
-                                                <th>Nombre</th>
+                                                <th>Reservation M4SG</th>
+                                                <th>Name</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         #{list reservations }
                                             <tr>
+                                                <td>${ _.id}</td>
                                                 <td>${_.name}</td>
-                                                <td>
-                                                    <button class="btn btn-default">Re enviar</button>
+                                                <td class="text-right">
+                                                    <button type="button" class="btn btn-default resend-bulkbank" id="${_.id}" data-loading-text="Sending...">Re enviar</button>
                                                 </td>
                                             </tr>
                                         #{/list}

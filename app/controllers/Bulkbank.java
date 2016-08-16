@@ -1,14 +1,13 @@
 package controllers;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dao.M4CBBReservacionDTO;
 import play.libs.WS;
 import play.mvc.Scope;
 import play.mvc.With;
 import services.M4CBBReservacionesService;
-import services.ReservationDTO;
+import dao.M4CBBReservacionesDTO;
 import util.Constants;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class Bulkbank extends MasterController {
             editMode = false;
 
 
-        List<ReservationDTO> reservations= new M4CBBReservacionesService().getFailures();
+        List<M4CBBReservacionesDTO> reservations = new M4CBBReservacionesService().getFailures(templateId, year);
         renderArgs.put("reservations", reservations);
         renderArgs.put("editMode", editMode);
         renderArgs.put("templateId", templateId);
@@ -181,6 +180,12 @@ public class Bulkbank extends MasterController {
         } catch (Exception excepcion) {
             renderText("error");
         }
+    }
+
+    public static void resendBulkBank(int id)
+    {
+        JsonObject resend = new M4CBBReservacionesService().resendBulkBank(id);
+        renderText(resend);
     }
 
 }
