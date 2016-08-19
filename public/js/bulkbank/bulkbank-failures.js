@@ -43,6 +43,12 @@
                         $("#failures-table tbody").remove();
                         $("#failures-table").append(tbody);
 
+                        $('.resend-bulkbank').on('click', function () {
+
+                            $(this).bulkbankResend();
+
+                        });
+
                     }
                 });
 

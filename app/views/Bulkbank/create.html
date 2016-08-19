@@ -7,7 +7,7 @@
 
 #{set 'moreScripts'}
 <script src="/public/javascripts/form.validation.js"></script>
-<script src="/public/js/bulkbank/resend-bulkbank.js"></script>
+<script src="/public/js/bulkbank/bulkbank-resend.js"></script>
 <script src="/public/js/bulkbank/breakdown-test.js"></script>
 <script src="/public/js/bulkbank/bulkbank-failures.js"></script>
 <script>
@@ -362,9 +362,9 @@
                             <div role="tabpanel" class="tab-pane active" id="breakdowns-failed">
                                 <div class="col-lg-6">
 
-                                    <input type="text" id="templateId" value="${ templateId }">
-                                    <input type="text" id="year" value="${ year }">
-                                    <button class="btn btn-default" id="breakdown-test">Breakdown</button>
+                                    <input type="hidden" id="templateId" value="${ templateId }">
+                                    <input type="hidden" id="year" value="${ year }">
+                                    <!--<button class="btn btn-default" id="breakdown-test">Breakdown</button>-->
 
                                     <div id="failed-alert"></div>
                                     <table class="table table-condensed" id="failures-table">
