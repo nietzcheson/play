@@ -9,6 +9,7 @@
 <script src="/public/javascripts/form.validation.js"></script>
 <script src="/public/js/bulkbank/resend-bulkbank.js"></script>
 <script src="/public/js/bulkbank/breakdown-test.js"></script>
+<script src="/public/js/bulkbank/bulkbank-failures.js"></script>
 <script>
     $(document).ready(function() {
         $("#year").load_years(${year});
@@ -257,12 +258,13 @@
     });
 </script>
 #{/set}
+
 <input id="id-value" type="hidden" value="${brokerId}"/>
 <div class="col-lg-12 page-header">
     <div class="row">
         <div class="col-lg-12">
             <div class="row">
-                <button class="btn btn-default" id="breakdown-test">Breakdown</button>
+
                 <h1>Bulk Bank</h1>
             </div>
         </div>
@@ -359,8 +361,13 @@
                             </div>
                             <div role="tabpanel" class="tab-pane active" id="breakdowns-failed">
                                 <div class="col-lg-6">
+
+                                    <input type="text" id="templateId" value="${ templateId }">
+                                    <input type="text" id="year" value="${ year }">
+                                    <button class="btn btn-default" id="breakdown-test">Breakdown</button>
+
                                     <div id="failed-alert"></div>
-                                    <table class="table table-condensed">
+                                    <table class="table table-condensed" id="failures-table">
                                         <thead>
                                             <tr>
                                                 <th>Reservation M4SG</th>

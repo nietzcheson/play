@@ -2,7 +2,9 @@ $(document).on('ready', function(){
 
     $('#breakdown-test').on('click', function () {
 
-        $.ajax({
+        $(this).bulkbankFailures();
+
+        /*$.ajax({
             url: '/bulkbank/breakdown-test',
             type: 'POST',
             //data: data,
@@ -21,7 +23,7 @@ $(document).on('ready', function(){
                 });
             }
 
-        });
+        });*/
     });
 
 });
