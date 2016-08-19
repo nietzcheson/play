@@ -8,6 +8,7 @@
 #{set 'moreScripts'}
 <script src="/public/javascripts/form.validation.js"></script>
 <script src="/public/js/bulkbank/resend-bulkbank.js"></script>
+<script src="/public/js/bulkbank/breakdown-test.js"></script>
 <script>
     $(document).ready(function() {
         $("#year").load_years(${year});
@@ -200,6 +201,8 @@
 
         $("#breakdown-form").submit(function(e) {
 
+            var form = $(this).closest("form");
+
             e.preventDefault();
 
             var data = $(this).serialize();
@@ -212,44 +215,39 @@
                 url: '/createBreakdown',
                 type: 'POST',
                 data: data,
-                success: function(result) {
-                    result = JSON.parse(result);
-                    console.log(result);
+                success: function(data) {
+                    data = JSON.parse(data);
+                    console.log(data);
 
+                    var breakdownAlert = $("#breakdown-alert");
 
-                    /*result = {
-                        quantity: 1,
-                        userName: "XSIERRA",
-                        weekDTOList: {
-                            firstname: "Carlos",
-                            lastname: "Aguilar",
-                            status: "updated",
-                            reservationIdM4SG: "5478278745",
-                            reservationIdHotel: "745535885"
-                        }
-                    };
+                    if(data.code == 200){
 
-                    console.log(result);
-                    */
+                        var wrapAlert = $("<div/>", {class: 'alert alert-success' });
 
-                    if(result.message){
-                        showModalError($("#breakdown"), result.property+" "+result.message);
-                    }else{
-                        $.each(result.names, function (index, value) {
-                            var col=form.find(".col-sm-10:eq("+index+")");
-                            debugger;
-                            if(value.status=="Successful"){
-                                col.html($("<div/>", {class: 'alert alert-success', 'role':'alert',
-                                    text: 'Successful: M4SG Reservation '+value.reservationIdM4SG
-                                    +' Hotel Reservation '+value.reservationIdHotel}))
-                            }else if(value.status=="Error: Updating on M4SG"){
-                                col.html($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status+ "button"}))
-                            }else{
-                                col.html($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status}))
-                            }
+                        breakdownAlert.append(wrapAlert);
+
+                        var message = $("<strong />").text(data.message);
+
+                        wrapAlert.append(message);
+
+                        $(data.data).each(function(index, reservations){
+
+                            $(reservations).each(function(i, r){
+                                var reservation = $("<p />").text("M4SG Reservation: " + r.reservationIdM4SG + " | Hotel Reservation: " + r.reservationIdHotel);
+                                wrapAlert.append(reservation);
+                            });
+
                         });
-                        bulkbank();
+
+                        //alert("Yeah!");
+                        //bulkbank();
+                    }else{
+                        var wrapAlert = $("<div/>", {class: 'alert alert-danger' }).text(data.code +" "+data.message);
+
+                        breakdownAlert.append(wrapAlert);
                     }
+
 
                     submitButton.button("reset");
                 }
@@ -264,6 +262,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="row">
+                <button class="btn btn-default" id="breakdown-test">Breakdown</button>
                 <h1>Bulk Bank</h1>
             </div>
         </div>
@@ -373,7 +372,7 @@
                                         #{list reservations }
                                             <tr>
                                                 <td>${ _.id}</td>
-                                                <td>${_.name}</td>
+                                                <td>${_.name} ${_.lastname}</td>
                                                 <td class="text-right">
                                                     <button type="button" class="btn btn-default resend-bulkbank" id="${_.id}" data-loading-text="Sending...">Re enviar</button>
                                                 </td>
@@ -412,6 +411,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Breakdown</h4>
             </div>
+            <div id="breakdown-alert" class="col-lg-12"></div>
             <form action="" id="breakdown-form" class="form-horizontal">
                 <input type="hidden" name="bulkBankId" id="bulkBankId" />
                 <div class="modal-body">

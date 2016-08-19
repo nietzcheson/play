@@ -124,6 +124,7 @@ GET /bulkbank/?                                         Bulkbank.list
 GET /bulkbank/{templateId}/{year}/{day}/?               Bulkbank.create
 GET /bulkbank/create/?                                  Bulkbank.create
 GET /bulkbank/resend-bulkbank/{id}                      Bulkbank.resendBulkBank
+POST /bulkbank/breakdown-test                            Bulkbank.breakdownTest
 POST /createBulkbank/?                                  Bulkbank.createBulkbank
 POST /createBreakdown/?                                 Bulkbank.createBreakdown
 POST /createBulkbankOtas/?                              Bulkbank.createBulkBankOtas

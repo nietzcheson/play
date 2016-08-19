@@ -14,21 +14,28 @@ $(document).on('ready', function(){
 
                 data = JSON.parse(data);
 
-                if(data.status == 200){
+                console.log(data);
+
+                if(data.code == 200){
 
                     var alert = $("<div />", { "class": "alert alert-info" });
-                    var idM4SG = $("<p />").text("Reservation M4SG: " + data.reservationIdM4SG);
-                    var idHotel = $("<p />").text("Reservation Hotel: " + data.reservationIdHotel);
 
-                    alert.append(idM4SG);
-                    alert.append(idHotel);
+                    $(data.data).each(function (i, e) {
+                        var idM4SG = $("<p />").text("Reservation M4SG: " + e.reservationIdM4SG);
+                        var idHotel = $("<p />").text("Reservation Hotel: " + e.reservationIdHotel);
 
-                    $("#failed-alert").html(alert);
+                        alert.append(idM4SG);
+                        alert.append(idHotel);
+                    });
+
+
+                    $("#failed-alert").append(alert);
 
                     var tr = button.closest("tr");
 
                     tr.remove();
                 }
+
             }
         });
     });

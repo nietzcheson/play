@@ -188,4 +188,27 @@ public class Bulkbank extends MasterController {
         renderText(resend);
     }
 
+    public static void breakdownTest()
+    {
+        WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank/breakdown-test").authenticate(user, password);
+        request.body = params;
+        request.mimeType = "application/json";
+
+        WS.HttpResponse response = request.post();
+
+        JsonObject reservacion = new JsonObject();
+
+        if(response.getStatus() == 200){
+
+            reservacion = response.getJson().getAsJsonObject();
+        }
+
+        //response.getJson().getAsJsonObject();
+
+        renderText(reservacion);
+
+
+
+    }
+
 }

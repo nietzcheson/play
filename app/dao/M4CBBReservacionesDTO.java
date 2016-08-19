@@ -7,6 +7,7 @@ public class M4CBBReservacionesDTO
 {
     private String id;
     private String name;
+    private String lastname;
 
     public String getId() {
         return id;
@@ -24,13 +25,11 @@ public class M4CBBReservacionesDTO
         this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
-
-    private String lastName;
 }
