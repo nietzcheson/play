@@ -7,6 +7,9 @@
 
 #{set 'moreScripts'}
 <script src="/public/javascripts/form.validation.js"></script>
+<script src="/public/js/bulkbank/bulkbank-resend.js"></script>
+<script src="/public/js/bulkbank/breakdown-test.js"></script>
+<script src="/public/js/bulkbank/bulkbank-failures.js"></script>
 <script>
     $(document).ready(function() {
         $("#year").load_years(${year});
@@ -199,6 +202,8 @@
 
         $("#breakdown-form").submit(function(e) {
 
+            var form = $(this).closest("form");
+
             e.preventDefault();
 
             var data = $(this).serialize();
@@ -211,42 +216,41 @@
                 url: '/createBreakdown',
                 type: 'POST',
                 data: data,
-                success: function(result) {
-                    result = JSON.parse(result);
-                    console.log(result);
-                    /*result = {
-                        quantity: 1,
-                        userName: "XSIERRA",
-                        weekDTOList: {
-                            firstname: "Carlos",
-                            lastname: "Aguilar",
-                            status: "updated",
-                            reservationIdM4SG: "5478278745",
-                            reservationIdHotel: "745535885"
-                        }
-                    };
+                success: function(data) {
+                    data = JSON.parse(data);
+                    console.log(data);
 
-                    console.log(result);
-                    */
+                    var breakdownAlert = $("#breakdown-alert");
 
-                    if(result.message){
-                        showModalError($("#breakdown"), result.property+" "+result.message);
-                    }else{
-                        $.each(result.names, function (index, value) {
-                            var col=form.find(".col-sm-10:eq("+index+")");
-                            debugger;
-                            if(value.status=="Successful"){
-                                col.append($("<div/>", {class: 'alert alert-success', 'role':'alert',
-                                    text: 'Successful: M4SG Reservation '+value.reservationIdM4SG
-                                    +' Hotel Reservation '+value.reservationIdHotel}))
-                            }else if(value.status=="Error: Updating on M4SG"){
-                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status+ "button"}))
-                            }else{
-                                col.append($("<div/>", {class: 'alert alert-danger', 'role':'alert',  text: value.status}))
-                            }
+                    if(data.code == 200){
+
+                        var wrapAlert = $("<div/>", {class: 'alert alert-success' });
+
+                        breakdownAlert.append(wrapAlert);
+
+                        var message = $("<strong />").text(data.message);
+
+                        wrapAlert.append(message);
+
+                        $(data.data).each(function(index, reservations){
+
+                            $(reservations).each(function(i, r){
+                                var reservation = $("<p />").text("M4SG Reservation: " + r.reservationIdM4SG + " | Hotel Reservation: " + r.reservationIdHotel);
+                                wrapAlert.append(reservation);
+                            });
+
                         });
-                        bulkbank();
+
+                    }else{
+                        var wrapAlert = $("<div/>", {class: 'alert alert-danger' }).text(data.code +" "+data.message);
+
+                        breakdownAlert.append(wrapAlert);
+
+                        $(this).bulkbankFailures();
                     }
+
+                    bulkbank();
+
 
                     submitButton.button("reset");
                 }
@@ -256,11 +260,13 @@
     });
 </script>
 #{/set}
+
 <input id="id-value" type="hidden" value="${brokerId}"/>
 <div class="col-lg-12 page-header">
     <div class="row">
         <div class="col-lg-12">
             <div class="row">
+
                 <h1>Bulk Bank</h1>
             </div>
         </div>
@@ -275,37 +281,44 @@
             </div>
             <div class="clearfix"></div>
             <div class="ibox-content">
-                <form role="form" action="" method="post" id="bulkbank-search">
-                    <div class="sk-chasing-dots">
-                        <div class="sk-child sk-dot1"></div>
-                        <div class="sk-child sk-dot2"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form" action="" method="post" id="bulkbank-search">
+                            <div class="sk-chasing-dots">
+                                <div class="sk-child sk-dot1"></div>
+                                <div class="sk-child sk-dot2"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Hotel</label>
+                                    <select  class="form-control" name="hotel" id="hotel"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Template</label>
+                                    <select  class="form-control" name="template" id="template"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Year</label>
+                                    <select  class="form-control" name="year" id="year"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Day</label>
+                                    <select  class="form-control" name="day" id="day"></select>
+                                </div>
+                                <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'search'}">
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Hotel</label>
-                            <select  class="form-control" name="hotel" id="hotel"></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Template</label>
-                            <select  class="form-control" name="template" id="template"></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Year</label>
-                            <select  class="form-control" name="year" id="year"></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Day</label>
-                            <select  class="form-control" name="day" id="day"></select>
-                        </div>
-                        <input type="submit" id="submit" class="btn btn-primary pull-right" value="&{'search'}">
-                    </div>
-                </form>
+                </div>
+
+
             </div>
         </div>
         <div class="clearfix"></div><br /><br />
@@ -322,22 +335,84 @@
                     </div>
                 </div>
                 <div class="clearfix"></div><br/><br/>
-                <form role="form" action="" method="post" id="bulkbank-save">
-                    <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
-                    <input type="hidden" name="year" id="year" value="${year}" />
-                    <input type="hidden" name="weekDay" id="weekDay" value="${day}" />
-                    <table class="table table-bordered bulkbank-table">
-                        <tbody>
 
-                        </tbody>
-                    </table>
-                    <button type="submit" class="btn btn-primary pull-right" data-loading-text="Creating...">&{'save'}</button>
-                </form>
+
+                <div class="panel panel-default">
+                    <div class="panel panel-heading">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation"><a href="#breakdowns" aria-controls="breakdowns" role="tab" data-toggle="tab">Breakdowns</a></li>
+                            <li role="presentation" class="active"><a href="#breakdowns-failed" aria-controls="profile" role="tab" data-toggle="tab">Failed</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel panel-body">
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane" id="breakdowns">
+
+                                <form role="form" action="" method="post" id="bulkbank-save">
+                                    <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
+                                    <input type="hidden" name="year" id="year" value="${year}" />
+                                    <input type="hidden" name="weekDay" id="weekDay" value="${day}" />
+                                    <table class="table table-bordered bulkbank-table">
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                    <button type="submit" class="btn btn-primary pull-right" data-loading-text="Creating...">&{'save'}</button>
+                                </form>
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane active" id="breakdowns-failed">
+                                <div class="col-lg-6">
+
+                                    <input type="hidden" id="templateId" value="${ templateId }">
+                                    <input type="hidden" id="year" value="${ year }">
+                                    <!--<button class="btn btn-default" id="breakdown-test">Breakdown</button>-->
+
+                                    <div id="failed-alert"></div>
+                                    <table class="table table-condensed" id="failures-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Reservation M4SG</th>
+                                                <th>Name</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        #{list reservations }
+                                            <tr>
+                                                <td>${ _.id}</td>
+                                                <td>${_.name} ${_.lastname}</td>
+                                                <td class="text-right">
+                                                    <button type="button" class="btn btn-default resend-bulkbank" id="${_.id}" data-loading-text="Sending...">Re enviar</button>
+                                                </td>
+                                            </tr>
+                                        #{/list}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nav tabs -->
+
+
+                <!-- Tab panes -->
+
+
+            </div>
+
+
             </div>
             <div class="clearfix"></div><br /><br />
         </div>
         <!-- /.panel -->
     </div>
+</div>
+
 <div class="modal fade" id="breakdown" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -345,6 +420,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Breakdown</h4>
             </div>
+            <div id="breakdown-alert" class="col-lg-12"></div>
             <form action="" id="breakdown-form" class="form-horizontal">
                 <input type="hidden" name="bulkBankId" id="bulkBankId" />
                 <div class="modal-body">
@@ -361,5 +437,4 @@
             </form>
         </div>
     </div>
-</div>
 </div>

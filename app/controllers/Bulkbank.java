@@ -1,13 +1,17 @@
 package controllers;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dao.M4CBBReservacionDTO;
 import play.libs.WS;
 import play.mvc.Scope;
 import play.mvc.With;
+import services.M4CBBReservacionesService;
+import dao.M4CBBReservacionesDTO;
 import util.Constants;
+
+import java.util.List;
 
 /**
  * Created by desarrollo1 on 18/04/2016.
@@ -44,10 +48,16 @@ public class Bulkbank extends MasterController {
             editMode = true;
         else
             editMode = false;
+
+
+        List<M4CBBReservacionesDTO> reservations = new M4CBBReservacionesService().failuresDTO(templateId, year);
+        renderArgs.put("reservations", reservations);
         renderArgs.put("editMode", editMode);
         renderArgs.put("templateId", templateId);
         renderArgs.put("year", year);
         renderArgs.put("day", day);
+        //renderArgs.put("failures", m4CBBReservacionesService.getFailures());
+
         render();
     }
 
@@ -171,6 +181,42 @@ public class Bulkbank extends MasterController {
         } catch (Exception excepcion) {
             renderText("error");
         }
+    }
+
+    public static void resendBulkBank(int id)
+    {
+        JsonObject resend = new M4CBBReservacionesService().resendBulkBank(id);
+        renderText(resend);
+    }
+
+    public static void breakdownFailures()
+    {
+        String reservations = new M4CBBReservacionesService().failuresJson(Long.parseLong(params.get("template")), Integer.parseInt(params.get("year")));
+
+        renderText(reservations);
+    }
+
+    public static void breakdownTest()
+    {
+        WS.WSRequest request = WS.url(Constants.API_Bulkbank + "/bulkBank/breakdown-test").authenticate(user, password);
+        request.body = params;
+        request.mimeType = "application/json";
+
+        WS.HttpResponse response = request.post();
+
+        JsonObject reservacion = new JsonObject();
+
+        if(response.getStatus() == 200){
+
+            reservacion = response.getJson().getAsJsonObject();
+        }
+
+        //response.getJson().getAsJsonObject();
+
+        renderText(reservacion);
+
+
+
     }
 
 }
