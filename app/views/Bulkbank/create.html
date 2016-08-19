@@ -209,7 +209,7 @@
             var data = $(this).serialize();
 
             var submitButton = $(this).find(":submit");
-            //submitButton.button("loading");
+            submitButton.button("loading");
 
             var form=$(this);
             $.ajax({
@@ -241,13 +241,15 @@
 
                         });
 
-                        //alert("Yeah!");
-                        //bulkbank();
                     }else{
                         var wrapAlert = $("<div/>", {class: 'alert alert-danger' }).text(data.code +" "+data.message);
 
                         breakdownAlert.append(wrapAlert);
+
+                        $(this).bulkbankFailures();
                     }
+
+                    bulkbank();
 
 
                     submitButton.button("reset");
