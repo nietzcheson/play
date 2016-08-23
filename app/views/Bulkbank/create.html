@@ -340,13 +340,13 @@
                 <div class="panel panel-default">
                     <div class="panel panel-heading">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation"><a href="#breakdowns" aria-controls="breakdowns" role="tab" data-toggle="tab">Breakdowns</a></li>
-                            <li role="presentation" class="active"><a href="#breakdowns-failed" aria-controls="profile" role="tab" data-toggle="tab">Failed</a></li>
+                            <li role="presentation" class="active"><a href="#breakdowns" aria-controls="breakdowns" role="tab" data-toggle="tab">Breakdowns</a></li>
+                            <li role="presentation"><a href="#breakdowns-failed" aria-controls="profile" role="tab" data-toggle="tab">Failed</a></li>
                         </ul>
                     </div>
                     <div class="panel panel-body">
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane" id="breakdowns">
+                            <div role="tabpanel" class="tab-pane active" id="breakdowns">
 
                                 <form role="form" action="" method="post" id="bulkbank-save">
                                     <input type="hidden" name="templateId" id="templateId" value="${templateId}" />
@@ -361,7 +361,7 @@
                                 </form>
 
                             </div>
-                            <div role="tabpanel" class="tab-pane active" id="breakdowns-failed">
+                            <div role="tabpanel" class="tab-pane" id="breakdowns-failed">
                                 <div class="col-lg-6">
 
                                     <input type="hidden" id="templateId" value="${ templateId }">
