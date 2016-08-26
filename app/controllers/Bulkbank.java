@@ -49,9 +49,11 @@ public class Bulkbank extends MasterController {
         else
             editMode = false;
 
+        if(templateId != null && year != null && day != null){
+            List<M4CBBReservacionesDTO> reservations = new M4CBBReservacionesService().failuresDTO(templateId, year);
+            renderArgs.put("reservations", reservations);
+        }
 
-        List<M4CBBReservacionesDTO> reservations = new M4CBBReservacionesService().failuresDTO(templateId, year);
-        renderArgs.put("reservations", reservations);
         renderArgs.put("editMode", editMode);
         renderArgs.put("templateId", templateId);
         renderArgs.put("year", year);
