@@ -1108,8 +1108,15 @@ $.fn.load_weeks = function (year, day) {
         }
         var n2 = new Date(day1 + 604800000);
         if(new Date(day1).getFullYear()==year || n2.getFullYear()==year){
+
+            var span = $("<span/>", {'text': i > 9 ? i :"0"+i});
+
+            if(today > new Date(day1)){
+                span = i > 9 ? i :"0"+i;
+            }
+
             var td=$("<td/>").append(
-                $("<span/>", {'text': i > 9 ? i :"0"+i}),
+                span,
                 input,
                 $("<input/>", {'type': 'hidden', 'class': 'form-control', value: 0, name: 'ids'}),
                 $("<input/>", {'type': 'hidden', 'class': 'form-control', value: i, name: 'weekDayId'}),
