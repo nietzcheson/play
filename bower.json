@@ -1,0 +1,17 @@
+{
+  "name": "crm-marketing-vista",
+  "authors": [
+    "Cristian Angulo Nova <cristianangulonova@gmail.com>"
+  ],
+  "description": "\"CRM-MARKETING-VISTA\"",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
