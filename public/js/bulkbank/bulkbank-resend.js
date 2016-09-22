@@ -22,22 +22,28 @@
 
                         if(data.code == 200){
 
-                            var alert = $("<div />", { "class": "alert alert-info" });
+                            var info = $("<div />", { "class": "alert alert-info" });
 
                             $(data.data).each(function (i, e) {
                                 var idM4SG = $("<p />").text("Reservation M4SG: " + e.reservationIdM4SG);
                                 var idHotel = $("<p />").text("Reservation Hotel: " + e.reservationIdHotel);
 
-                                alert.append(idM4SG);
-                                alert.append(idHotel);
+                                info.append(idM4SG);
+                                info.append(idHotel);
                             });
 
 
-                            $("#failed-alert").append(alert);
+                            $("#failed-alert").append(info);
 
                             var tr = button.closest("tr");
 
                             tr.remove();
+                        }else{
+                            var info = $("<div />", { "class": "alert alert-danger" });
+
+                            info.text(data.message);
+
+                            $("#failed-alert").append(info);
                         }
 
                     }
